@@ -1,5 +1,7 @@
 
+
 import { useState } from "react";
+import { SearchableResources } from "../components";
 
 const roadmapTracks = [
   "Web Development",
@@ -13,13 +15,12 @@ const roadmapSteps = [
   { title: "Build", detail: "Projects and practice" },
   { title: "Grow", detail: "Career-ready skills" },
 ];
-
 export default function Home() {
   // isDarkMode: true = dark theme (default), false = light theme
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   return (
-    // Root background and text color change based on isDarkMode state
+
     <main className={`min-h-screen overflow-hidden transition-colors duration-300 ${isDarkMode ? "bg-slate-950 text-white" : "bg-slate-50 text-slate-900"}`}>
       
       {/* Toggle button — switches isDarkMode between true and false on click */}
@@ -140,21 +141,31 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="mt-8 w-full flex flex-col items-center sm:items-start">
-          <a
-            href="https://discord.gg/yWtjK2Tb8T"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 rounded-full bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-700"
-          >
-            Join our Discord
-          </a>
-          <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 max-w-md">
-            Join the community on Discord to discuss roadmaps, ask questions, and
-            contribute to projects — we'd love to have you!
-          </p>
+      </section>
+
+      <section className="px-6 pb-16 sm:px-10 lg:px-16">
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="mt-8 flex w-full flex-col items-center sm:items-start">
+            <a
+              href="https://discord.gg/yWtjK2Tb8T"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 rounded-full bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-700"
+            >
+              Join our Discord
+            </a>
+            <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 max-w-md">
+            </p>
+          </div>
+
+          <section className="mt-12 w-full">
+            <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50 mb-6">
+              Learning Resources
+            </h2>
+            <SearchableResources />
+          </section>
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }
