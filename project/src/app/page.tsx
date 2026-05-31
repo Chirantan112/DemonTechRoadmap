@@ -1,4 +1,4 @@
-import { ResourceCard } from "../components";
+import { ResourceCard, SearchableResources } from "../components";
 
 export default function Home() {
   return (
@@ -34,26 +34,7 @@ export default function Home() {
           <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50 mb-6">
             Learning Resources
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ResourceCard
-              title="Frontend Roadmap"
-              description="A curated roadmap to learn frontend development: HTML, CSS, JS, and frameworks."
-              href="https://github.com/kamranahmedse/developer-roadmap"
-              tags={["frontend", "roadmap"]}
-            />
-            <ResourceCard
-              title="JavaScript Info"
-              description="Comprehensive guide to modern JavaScript with tutorials and examples."
-              href="https://javascript.info/"
-              tags={["javascript", "tutorial"]}
-            />
-            <ResourceCard
-              title="FreeCodeCamp"
-              description="Interactive coding lessons and projects to build your portfolio."
-              href="https://www.freecodecamp.org/"
-              tags={["practice", "projects"]}
-            />
-          </div>
+          <SearchableResources />
         </section>
       </main>
     </div>
