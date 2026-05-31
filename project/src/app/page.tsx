@@ -1,12 +1,7 @@
-"use client";
+
 
 import { useState } from "react";
 import { SearchableResources } from "../components";
-
-// Feature: Dark/Light Theme Toggle
-// Author: Dhrubajyoti930
-// Resolves issue #15
-// Added "use client" directive and useState to enable theme switching
 
 const roadmapTracks = [
   "Web Development",
