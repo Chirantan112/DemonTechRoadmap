@@ -1,3 +1,5 @@
+
+import { ResourceCard, SearchableResources } from "../components";
 // Feature: Dark/Light Theme Toggle
 // Author: Dhrubajyoti930
 // Resolves issue #15
@@ -18,12 +20,12 @@ const roadmapSteps = [
   { title: "Build", detail: "Projects and practice" },
   { title: "Grow", detail: "Career-ready skills" },
 ];
-
 export default function Home() {
   // isDarkMode: true = dark theme (default), false = light theme
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   return (
+
     // Root background and text color change based on isDarkMode state
     <main className={`min-h-screen overflow-hidden transition-colors duration-300 ${isDarkMode ? "bg-slate-950 text-white" : "bg-slate-50 text-slate-900"}`}>
       
@@ -155,10 +157,16 @@ export default function Home() {
             Join our Discord
           </a>
           <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 max-w-md">
-            Join the community on Discord to discuss roadmaps, ask questions, and
-            contribute to projects — we'd love to have you!
+
           </p>
         </div>
+
+        <section className="mt-12 w-full">
+          <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50 mb-6">
+            Learning Resources
+          </h2>
+          <SearchableResources />
+        </section>
       </main>
     </div>
   );
