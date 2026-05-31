@@ -88,12 +88,6 @@ Thanks to these amazing people for contributing to this project! 🎉
 <table>
   <tr>
     <td align="center">
-      <a href="https://github.com/rishibhardwaj2" title="rishibhardwaj2">
-        <img src="https://avatars.githubusercontent.com/u/119101066?v=4&s=100&s=100&s=100" width="80px;" alt="rishibhardwaj2"/><br />
-        <sub><b>rishibhardwaj2</b></sub>
-      </a>
-    </td>
-    <td align="center">
       <a href="https://github.com/rue-eru" title="rue-eru">
         <img src="https://avatars.githubusercontent.com/u/162464326?v=4&s=100&s=100&s=100" width="80px;" alt="rue-eru"/><br />
         <sub><b>rue-eru</b></sub>
