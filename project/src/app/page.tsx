@@ -1,4 +1,9 @@
+// Feature: Dark/Light Theme Toggle
+// Author: Dhrubajyoti930
+// Resolves issue #15
+// Added "use client" directive and useState to enable theme switching
 "use client";
+
 import { useState } from "react";
 
 const roadmapTracks = [
@@ -15,13 +20,14 @@ const roadmapSteps = [
 ];
 
 export default function Home() {
+  // isDarkMode: true = dark theme (default), false = light theme
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   return (
-    // 1. Controlled root background and text via state
+    // Root background and text color change based on isDarkMode state
     <main className={`min-h-screen overflow-hidden transition-colors duration-300 ${isDarkMode ? "bg-slate-950 text-white" : "bg-slate-50 text-slate-900"}`}>
       
-      {/* 2. Floating Mode Toggle Button */}
+      {/* Toggle button — switches isDarkMode between true and false on click */}
       <button
         onClick={() => setIsDarkMode(!isDarkMode)}
         className="fixed right-6 top-6 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-lg shadow-md backdrop-blur transition hover:scale-105 active:scale-95"
@@ -31,7 +37,6 @@ export default function Home() {
       </button>
 
       <section className="relative isolate flex min-h-screen items-center px-6 py-14 sm:px-10 lg:px-16">
-        {/* 3. Conditional Hero Gradients based on theme state */}
         <div className={`absolute inset-0 -z-20 transition-opacity duration-500 ${
           isDarkMode 
             ? "bg-[linear-gradient(135deg,#111827_0%,#0f172a_46%,#0f766e_100%)] opacity-100" 
@@ -40,7 +45,6 @@ export default function Home() {
         <div className={`absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:96px_96px] ${isDarkMode ? "opacity-30" : "invert opacity-20"}`} />
 
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.02fr_0.98fr]">
-          {/* Hero Left Content */}
           <div className={`max-w-3xl pt-8 lg:pt-0 transition-colors ${isDarkMode ? "text-white" : "text-slate-900"}`}>
             <p className={`mb-5 inline-flex rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em] shadow-sm backdrop-blur ${isDarkMode ? "border-white/20 bg-white/10 text-cyan-100" : "border-slate-300 bg-slate-200/50 text-teal-800"}`}>
               Open-source learning paths
@@ -85,7 +89,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Card Container Right */}
           <div className={`rounded-lg border p-4 shadow-2xl transition-colors duration-300 sm:p-6 ${isDarkMode ? "border-slate-800 bg-slate-900 shadow-slate-950/50" : "border-slate-200 bg-white shadow-slate-300/50"}`}>
             <div className="mb-6 flex items-center justify-between gap-4">
               <div>
