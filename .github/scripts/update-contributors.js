@@ -117,16 +117,17 @@ async function enrichContributor({ guessedUsername, name, email }) {
       const emailEncoded = encodeURIComponent(email);
       const repoParts = (process.env.GITHUB_REPOSITORY || "").split("/");
       const repoQuery = repoParts.length === 2 ? `repo:${repoParts[0]}/${repoParts[1]}+` : "";
-      const commitSearch = await fetch(
-        `https://api.github.com/search/commits?q=${repoQuery}author-email:${emailEncoded}&per_page=1`,
-        {
-          headers: {
-            ...headers,
-            Accept: "application/vnd.github.cloak-preview",
-          }
+      const searchUrl = `https://api.github.com/search/commits?q=${repoQuery}author-email:${emailEncoded}&per_page=1`;
+      const searchOptions = {
+        headers: {
+          ...headers,
+          Accept: "application/vnd.github.cloak-preview",
         }
-      );
-      await checkRateLimit(commitSearch);
+      };
+      let commitSearch = await fetch(searchUrl, searchOptions);
+      if (await checkRateLimit(commitSearch)) {
+        commitSearch = await fetch(searchUrl, searchOptions);
+      }
       if (commitSearch.ok) {
         const data = await commitSearch.json();
         if (data.items && data.items.length > 0) {
@@ -153,11 +154,12 @@ async function enrichContributor({ guessedUsername, name, email }) {
   if (isNoreplyGithub) {
     try {
       await delay(200);
-      const direct = await fetch(
-        `https://api.github.com/users/${guessedUsername}`,
-        { headers }
-      );
-      await checkRateLimit(direct);
+      const directUrl = `https://api.github.com/users/${guessedUsername}`;
+      const directOptions = { headers };
+      let direct = await fetch(directUrl, directOptions);
+      if (await checkRateLimit(direct)) {
+        direct = await fetch(directUrl, directOptions);
+      }
       if (direct.ok) {
         const data = await direct.json();
         if (
