@@ -48,7 +48,12 @@ function getNewCommitters() {
       if (noreplyMatch) {
         guessedUsername = noreplyMatch[1];
       } else {
-        guessedUsername = email.split("@")[0].toLowerCase();
+        const noreplySimple = email.match(/^([^@]+)@users\.noreply\.github\.com$/);
+        if (noreplySimple) {
+          guessedUsername = noreplySimple[1];
+        } else {
+          guessedUsername = email.split("@")[0].toLowerCase();
+        }
       }
 
       if (guessedUsername.includes("github-actions")) continue;
@@ -77,40 +82,7 @@ async function enrichContributor({ guessedUsername, name, email }) {
     "User-Agent": "update-contributors-bot",
   };
 
-  // 1. Direct lookup by guessed username
-  try {
-    const direct = await fetch(
-      `https://api.github.com/users/${guessedUsername}`,
-      { headers }
-    );
-    if (direct.ok) {
-      const data = await direct.json();
-      // Validate API response fields
-      if (
-        data.login &&
-        USERNAME_RE.test(data.login) &&
-        typeof data.avatar_url === "string" &&
-        data.avatar_url.startsWith("https://avatars.githubusercontent.com/") &&
-        typeof data.html_url === "string" &&
-        data.html_url.startsWith("https://github.com/")
-      ) {
-        console.log(`    ✓ direct lookup: @${data.login}`);
-        return {
-          username: data.login,
-          name: data.name || data.login,
-          avatarUrl: data.avatar_url,
-          htmlUrl: data.html_url,
-        };
-      }
-      console.warn(`    ⚠ direct lookup returned invalid fields for "${guessedUsername}", falling through`);
-    }
-  } catch (err) {
-    console.warn(`    ⚠ API error for "${guessedUsername}": ${err.message}`);
-  }
-
-
-
-  // 2. Commit-based lookup using email
+  // 1. Commit-search by email (most reliable — matches email to actual GitHub account)
   if (email) {
     try {
       const emailEncoded = encodeURIComponent(email);
@@ -145,15 +117,42 @@ async function enrichContributor({ guessedUsername, name, email }) {
     }
   }
 
-  // 4. Fallback
-  console.log(`    ⚠ using fallback for guessed username "${guessedUsername}"`);
-  const safeUsername = USERNAME_RE.test(guessedUsername) ? guessedUsername : "unknown-user";
-  return {
-    username: safeUsername,
-    name: name || safeUsername,
-    avatarUrl: `https://github.com/${safeUsername}.png`,
-    htmlUrl: `https://github.com/${safeUsername}`,
-  };
+  // 2. For GitHub noreply emails only, try direct username lookup
+  //    (noreply emails contain the actual GitHub username and are safe to use)
+  const isNoreplyGithub = email && /@users\.noreply\.github\.com$/.test(email);
+  if (isNoreplyGithub) {
+    try {
+      const direct = await fetch(
+        `https://api.github.com/users/${guessedUsername}`,
+        { headers }
+      );
+      if (direct.ok) {
+        const data = await direct.json();
+        if (
+          data.login &&
+          USERNAME_RE.test(data.login) &&
+          typeof data.avatar_url === "string" &&
+          data.avatar_url.startsWith("https://avatars.githubusercontent.com/") &&
+          typeof data.html_url === "string" &&
+          data.html_url.startsWith("https://github.com/")
+        ) {
+          console.log(`    ✓ noreply direct lookup: @${data.login}`);
+          return {
+            username: data.login,
+            name: data.name || data.login,
+            avatarUrl: data.avatar_url,
+            htmlUrl: data.html_url,
+          };
+        }
+      }
+    } catch (err) {
+      console.warn(`    ⚠ API error for "${guessedUsername}": ${err.message}`);
+    }
+  }
+
+  // 3. Cannot verify — skip this contributor entirely rather than adding a wrong/broken entry
+  console.log(`    ⚠ skipping "${guessedUsername}" <${email}> — could not verify GitHub identity`);
+  return null;
 }
 
 function getExistingContributors(content) {
@@ -288,9 +287,13 @@ async function main() {
       if (!email) continue;
 
       const noreplyMatch = email.match(/^\d+\+([^@]+)@users\.noreply\.github\.com$/);
-      const guessedUsername = noreplyMatch
-        ? noreplyMatch[1]
-        : email.split("@")[0].toLowerCase();
+      let guessedUsername;
+      if (noreplyMatch) {
+        guessedUsername = noreplyMatch[1];
+      } else {
+        const noreplySimple = email.match(/^([^@]+)@users\.noreply\.github\.com$/);
+        guessedUsername = noreplySimple ? noreplySimple[1] : email.split("@")[0].toLowerCase();
+      }
 
       if (guessedUsername.includes("github-actions")) continue;
       if (seen.has(email.toLowerCase())) continue;
@@ -305,7 +308,7 @@ async function main() {
     const enrichedHistory = [];
     for (const c of historicalCommitters) {
       const profile = await enrichContributor(c);
-      enrichedHistory.push(profile);
+      if (profile) enrichedHistory.push(profile);
     }
 
     const seedBlock = buildContributorBlock(enrichedHistory);
@@ -344,7 +347,7 @@ async function main() {
   const enriched = [];
   for (const c of newCommitters) {
     const profile = await enrichContributor(c);
-    enriched.push(profile);
+    if (profile) enriched.push(profile);
   }
   console.log("::endgroup::");
 
