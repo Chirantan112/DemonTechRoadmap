@@ -6,10 +6,14 @@ import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 
 type ThemeVars = CSSProperties & Record<`--${string}`, string>;
+type SidebarGroup = {
+  title: string;
+  items: Array<{ label: string; icon: string; href?: string; active?: boolean }>;
+};
 
 const navItems = ["Roadmaps", "Resources", "Docs", "Guides", "Community"];
 
-const sidebarGroups = [
+const sidebarGroups: SidebarGroup[] = [
   {
     title: "Get Started",
     items: [
@@ -21,7 +25,7 @@ const sidebarGroups = [
         href: "/docs/how-roadmaps-work",
         active: true,
       },
-      { label: "Learning Paths", icon: "nodes" },
+      { label: "Learning Paths", icon: "nodes", href: "/docs/learning-paths" },
     ],
   },
   {
