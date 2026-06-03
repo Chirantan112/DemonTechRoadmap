@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   update-contributors:
+    if: github.actor != 'github-actions[bot]' && github.actor != 'github-actions'
     runs-on: ubuntu-latest
 
     steps:

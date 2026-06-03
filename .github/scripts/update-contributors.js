@@ -21,6 +21,35 @@ function git(...args) {
   }).trim();
 }
 
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function checkRateLimit(response) {
+  const remaining = response.headers.get("X-RateLimit-Remaining");
+  const resetTime = response.headers.get("X-RateLimit-Reset");
+
+  if (remaining === null || resetTime === null) return;
+
+  const remainingNum = parseInt(remaining, 10);
+  const resetTimeNum = parseInt(resetTime, 10);
+
+  if (isNaN(remainingNum) || isNaN(resetTimeNum)) return;
+
+  if (remainingNum === 0) {
+    const waitMs = Math.max(0, resetTimeNum * 1000 - Date.now() + 5000);
+    console.log(
+      `    ⚠ Rate limit exhausted. Sleeping ${Math.ceil(waitMs / 1000)}s until reset (${new Date(resetTimeNum * 1000).toISOString()})...`
+    );
+    await delay(waitMs);
+    return true; // signal caller to retry
+  } else if (remainingNum < 100) {
+    console.warn(
+      `    ⚠ Rate limit running low: ${remainingNum} remaining, resets at ${new Date(resetTimeNum * 1000).toISOString()}`
+    );
+  }
+}
+
 function getNewCommitters() {
   const before = process.env.BEFORE_SHA;
   const after  = process.env.AFTER_SHA;
@@ -48,7 +77,12 @@ function getNewCommitters() {
       if (noreplyMatch) {
         guessedUsername = noreplyMatch[1];
       } else {
-        guessedUsername = email.split("@")[0].toLowerCase();
+        const noreplySimple = email.match(/^([^@]+)@users\.noreply\.github\.com$/);
+        if (noreplySimple) {
+          guessedUsername = noreplySimple[1];
+        } else {
+          guessedUsername = email.split("@")[0].toLowerCase();
+        }
       }
 
       if (guessedUsername.includes("github-actions")) continue;
@@ -77,54 +111,23 @@ async function enrichContributor({ guessedUsername, name, email }) {
     "User-Agent": "update-contributors-bot",
   };
 
-  // 1. Direct lookup by guessed username
-  try {
-    const direct = await fetch(
-      `https://api.github.com/users/${guessedUsername}`,
-      { headers }
-    );
-    if (direct.ok) {
-      const data = await direct.json();
-      // Validate API response fields
-      if (
-        data.login &&
-        USERNAME_RE.test(data.login) &&
-        typeof data.avatar_url === "string" &&
-        data.avatar_url.startsWith("https://avatars.githubusercontent.com/") &&
-        typeof data.html_url === "string" &&
-        data.html_url.startsWith("https://github.com/")
-      ) {
-        console.log(`    ✓ direct lookup: @${data.login}`);
-        return {
-          username: data.login,
-          name: data.name || data.login,
-          avatarUrl: data.avatar_url,
-          htmlUrl: data.html_url,
-        };
-      }
-      console.warn(`    ⚠ direct lookup returned invalid fields for "${guessedUsername}", falling through`);
-    }
-  } catch (err) {
-    console.warn(`    ⚠ API error for "${guessedUsername}": ${err.message}`);
-  }
-
-
-
-  // 2. Commit-based lookup using email
+  // 1. Commit-search by email (most reliable — matches email to actual GitHub account)
   if (email) {
     try {
       const emailEncoded = encodeURIComponent(email);
       const repoParts = (process.env.GITHUB_REPOSITORY || "").split("/");
       const repoQuery = repoParts.length === 2 ? `repo:${repoParts[0]}/${repoParts[1]}+` : "";
-      const commitSearch = await fetch(
-        `https://api.github.com/search/commits?q=${repoQuery}author-email:${emailEncoded}&per_page=1`,
-        {
-          headers: {
-            ...headers,
-            Accept: "application/vnd.github.cloak-preview",
-          }
+      const searchUrl = `https://api.github.com/search/commits?q=${repoQuery}author-email:${emailEncoded}&per_page=1`;
+      const searchOptions = {
+        headers: {
+          ...headers,
+          Accept: "application/vnd.github.cloak-preview",
         }
-      );
+      };
+      let commitSearch = await fetch(searchUrl, searchOptions);
+      if (await checkRateLimit(commitSearch)) {
+        commitSearch = await fetch(searchUrl, searchOptions);
+      }
       if (commitSearch.ok) {
         const data = await commitSearch.json();
         if (data.items && data.items.length > 0) {
@@ -145,15 +148,45 @@ async function enrichContributor({ guessedUsername, name, email }) {
     }
   }
 
-  // 4. Fallback
-  console.log(`    ⚠ using fallback for guessed username "${guessedUsername}"`);
-  const safeUsername = USERNAME_RE.test(guessedUsername) ? guessedUsername : "unknown-user";
-  return {
-    username: safeUsername,
-    name: name || safeUsername,
-    avatarUrl: `https://github.com/${safeUsername}.png`,
-    htmlUrl: `https://github.com/${safeUsername}`,
-  };
+  // 2. For GitHub noreply emails only, try direct username lookup
+  //    (noreply emails contain the actual GitHub username and are safe to use)
+  const isNoreplyGithub = email && /@users\.noreply\.github\.com$/.test(email);
+  if (isNoreplyGithub) {
+    try {
+      await delay(200);
+      const directUrl = `https://api.github.com/users/${guessedUsername}`;
+      const directOptions = { headers };
+      let direct = await fetch(directUrl, directOptions);
+      if (await checkRateLimit(direct)) {
+        direct = await fetch(directUrl, directOptions);
+      }
+      if (direct.ok) {
+        const data = await direct.json();
+        if (
+          data.login &&
+          USERNAME_RE.test(data.login) &&
+          typeof data.avatar_url === "string" &&
+          data.avatar_url.startsWith("https://avatars.githubusercontent.com/") &&
+          typeof data.html_url === "string" &&
+          data.html_url.startsWith("https://github.com/")
+        ) {
+          console.log(`    ✓ noreply direct lookup: @${data.login}`);
+          return {
+            username: data.login,
+            name: data.name || data.login,
+            avatarUrl: data.avatar_url,
+            htmlUrl: data.html_url,
+          };
+        }
+      }
+    } catch (err) {
+      console.warn(`    ⚠ API error for "${guessedUsername}": ${err.message}`);
+    }
+  }
+
+  // 3. Cannot verify — skip this contributor entirely rather than adding a wrong/broken entry
+  console.log(`    ⚠ skipping "${guessedUsername}" <${email}> — could not verify GitHub identity`);
+  return null;
 }
 
 function getExistingContributors(content) {
@@ -288,9 +321,13 @@ async function main() {
       if (!email) continue;
 
       const noreplyMatch = email.match(/^\d+\+([^@]+)@users\.noreply\.github\.com$/);
-      const guessedUsername = noreplyMatch
-        ? noreplyMatch[1]
-        : email.split("@")[0].toLowerCase();
+      let guessedUsername;
+      if (noreplyMatch) {
+        guessedUsername = noreplyMatch[1];
+      } else {
+        const noreplySimple = email.match(/^([^@]+)@users\.noreply\.github\.com$/);
+        guessedUsername = noreplySimple ? noreplySimple[1] : email.split("@")[0].toLowerCase();
+      }
 
       if (guessedUsername.includes("github-actions")) continue;
       if (seen.has(email.toLowerCase())) continue;
@@ -305,7 +342,7 @@ async function main() {
     const enrichedHistory = [];
     for (const c of historicalCommitters) {
       const profile = await enrichContributor(c);
-      enrichedHistory.push(profile);
+      if (profile) enrichedHistory.push(profile);
     }
 
     const seedBlock = buildContributorBlock(enrichedHistory);
@@ -325,7 +362,7 @@ async function main() {
     git("config", "user.name", "github-actions[bot]");
     git("config", "user.email", "github-actions[bot]@users.noreply.github.com");
     git("add", "README.md");
-    git("commit", "-m", "docs: seed contributor table with all historical contributors");
+    git("commit", "-m", "docs: seed contributor table with all historical contributors [skip ci]");
 
     try {
       git("pull", "--rebase", "origin", "main");
@@ -344,7 +381,7 @@ async function main() {
   const enriched = [];
   for (const c of newCommitters) {
     const profile = await enrichContributor(c);
-    enriched.push(profile);
+    if (profile) enriched.push(profile);
   }
   console.log("::endgroup::");
 
@@ -379,7 +416,7 @@ async function main() {
   console.log("::endgroup::");
 
   const names = trulyNew.map((c) => `@${c.username}`).join(", ");
-  const commitMsg = `docs: add contributor(s) ${names} to README`;
+  const commitMsg = `docs: add contributor(s) ${names} to README [skip ci]`;
 
   console.log("::group::🚀 Committing & pushing");
   git("config", "user.name", "github-actions[bot]");
@@ -395,6 +432,15 @@ async function main() {
     } catch (err) {
       console.error("❌ Rebase failed — likely conflicting changes. Exiting.");
       process.exit(1);
+    }
+
+    // After rebase, read README from origin/main to detect concurrent modifications
+    const remoteReadme = git("show", "origin/main:README.md");
+    const { usernames: freshExisting } = getExistingContributors(remoteReadme);
+    const stillNew = trulyNew.filter(p => !freshExisting.has(p.username.toLowerCase()));
+    if (stillNew.length === 0) {
+      console.log("ℹ️  All new contributors were already added by another workflow. Nothing to push.");
+      return;
     }
 
     git("push", "origin", "HEAD:main");
