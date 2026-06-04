@@ -29,7 +29,7 @@ const sidebarGroups: SidebarGroup[] = [
       { label: "All Roadmaps", icon: "grid", href: "/docs/all-roadmaps" },
       { label: "By Category", icon: "folder", href: "/docs/by-category" },
       { label: "Learning Resources", icon: "send" },
-      { label: "Project Ideas", icon: "spark" },
+      { label: "Project Ideas", icon: "spark", href: "/docs/project-ideas" },
     ],
   },
   {
