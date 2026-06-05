@@ -57,6 +57,7 @@ export type ReadinessMetric = {
 };
 
 export type RoadmapPageShellProps = {
+  detailBasePath?: string;
   storageKey: string;
   breadcrumb: string;
   eyebrow: string;
@@ -231,6 +232,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
     return { ...metric, percentage };
   });
   const durationOptions = Array.from(new Set(props.roadmapNodes.map((node) => node.duration)));
+  const getTopicHref = (nodeId: string) => (props.detailBasePath ? `${props.detailBasePath}/${nodeId}` : undefined);
   const filteredNodes = props.roadmapNodes.filter((node) => {
     const query = searchQuery.trim().toLowerCase();
     const searchable = [
@@ -303,6 +305,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
         </div>
       </header>
       <CommandPalette
+        getTopicHref={getTopicHref}
         open={commandOpen}
         props={props}
         query={searchQuery}
@@ -337,6 +340,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
             searchQuery={searchQuery}
             setDifficultyFilter={setDifficultyFilter}
             setDurationFilter={setDurationFilter}
+            getTopicHref={getTopicHref}
             toggleSet={toggleSet}
             setBookmarkedIds={setBookmarkedIds}
             setResourceFilter={setResourceFilter}
@@ -479,6 +483,7 @@ function RoadmapJourney(props: {
   durationFilter: string;
   durationOptions: string[];
   expandedNodeId: string;
+  getTopicHref?: (nodeId: string) => string | undefined;
   miniProjectLabel: string;
   nodes: RoadmapNode[];
   notes: Record<string, string>;
@@ -564,6 +569,7 @@ function RoadmapJourney(props: {
               onNoteChange={(value) => props.setNotes((current) => ({ ...current, [node.id]: value }))}
               onToggleBookmark={() => props.toggleSet(props.setBookmarkedIds, props.bookmarkedIds, node.id)}
               onToggleComplete={() => props.toggleSet(props.setCompletedIds, props.completedIds, node.id)}
+              topicHref={props.getTopicHref?.(node.id)}
             />
           ))
         ) : (
@@ -660,6 +666,7 @@ type CommandResult = {
 };
 
 function CommandPalette({
+  getTopicHref,
   open,
   props,
   query,
@@ -667,6 +674,7 @@ function CommandPalette({
   setQuery,
   onOpenNode,
 }: {
+  getTopicHref?: (nodeId: string) => string | undefined;
   open: boolean;
   props: RoadmapPageShellProps;
   query: string;
@@ -705,6 +713,7 @@ function CommandPalette({
       title: node.title,
       detail: `${node.stage} • ${node.difficulty} • ${node.duration}`,
       group: "Topics" as const,
+      href: getTopicHref?.(node.id),
       nodeId: node.id,
     })),
     ...props.roadmapNodes.flatMap((node) =>
@@ -741,7 +750,7 @@ function CommandPalette({
   const visibleResults = groupedResults.flatMap(({ results }) => results);
 
   const runResult = (result: CommandResult) => {
-    if (result.nodeId) {
+    if (result.nodeId && !result.href) {
       setQuery(result.title);
       onOpenNode(result.nodeId);
       setOpen(false);
@@ -825,6 +834,7 @@ export function RoadmapNodeCard({
   onNoteChange,
   onToggleBookmark,
   onToggleComplete,
+  topicHref,
 }: {
   bookmarked: boolean;
   completed: boolean;
@@ -838,6 +848,7 @@ export function RoadmapNodeCard({
   onNoteChange: (value: string) => void;
   onToggleBookmark: () => void;
   onToggleComplete: () => void;
+  topicHref?: string;
 }) {
   const detailsId = `${node.id}-details`;
 
@@ -869,7 +880,7 @@ export function RoadmapNodeCard({
           <div className="border-t border-zinc-800 px-5 pb-5 pl-10" id={detailsId}>
             <div className="grid gap-5 pt-5 xl:grid-cols-[minmax(0,1fr)_270px]">
               <NodeMainContent node={node} note={note} notesPlaceholder={notesPlaceholder} onNoteChange={onNoteChange} />
-              <NodeAside bookmarked={bookmarked} completed={completed} miniProjectLabel={miniProjectLabel} node={node} onToggleBookmark={onToggleBookmark} onToggleComplete={onToggleComplete} />
+              <NodeAside bookmarked={bookmarked} completed={completed} miniProjectLabel={miniProjectLabel} node={node} onToggleBookmark={onToggleBookmark} onToggleComplete={onToggleComplete} topicHref={topicHref} />
             </div>
           </div>
         ) : null}
@@ -902,9 +913,15 @@ function NodeMainContent({ node, note, notesPlaceholder, onNoteChange }: { node:
   );
 }
 
-function NodeAside({ bookmarked, completed, miniProjectLabel, node, onToggleBookmark, onToggleComplete }: { bookmarked: boolean; completed: boolean; miniProjectLabel: string; node: RoadmapNode; onToggleBookmark: () => void; onToggleComplete: () => void }) {
+function NodeAside({ bookmarked, completed, miniProjectLabel, node, onToggleBookmark, onToggleComplete, topicHref }: { bookmarked: boolean; completed: boolean; miniProjectLabel: string; node: RoadmapNode; onToggleBookmark: () => void; onToggleComplete: () => void; topicHref?: string }) {
   return (
     <aside className="space-y-5">
+      {topicHref ? (
+        <Link className="flex h-10 items-center justify-center gap-2 rounded-md border border-red-500/40 bg-red-500 px-3 text-sm font-black text-white transition hover:bg-red-400" href={topicHref}>
+          Open topic page
+          <Icon className="h-4 w-4" name="arrow" />
+        </Link>
+      ) : null}
       <section className="border-l border-red-500/40 pl-4">
         <h3 className="text-sm font-black text-white">Prerequisites</h3>
         <div className="mt-3 flex flex-wrap gap-2">

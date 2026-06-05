@@ -1,0 +1,6 @@
+.next
+project/.next
+node_modules
+project/node_modules
+.env*
+*.log

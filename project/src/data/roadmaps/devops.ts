@@ -1930,6 +1930,7 @@ const readinessMetrics: ReadinessMetric[] = [
 ];
 
 export const devopsRoadmap = {
+  detailBasePath: "/roadmaps/devops-engineer",
   storageKey: "demontech-devops-roadmap",
   breadcrumb: "DevOps Engineer",
   eyebrow: "Production Infrastructure Engineering Path",

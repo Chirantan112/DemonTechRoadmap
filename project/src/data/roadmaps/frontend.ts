@@ -506,6 +506,7 @@ const readinessMetrics: ReadinessMetric[] = [
 ];
 
 export const frontendRoadmap = {
+  detailBasePath: "/roadmaps/frontend-developer",
   storageKey: "demontech-frontend-roadmap",
   breadcrumb: "Frontend Developer",
   eyebrow: "Premium Frontend Engineering Path",
