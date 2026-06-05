@@ -82,10 +82,11 @@ const roadmapCards = [
   {
     title: "Backend Developer",
     detail: "Master server-side development, databases, APIs, and more.",
-    topics: "48 Topics",
+    topics: "24 Stages",
     level: "Beginner to Advanced",
-    progress: "80%",
-    tags: ["Node.js", "Express", "MongoDB", "SQL", "+3"],
+    progress: "94%",
+    tags: ["APIs", "SQL", "Auth", "Cloud", "+10"],
+    href: "/roadmaps/backend-developer",
   },
   {
     title: "Full Stack Developer",
