@@ -1,8 +1,10 @@
-import { copyFile, access, mkdir } from "node:fs/promises";
+import { copyFile, access, cp, mkdir } from "node:fs/promises";
 import { constants } from "node:fs";
 
 const source = new URL("../.next/routes-manifest.json", import.meta.url);
 const target = new URL("../.next/routes-manifest-deterministic.json", import.meta.url);
+const nextOutput = new URL("../.next/", import.meta.url);
+const repositoryRootNextOutput = new URL("../../.next/", import.meta.url);
 const repositoryRootTarget = new URL("../../.next/routes-manifest-deterministic.json", import.meta.url);
 const mirroredManifests = [
   [new URL("../.next/app-path-routes-manifest.json", import.meta.url), new URL("../../.next/app-path-routes-manifest.json", import.meta.url)],
@@ -26,6 +28,20 @@ async function copyIfPresent(from, to) {
   }
 }
 
+async function mirrorNextOutputIfPresent() {
+  try {
+    await access(nextOutput, constants.F_OK);
+    await mkdir(repositoryRootNextOutput, { recursive: true });
+    await cp(nextOutput, repositoryRootNextOutput, {
+      force: true,
+      recursive: true,
+      filter: (sourcePath) => !sourcePath.includes(`${String.raw`/`}.next${String.raw`/`}cache`),
+    });
+  } catch {
+    // The output directory is created during the build. Keep polling.
+  }
+}
+
 export async function ensureVercelRoutesManifest() {
   try {
     await access(target, constants.F_OK);
@@ -41,6 +57,7 @@ export async function ensureVercelRoutesManifest() {
   }
 
   await Promise.all(mirroredManifests.map(([from, to]) => copyIfPresent(from, to)));
+  await mirrorNextOutputIfPresent();
 }
 
 export async function watchVercelRoutesManifest({ signal, timeoutMs = 120000 } = {}) {
@@ -48,6 +65,8 @@ export async function watchVercelRoutesManifest({ signal, timeoutMs = 120000 } =
   let copiedRoutesManifest = false;
 
   while (!signal?.aborted && Date.now() - startedAt < timeoutMs) {
+    await mirrorNextOutputIfPresent();
+
     try {
       await access(source, constants.F_OK);
       await ensureVercelRoutesManifest();
