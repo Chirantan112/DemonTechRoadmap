@@ -14,6 +14,14 @@ export default function ResourceCard({
   href = "#",
   tags = [],
 }: ResourceCardProps) {
+  const formatTagLabel = (tag: string) =>
+    tag
+      .trim()
+      .split("-")
+      .filter(Boolean)
+      .map((segment) => segment[0].toUpperCase() + segment.slice(1))
+      .join(" ");
+
   return (
     <a
       href={href}
@@ -29,7 +37,7 @@ export default function ResourceCard({
       {tags && tags.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {tags.map((t) => (
-            <Badge key={t}>{t}</Badge>
+            <Badge key={t}>{formatTagLabel(t)}</Badge>
           ))}
         </div>
       )}
