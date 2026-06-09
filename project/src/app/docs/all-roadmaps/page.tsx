@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { roadmapSeo } from "@/src/lib/roadmapSeo";
 import type { CSSProperties, ReactNode } from "react";
 
 type ThemeVars = CSSProperties & Record<`--${string}`, string>;
@@ -642,6 +643,9 @@ export default function AllRoadmaps() {
 
             <section className="mt-6 grid gap-5 xl:grid-cols-3">
               {filteredRoadmaps.map((roadmap) => {
+                const slug = roadmap.href.split("/").pop() || "";
+                const duration = roadmapSeo[slug]?.duration;
+
                 const cardContent = (
                   <>
                   <div className="flex items-start justify-between gap-4">
@@ -660,6 +664,15 @@ export default function AllRoadmaps() {
                     <span>{roadmap.topics}</span>
                     <span className="h-4 w-px bg-[var(--border)]" />
                     <span>{roadmap.level}</span>
+                    {duration && (
+                      <>
+                        <span className="h-4 w-px bg-[var(--border)]" />
+                        <span className="flex items-center gap-1 font-medium">
+                          <Icon className="h-3.5 w-3.5 text-red-400" name="clock" />
+                          {duration}
+                        </span>
+                      </>
+                    )}
                     <span className="h-4 w-px bg-[var(--border)]" />
                     <span>{roadmap.updated}</span>
                   </div>
