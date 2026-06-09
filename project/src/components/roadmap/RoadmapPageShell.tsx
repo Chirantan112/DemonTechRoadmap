@@ -215,6 +215,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
   const completedCount = completedIds.size;
   const progressPercentage = Math.round((completedCount / props.roadmapNodes.length) * 100);
   const nextNode = props.roadmapNodes.find((node) => !completedIds.has(node.id)) ?? props.roadmapNodes[props.roadmapNodes.length - 1];
+  const nextNodeId = nextNode?.id;
   const currentLevel = props.stageSummaries.find((stage) => props.roadmapNodes.filter((node) => node.stage === stage.stage).some((node) => !completedIds.has(node.id)))?.stage ?? "Expert";
   const noteCount = Object.values(notes).filter((note) => note.trim()).length;
   const stageProgress = props.stageSummaries.map((summary) => {
@@ -322,6 +323,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
           <RoadmapJourney
             completedIds={completedIds}
             expandedNodeId={expandedNodeId}
+            nextNodeId={nextNodeId}
             notes={notes}
             bookmarkedIds={bookmarkedIds}
             setCompletedIds={setCompletedIds}
@@ -483,6 +485,7 @@ function RoadmapJourney(props: {
   durationFilter: string;
   durationOptions: string[];
   expandedNodeId: string;
+  nextNodeId: string | undefined;
   getTopicHref?: (nodeId: string) => string | undefined;
   miniProjectLabel: string;
   nodes: RoadmapNode[];
@@ -555,7 +558,7 @@ function RoadmapJourney(props: {
         <div className="absolute bottom-8 left-6 top-8 hidden w-px bg-zinc-800 sm:block" />
         {props.nodes.length ? (
           props.nodes.map((node, index) => {
-            const isNext = index === props.nodes.findIndex(n => !props.completedIds.has(n.id));
+            const isNext = node.id === props.nextNodeId;
             return (
               <RoadmapNodeCard
                 bookmarked={props.bookmarkedIds.has(node.id)}
