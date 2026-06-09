@@ -564,10 +564,6 @@ function RoadmapJourney(props: {
                 isNext={isNext}
                 index={index}
                 key={node.id}
-              miniProjectLabel={props.miniProjectLabel}
-              node={node}
-              note={props.notes[node.id] ?? ""}
-              notesPlaceholder={props.notesPlaceholder}
                 miniProjectLabel={props.miniProjectLabel}
                 node={node}
                 note={props.notes[node.id] ?? ""}
