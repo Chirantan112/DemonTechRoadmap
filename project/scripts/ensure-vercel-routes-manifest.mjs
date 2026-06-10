@@ -1,46 +1,8 @@
-import { copyFile, access, cp, mkdir } from "node:fs/promises";
+import { copyFile, access } from "node:fs/promises";
 import { constants } from "node:fs";
 
 const source = new URL("../.next/routes-manifest.json", import.meta.url);
 const target = new URL("../.next/routes-manifest-deterministic.json", import.meta.url);
-const nextOutput = new URL("../.next/", import.meta.url);
-const repositoryRootNextOutput = new URL("../../.next/", import.meta.url);
-const repositoryRootTarget = new URL("../../.next/routes-manifest-deterministic.json", import.meta.url);
-const mirroredManifests = [
-  [new URL("../.next/app-path-routes-manifest.json", import.meta.url), new URL("../../.next/app-path-routes-manifest.json", import.meta.url)],
-  [new URL("../.next/prerender-manifest.json", import.meta.url), new URL("../../.next/prerender-manifest.json", import.meta.url)],
-  [new URL("../.next/required-server-files.json", import.meta.url), new URL("../../.next/required-server-files.json", import.meta.url)],
-  [new URL("../.next/server/app-paths-manifest.json", import.meta.url), new URL("../../.next/server/app-paths-manifest.json", import.meta.url)],
-  [new URL("../.next/server/middleware-manifest.json", import.meta.url), new URL("../../.next/server/middleware-manifest.json", import.meta.url)],
-  [new URL("../.next/server/next-font-manifest.json", import.meta.url), new URL("../../.next/server/next-font-manifest.json", import.meta.url)],
-  [new URL("../.next/server/pages-manifest.json", import.meta.url), new URL("../../.next/server/pages-manifest.json", import.meta.url)],
-  [new URL("../.next/server/server-reference-manifest.json", import.meta.url), new URL("../../.next/server/server-reference-manifest.json", import.meta.url)],
-];
-
-async function copyIfPresent(from, to) {
-  try {
-    await access(from, constants.F_OK);
-    await mkdir(new URL("./", to), { recursive: true });
-    await copyFile(from, to);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function mirrorNextOutputIfPresent() {
-  try {
-    await access(nextOutput, constants.F_OK);
-    await mkdir(repositoryRootNextOutput, { recursive: true });
-    await cp(nextOutput, repositoryRootNextOutput, {
-      force: true,
-      recursive: true,
-      filter: (sourcePath) => !sourcePath.includes(`${String.raw`/`}.next${String.raw`/`}cache`),
-    });
-  } catch {
-    // The output directory is created during the build. Keep polling.
-  }
-}
 
 export async function ensureVercelRoutesManifest() {
   try {
@@ -48,16 +10,6 @@ export async function ensureVercelRoutesManifest() {
   } catch {
     await copyFile(source, target);
   }
-
-  try {
-    await access(repositoryRootTarget, constants.F_OK);
-  } catch {
-    await mkdir(new URL("../../.next/", import.meta.url), { recursive: true });
-    await copyFile(source, repositoryRootTarget);
-  }
-
-  await Promise.all(mirroredManifests.map(([from, to]) => copyIfPresent(from, to)));
-  await mirrorNextOutputIfPresent();
 }
 
 export async function watchVercelRoutesManifest({ signal, timeoutMs = 120000 } = {}) {
@@ -65,8 +17,6 @@ export async function watchVercelRoutesManifest({ signal, timeoutMs = 120000 } =
   let copiedRoutesManifest = false;
 
   while (!signal?.aborted && Date.now() - startedAt < timeoutMs) {
-    await mirrorNextOutputIfPresent();
-
     try {
       await access(source, constants.F_OK);
       await ensureVercelRoutesManifest();

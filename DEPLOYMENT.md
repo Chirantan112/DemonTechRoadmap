@@ -38,9 +38,9 @@ The actual build process inside `project/package.json` uses a custom script:
 This script (`project/scripts/build-for-vercel.mjs` and `project/scripts/ensure-vercel-routes-manifest.mjs`):
 1. Runs `next build --webpack` from the project directory.
 2. Watches for and ensures `routes-manifest.json` is correctly generated.
-3. Mirrors the `.next` output from `project/.next` to the repo root `.next`.
+3. Keeps the generated `.next` output inside `project/.next` so Vercel traces runtime dependencies from the same app directory where dependencies are installed.
 
-**Warning for Contributors:** Do NOT remove or modify `project/scripts/build-for-vercel.mjs` or `project/scripts/ensure-vercel-routes-manifest.mjs` without testing a full Vercel deployment first. These scripts handle critical manifest mirroring that Vercel needs to deploy the application successfully. 
+**Warning for Contributors:** Do NOT remove or modify `project/scripts/build-for-vercel.mjs` or `project/scripts/ensure-vercel-routes-manifest.mjs` without testing a full Vercel deployment first. These scripts handle the manifest generation check that Vercel needs to deploy the application successfully.
 
 ## Local Production Build
 
