@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth, loginWithGithub, logout, syncProgressToCloud, getCloudProgress } from "@/src/lib/firebase";
+import { auth, loginWithGithub, logout, getCloudProgress } from "@/src/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 
 export default function AuthButton() {
@@ -10,6 +10,7 @@ export default function AuthButton() {
   const [isMocked, setIsMocked] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsClient(true);
     if (auth) {
       const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -34,7 +35,7 @@ export default function AuthButton() {
 
   const handleLogin = async () => {
     try {
-      const res = await loginWithGithub();
+      await loginWithGithub();
       if (!auth) {
         setIsMocked(true); // Mock user for demo if Firebase is not configured
       }

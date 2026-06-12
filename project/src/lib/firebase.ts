@@ -40,7 +40,7 @@ export async function logout() {
   return signOut(auth);
 }
 
-export async function syncProgressToCloud(uid: string, localProgress: Record<string, any>) {
+export async function syncProgressToCloud(uid: string, localProgress: Record<string, unknown>) {
   if (!db) return;
   try {
     const userRef = doc(db, "users", uid);
