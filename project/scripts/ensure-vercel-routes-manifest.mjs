@@ -1,14 +1,26 @@
-import { copyFile, access } from "node:fs/promises";
+import { copyFile, access, mkdir } from "node:fs/promises";
 import { constants } from "node:fs";
 
 const source = new URL("../.next/routes-manifest.json", import.meta.url);
 const target = new URL("../.next/routes-manifest-deterministic.json", import.meta.url);
+const rootNextDir = new URL("../../.next", import.meta.url);
+const rootSource = new URL("../../.next/routes-manifest.json", import.meta.url);
+const rootTarget = new URL("../../.next/routes-manifest-deterministic.json", import.meta.url);
 
 export async function ensureVercelRoutesManifest() {
   try {
     await access(target, constants.F_OK);
   } catch {
     await copyFile(source, target);
+  }
+
+  // Also copy to root .next directory for Vercel's build environment
+  try {
+    await mkdir(rootNextDir, { recursive: true });
+    await copyFile(source, rootSource);
+    await copyFile(source, rootTarget);
+  } catch (err) {
+    console.error("Failed to copy routes manifest to root .next directory:", err);
   }
 }
 
