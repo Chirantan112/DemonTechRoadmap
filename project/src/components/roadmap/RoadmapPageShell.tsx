@@ -126,7 +126,6 @@ export const roadmapLinks = [
   { title: "Data Scientist Roadmap", href: "/roadmaps/data-scientist", detail: "Python, statistics, ML, deep learning, MLOps, GenAI" },
   { title: "Mobile Developer Roadmap", href: "/roadmaps/mobile-developer", detail: "Android, iOS, Flutter, React Native, app release systems" },
   { title: "JavaScript Roadmap", href: "/roadmaps/javascript", detail: "Language fundamentals, DOM, async, modules, patterns" },
-  { title: "TypeScript Roadmap", href: "/roadmaps/typescript", detail: "Types, interfaces, generics, architecture, tooling" },
   { title: "React Roadmap", href: "/roadmaps/react", detail: "Components, hooks, state, routing, app architecture" },
   { title: "Next.js Roadmap", href: "/roadmaps/nextjs", detail: "App Router, layouts, rendering, APIs, deployment" },
   { title: "Git Roadmap", href: "/roadmaps/git", detail: "Commits, branches, remotes, recovery, collaboration" },
@@ -1420,7 +1419,7 @@ export function ProgressDashboard({
             <Icon className="h-6 w-6" name="flame" />
           </span>
           <div>
-            <p className="text-2xl font-black text-white">5 days</p>
+            <p className="text-2xl font-black text-white">{completedCount > 0 ? Math.min(7, Math.max(1, Math.ceil(completedCount / 4))) : 0} days</p>
             <p className="text-sm text-zinc-500">current streak</p>
           </div>
         </div>
@@ -1479,16 +1478,7 @@ export function ProgressDashboard({
           ))}
         </div>
       </SidebarPanel>
-      <SidebarPanel title={missingTitle}>
-        <ul className="mt-4 space-y-3 text-sm leading-6 text-zinc-400">
-          {missingTopics.map((topic) => (
-            <li className="flex gap-3" key={topic}>
-              <Icon className="mt-0.5 h-4 w-4 shrink-0 text-red-400" name="check" />
-              {topic}
-            </li>
-          ))}
-        </ul>
-      </SidebarPanel>
+
       <div className="print:hidden">
         <ActivityGraph />
       </div>

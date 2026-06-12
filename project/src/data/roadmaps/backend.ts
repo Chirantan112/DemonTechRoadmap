@@ -3,22 +3,22 @@ import type { ReadinessMetric, RoadmapNode, RoadmapPageShellProps, StageSummary,
 const stageSummaries: StageSummary[] = [
   {
     stage: "Beginner",
-    duration: "10-14 weeks",
+    duration: "12 weeks",
     outcome: "Understand the web, choose a language, use Git, and manage dependencies.",
   },
   {
     stage: "Intermediate",
-    duration: "18-24 weeks",
+    duration: "30 weeks",
     outcome: "Design APIs, use databases, authenticate users, cache data, and process background work.",
   },
   {
     stage: "Advanced",
-    duration: "16-22 weeks",
+    duration: "27 weeks",
     outcome: "Design scalable systems, architecture boundaries, observability, security, testing, and DevOps flows.",
   },
   {
     stage: "Expert",
-    duration: "18-28 weeks",
+    duration: "27 weeks",
     outcome: "Run cloud-native, resilient, cost-aware distributed systems in production.",
   },
 ];
@@ -37,6 +37,7 @@ const roadmapNodes: RoadmapNode[] = [
     resources: [
       { label: "MDN: How the Web works", href: "https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/How_does_the_Internet_work", category: "Official Docs" },
       { label: "Cloudflare Learning Center", href: "https://www.cloudflare.com/learning/", category: "Official Docs" },
+      { label: "Hussein Nasser: Network Engineering", href: "https://www.youtube.com/watch?v=RMBHQqiYRWA", category: "Video" },
       { label: "HTTP Cats", href: "https://http.cat/", category: "Practice" },
     ],
     practiceExercises: ["Trace a DNS lookup with a command-line tool.", "Inspect request headers in browser devtools.", "Draw a client-server request lifecycle."],
@@ -137,6 +138,7 @@ const roadmapNodes: RoadmapNode[] = [
     resources: [
       { label: "PostgreSQL docs", href: "https://www.postgresql.org/docs/", category: "Official Docs" },
       { label: "SQLBolt", href: "https://sqlbolt.com/", category: "Practice" },
+      { label: "Hussein Nasser: Database Engineering", href: "https://www.youtube.com/watch?v=52A2Xl8n02Y", category: "Video" },
       { label: "Use The Index, Luke", href: "https://use-the-index-luke.com/", category: "Community" },
     ],
     practiceExercises: ["Design normalized tables for a blog.", "Write joins and aggregations.", "Use EXPLAIN on a slow query."],
@@ -177,6 +179,7 @@ const roadmapNodes: RoadmapNode[] = [
     resources: [
       { label: "OpenAPI specification", href: "https://spec.openapis.org/oas/latest.html", category: "Official Docs" },
       { label: "GraphQL Learn", href: "https://graphql.org/learn/", category: "Official Docs" },
+      { label: "Fireship: APIs for Beginners", href: "https://www.youtube.com/watch?v=-MTSQjw5DrM", category: "Video" },
       { label: "gRPC docs", href: "https://grpc.io/docs/", category: "Official Docs" },
     ],
     practiceExercises: ["Design endpoints for a notes app.", "Write OpenAPI documentation.", "Add validation and structured errors."],
@@ -397,6 +400,7 @@ const roadmapNodes: RoadmapNode[] = [
     resources: [
       { label: "Docker docs", href: "https://docs.docker.com/", category: "Official Docs" },
       { label: "GitHub Actions docs", href: "https://docs.github.com/en/actions", category: "Official Docs" },
+      { label: "TechWorld with Nana: DevOps Crash Course", href: "https://www.youtube.com/watch?v=hQcFE0RD0cQ", category: "Video" },
       { label: "Linux Journey", href: "https://linuxjourney.com/", category: "Practice" },
     ],
     practiceExercises: ["Write a Dockerfile.", "Create a GitHub Actions build pipeline.", "Use Bash to automate local setup."],
@@ -541,7 +545,7 @@ export const backendRoadmap = {
   eyebrow: "Production Backend Engineering Path",
   title: "Backend Developer Roadmap",
   description: "A complete server-side learning journey from internet fundamentals to distributed systems, cloud platforms, security, observability, and production engineering.",
-  stats: [["24", "Roadmap nodes", "layers"], ["46-68 weeks", "Total duration", "clock"], ["96+", "Skills tracked", "badge"], ["12", "Project builds", "target"]],
+  stats: [["24", "Roadmap nodes", "layers"], ["96 weeks", "Total duration", "clock"], ["96+", "Skills tracked", "badge"], ["12", "Project builds", "target"]],
   architectureLabel: "Level Architecture",
   projectIntro: "Every level ends with shippable backend systems that combine APIs, persistence, auth, reliability, and deployment skills.",
   journeyTitle: "Vertical Backend Journey",
@@ -550,7 +554,7 @@ export const backendRoadmap = {
   progressTitle: "Backend Progress",
   readinessTitle: "Backend Readiness",
   missingTitle: "Missing Backend Topics Added",
-  estimatedTime: "46-68w",
+  estimatedTime: "96w",
   miniProjectLabel: "Mini Project",
   stageSummaries: stageSummaries,
   roadmapNodes: roadmapNodes,

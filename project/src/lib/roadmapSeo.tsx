@@ -11,7 +11,7 @@ type RoadmapSeo = {
   topics: string[];
 };
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://demon-tech-roadmap.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://demontech-roadmap.vercel.app";
 const ogImage = "/roadmap-journey-bg.png";
 
 export const roadmapSeo: Record<string, RoadmapSeo> = {

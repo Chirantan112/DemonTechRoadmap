@@ -23,7 +23,7 @@ type RoadmapCard = {
   nodeCount: number;
   storageKey?: string;
   curatedProgress: number;
-  updated: string;
+
   status: "Recommended" | "Recently Updated" | "Popular" | "Core";
   tags: string[];
   href: string;
@@ -72,7 +72,7 @@ const roadmapCards: RoadmapCard[] = [
     nodeCount: 24,
     storageKey: "demontech-frontend-roadmap-completed",
     curatedProgress: 92,
-    updated: "Today",
+
     status: "Recommended",
     tags: ["HTML", "CSS", "React", "Next.js", "+8"],
     href: "/roadmaps/frontend-developer",
@@ -86,7 +86,7 @@ const roadmapCards: RoadmapCard[] = [
     skillLevel: "Beginner",
     nodeCount: 12,
     curatedProgress: 80,
-    updated: "This week",
+
     status: "Core",
     tags: ["Git", "Branches", "Remotes", "PRs", "+5"],
     href: "/roadmaps/git",
@@ -100,7 +100,7 @@ const roadmapCards: RoadmapCard[] = [
     skillLevel: "Beginner",
     nodeCount: 16,
     curatedProgress: 88,
-    updated: "This week",
+
     status: "Popular",
     tags: ["Python", "OOP", "Async", "Testing", "+5"],
     href: "/roadmaps/python",
@@ -115,7 +115,7 @@ const roadmapCards: RoadmapCard[] = [
     nodeCount: 24,
     storageKey: "demontech-backend-roadmap-completed",
     curatedProgress: 94,
-    updated: "Today",
+
     status: "Recently Updated",
     tags: ["APIs", "SQL", "Auth", "Cloud", "+10"],
     href: "/roadmaps/backend-developer",
@@ -130,7 +130,7 @@ const roadmapCards: RoadmapCard[] = [
     nodeCount: 33,
     storageKey: "demontech-full-stack-roadmap-completed",
     curatedProgress: 90,
-    updated: "Today",
+
     status: "Popular",
     tags: ["React", "Next.js", "Node.js", "Cloud", "+12"],
     href: "/roadmaps/full-stack-developer",
@@ -145,7 +145,7 @@ const roadmapCards: RoadmapCard[] = [
     nodeCount: 29,
     storageKey: "demontech-devops-roadmap-completed",
     curatedProgress: 88,
-    updated: "Today",
+
     status: "Recently Updated",
     tags: ["Linux", "CI/CD", "Docker", "Kubernetes", "+10"],
     href: "/roadmaps/devops-engineer",
@@ -160,7 +160,7 @@ const roadmapCards: RoadmapCard[] = [
     nodeCount: 32,
     storageKey: "demontech-data-scientist-roadmap-completed",
     curatedProgress: 86,
-    updated: "Today",
+
     status: "Recently Updated",
     tags: ["Python", "Pandas", "ML", "GenAI", "+12"],
     href: "/roadmaps/data-scientist",
@@ -175,7 +175,7 @@ const roadmapCards: RoadmapCard[] = [
     nodeCount: 33,
     storageKey: "demontech-mobile-roadmap-completed",
     curatedProgress: 84,
-    updated: "Today",
+
     status: "Recommended",
     tags: ["Android", "iOS", "Flutter", "React Native", "+10"],
     href: "/roadmaps/mobile-developer",
@@ -497,7 +497,7 @@ export default function AllRoadmaps() {
   );
   const filteredRoadmaps = roadmapCardsWithProgress.filter((roadmap) => {
     const query = searchQuery.trim().toLowerCase();
-    const searchable = [roadmap.title, roadmap.detail, roadmap.category, roadmap.skillLevel, roadmap.level, roadmap.updated, roadmap.status, ...roadmap.tags].join(" ").toLowerCase();
+    const searchable = [roadmap.title, roadmap.detail, roadmap.category, roadmap.skillLevel, roadmap.level, roadmap.status, ...roadmap.tags].join(" ").toLowerCase();
     const isStartedOrBookmarked = roadmap.completed > 0 || roadmap.bookmarks > 0;
 
     return (
@@ -517,7 +517,7 @@ export default function AllRoadmaps() {
         return (order[a.skillLevel] || 99) - (order[b.skillLevel] || 99);
       }
       case "Recently Updated":
-        return new Date(b.updated || "").getTime() - new Date(a.updated || "").getTime();
+        return 0; // Removing recently updated sort logic
       case "Default":
       default:
         return 0;
@@ -747,7 +747,7 @@ export default function AllRoadmaps() {
                 eyebrow="Recently Updated"
                 href={recentlyUpdatedRoadmap.href}
                 icon="refresh"
-                metric={recentlyUpdatedRoadmap.updated}
+                metric=""
                 title={recentlyUpdatedRoadmap.title}
                 detail={recentlyUpdatedRoadmap.detail}
               />
@@ -811,7 +811,7 @@ export default function AllRoadmaps() {
                       </>
                     )}
                     <span className="h-4 w-px bg-[var(--border)]" />
-                    <span>{roadmap.updated}</span>
+
                   </div>
 
                   <div className="mt-5 flex items-center gap-4">

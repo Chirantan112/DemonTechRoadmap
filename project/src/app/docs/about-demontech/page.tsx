@@ -46,10 +46,10 @@ const sidebarGroups: SidebarGroup[] = [
 ];
 
 const stats = [
-  ["100K+", "Developers Trust Us", "users"],
-  ["150+", "Roadmaps & Guides", "book-open"],
-  ["500+", "Learning Resources", "file-text"],
-  ["Open Source", "Community Driven", "code"],
+  ["8", "Core Tech Tracks", "users"],
+  ["150+", "Topics & Projects", "book-open"],
+  ["100%", "Free & Open Source", "file-text"],
+  ["Community", "Driven Platform", "code"],
 ];
 
 const purpose = [
@@ -59,7 +59,7 @@ const purpose = [
 ];
 
 const timeline = [
-  ["2023", "DemonTech Roadmap was founded.", "flag"],
+  ["2024", "DemonTech Roadmap was founded.", "flag"],
   ["Built with heart", "Passion, late nights, and countless coffees.", "heart"],
   ["Open Source", "Because knowledge should be free.", "code"],
   ["Growing Together", "A global community of learners and builders.", "users"],
@@ -353,7 +353,7 @@ export default function AboutDemonTech() {
             </section>
 
             <footer className="mt-10 flex flex-col gap-5 border-t border-[var(--border)] py-7 text-sm text-[var(--text-muted)] sm:flex-row sm:items-center sm:justify-between">
-              <p>© 2024 DemonTech. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} DemonTech. All rights reserved.</p>
               <div className="flex flex-wrap gap-6">
                 <a className="transition hover:text-red-500" href="https://github.com/Demon-Die/DemonTechRoadmap" rel="noreferrer" target="_blank">GitHub</a>
                 <a className="transition hover:text-red-500" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">Discord</a>

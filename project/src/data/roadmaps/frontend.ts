@@ -73,6 +73,7 @@ const frontendNodes: FrontendRoadmapNode[] = [
     resources: [
       { label: "MDN HTML", href: "https://developer.mozilla.org/en-US/docs/Web/HTML", category: "Official documentation" },
       { label: "web.dev: Learn HTML", href: "https://web.dev/learn/html", category: "Official documentation" },
+      { label: "Kevin Powell: HTML & CSS Crash Course", href: "https://www.youtube.com/watch?v=kUMe1FH4CGY", category: "Video resources" },
       { label: "freeCodeCamp HTML course", href: "https://www.freecodecamp.org/learn/2022/responsive-web-design/", category: "Interactive practice" },
     ],
     practiceTasks: ["Build a semantic resume page.", "Create a validated contact form.", "Mark up a blog article with headings, landmarks, and metadata."],
@@ -90,6 +91,7 @@ const frontendNodes: FrontendRoadmapNode[] = [
     resources: [
       { label: "MDN CSS", href: "https://developer.mozilla.org/en-US/docs/Web/CSS", category: "Official documentation" },
       { label: "web.dev: Learn CSS", href: "https://web.dev/learn/css", category: "Official documentation" },
+      { label: "Kevin Powell: CSS Basics", href: "https://www.youtube.com/watch?v=1PnVor36_40", category: "Video resources" },
       { label: "CSS Diner", href: "https://flukeout.github.io/", category: "Interactive practice" },
     ],
     practiceTasks: ["Recreate a landing page screenshot.", "Build reusable button and card styles.", "Create a consistent spacing and color system."],
@@ -193,6 +195,7 @@ const frontendNodes: FrontendRoadmapNode[] = [
     resources: [
       { label: "MDN JavaScript", href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript", category: "Official documentation" },
       { label: "Eloquent JavaScript (free book)", href: "https://eloquentjavascript.net/", category: "Community resources" },
+      { label: "Fireship: JavaScript in 100 Seconds", href: "https://www.youtube.com/watch?v=DHjqpvDnNGE", category: "Video resources" },
       { label: "JavaScript.info", href: "https://javascript.info/", category: "Interactive practice" },
     ],
     practiceTasks: ["Build a form validator.", "Fetch and render API data.", "Handle loading, success, and error states."],
@@ -208,8 +211,7 @@ const frontendNodes: FrontendRoadmapNode[] = [
     prerequisites: ["JavaScript"],
     keyConcepts: ["Primitive types", "Interfaces", "Union types", "Generics", "Utility types", "Strict mode"],
     resources: [
-      { label: "TypeScript handbook", href: "https://www.typescriptlang.org/docs/", category: "Official documentation" },
-      { label: "TypeScript roadmap", href: "/roadmaps/typescript", category: "Community resources" },
+      { label: "TypeScript documentation", href: "https://www.typescriptlang.org/docs/", category: "Official documentation" },
       { label: "TypeScript playground", href: "https://www.typescriptlang.org/play", category: "Interactive practice" },
     ],
     practiceTasks: ["Type API responses.", "Create reusable generic utilities.", "Convert a JavaScript app to TypeScript strict mode."],
@@ -278,6 +280,7 @@ const frontendNodes: FrontendRoadmapNode[] = [
     resources: [
       { label: "React documentation", href: "https://react.dev/", category: "Official documentation" },
       { label: "React roadmap", href: "/roadmaps/react", category: "Community resources" },
+      { label: "Traversy Media: React Crash Course", href: "https://www.youtube.com/watch?v=w7ejDZ8SWv8", category: "Video resources" },
       { label: "React challenges", href: "https://react.dev/learn", category: "Interactive practice" },
     ],
     practiceTasks: ["Create reusable components.", "Manage forms and validation.", "Build loading, empty, and error states."],

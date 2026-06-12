@@ -12,7 +12,6 @@ type SidebarGroup = {
 };
 type QuestionCategory = {
   title: string;
-  count: string;
   icon: string;
   active?: boolean;
 };
@@ -50,12 +49,11 @@ const sidebarGroups: SidebarGroup[] = [
 ];
 
 const categories: QuestionCategory[] = [
-  { title: "All Questions", count: "128 Questions", icon: "message", active: true },
-  { title: "Getting Started", count: "18 Questions", icon: "rocket" },
-  { title: "Roadmaps", count: "24 Questions", icon: "book" },
-  { title: "Learning", count: "28 Questions", icon: "book-open" },
-  { title: "Account & Billing", count: "16 Questions", icon: "user" },
-  { title: "Community", count: "22 Questions", icon: "users" },
+  { title: "All Questions", icon: "message", active: true },
+  { title: "Getting Started", icon: "rocket" },
+  { title: "Roadmaps", icon: "book" },
+  { title: "Learning", icon: "book-open" },
+  { title: "Community", icon: "users" },
 ];
 
 const questions = [
@@ -73,18 +71,18 @@ const questions = [
 ];
 
 const topQuestions = [
-  ["What is a roadmap and how does it help me?", "324 views"],
-  ["How do I choose the right roadmap for me?", "276 views"],
-  ["Are the roadmaps free?", "198 views"],
-  ["How often are the roadmaps updated?", "156 views"],
-  ["What if I get stuck while learning?", "132 views"],
+  "What is a roadmap and how does it help me?",
+  "How do I choose the right roadmap for me?",
+  "Are the roadmaps free?",
+  "How often are the roadmaps updated?",
+  "What if I get stuck while learning?",
 ];
 
 const helpTopics = [
-  ["Getting Started Guide", "New here? Start with the basics.", "book"],
-  ["How Roadmaps Work", "Understand the structure and flow.", "home"],
-  ["Learning Tips", "Proven tips to learn faster and smarter.", "target"],
-  ["Community Rules", "Guidelines for a positive and helpful community.", "shield"],
+  ["Getting Started Guide", "New here? Start with the basics.", "book", "/docs/quick-start"],
+  ["How Roadmaps Work", "Understand the structure and flow.", "home", "/docs/how-roadmaps-work"],
+  ["Learning Tips", "Proven tips to learn faster and smarter.", "target", "/docs/study-guide"],
+  ["Community Rules", "Guidelines for a positive and helpful community.", "shield", "/docs/best-practices"],
 ];
 
 const iconPaths: Record<string, ReactNode> = {
@@ -282,10 +280,10 @@ export default function CommonQuestions() {
                   Ask in Community
                   <Icon className="h-4 w-4" name="external" />
                 </a>
-                <a className="mt-5 flex items-center gap-2 text-sm font-black text-red-500" href="#">
-                  Contact Support
+                <Link className="mt-5 flex items-center gap-2 text-sm font-black text-red-500" href="/docs/contributing">
+                  Contribute to Roadmaps
                   <Icon className="h-4 w-4" name="chevron" />
-                </a>
+                </Link>
               </aside>
             </section>
 
@@ -299,11 +297,10 @@ export default function CommonQuestions() {
             <section className="mt-6">
               <h2 className="text-lg font-black text-[var(--text-primary)]">Browse by Category</h2>
               <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
-                {categories.map(({ title, count, icon, active }) => (
+                {categories.map(({ title, icon, active }) => (
                   <article className={`rounded-lg border p-5 transition ${active ? "border-red-500 bg-red-950/15" : "border-[var(--border)] bg-[var(--panel-strong)] hover:border-red-500/45"}`} key={title}>
                     <Icon className={`h-8 w-8 ${active ? "text-red-500" : "text-[var(--text-primary)]"}`} name={icon} />
                     <h3 className="mt-5 text-sm font-black text-[var(--text-primary)]">{title}</h3>
-                    <p className="mt-2 text-sm text-[var(--text-muted)]">{count}</p>
                   </article>
                 ))}
               </div>
@@ -312,7 +309,7 @@ export default function CommonQuestions() {
             <section className="mt-6 grid gap-5 xl:grid-cols-[1fr_240px]">
               <div>
                 <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
-                  <h2 className="text-lg font-black text-[var(--text-primary)]">All Questions (128)</h2>
+                  <h2 className="text-lg font-black text-[var(--text-primary)]">All Questions ({questions.length})</h2>
                   <label className="flex h-11 items-center gap-3 text-sm text-[var(--text-muted)]">
                     Sort by:
                     <button className="flex h-11 items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-4 font-bold text-[var(--text-primary)]" type="button">
@@ -344,14 +341,12 @@ export default function CommonQuestions() {
                           </p>
                           <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-[var(--text-muted)]">
                             <span>Was this helpful?</span>
-                            <span className="flex items-center gap-2">
+                            <button className="flex items-center gap-2 hover:text-red-500 transition">
                               <Icon className="h-4 w-4" name="thumbsUp" />
-                              324
-                            </span>
-                            <span className="flex items-center gap-2">
+                            </button>
+                            <button className="flex items-center gap-2 hover:text-red-500 transition">
                               <Icon className="h-4 w-4" name="thumbsDown" />
-                              18
-                            </span>
+                            </button>
                           </div>
                         </div>
                       )}
@@ -391,17 +386,12 @@ export default function CommonQuestions() {
                 <section className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5">
                   <h2 className="text-lg font-black text-[var(--text-primary)]">Top Questions</h2>
                   <div className="mt-5 space-y-5">
-                    {topQuestions.map(([question, views]) => (
-                      <a className="block text-sm leading-6 text-[var(--text-primary)]" href="#" key={question}>
+                    {topQuestions.map((question) => (
+                      <div className="block text-sm leading-6 text-[var(--text-primary)]" key={question}>
                         {question}
-                        <span className="mt-1 block font-black text-red-500">{views}</span>
-                      </a>
+                      </div>
                     ))}
                   </div>
-                  <a className="mt-6 flex h-11 items-center justify-center gap-2 rounded-md border border-[var(--border)] text-sm font-black text-[var(--text-primary)] transition hover:border-red-500 hover:text-red-500" href="#">
-                    View All Popular
-                    <Icon className="h-4 w-4" name="chevron" />
-                  </a>
                 </section>
 
                 <section className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5">
@@ -415,9 +405,9 @@ export default function CommonQuestions() {
                     </div>
                     <Icon className="h-12 w-12 shrink-0 text-[var(--border)]" name="headset" />
                   </div>
-                  <a className="mt-6 flex h-11 items-center justify-center gap-2 rounded-md border border-red-500/45 px-4 text-sm font-black text-[var(--text-primary)] transition hover:bg-red-500 hover:text-white" href="#">
-                    Contact Support
-                    <Icon className="h-4 w-4 text-red-500" name="chevron" />
+                  <a className="mt-6 flex h-11 items-center justify-center gap-2 rounded-md border border-red-500/45 px-4 text-sm font-black text-[var(--text-primary)] transition hover:bg-red-500 hover:text-white" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">
+                    Join Discord
+                    <Icon className="h-4 w-4 text-red-500" name="discord" />
                   </a>
                 </section>
               </aside>
@@ -434,17 +424,17 @@ export default function CommonQuestions() {
                 </div>
               </div>
               <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                {helpTopics.map(([title, detail, icon]) => (
+                {helpTopics.map(([title, detail, icon, href]) => (
                   <article className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5" key={title}>
                     <span className="grid h-11 w-11 place-items-center rounded-md border border-red-500/20 bg-red-950/25 text-red-500">
                       <Icon className="h-6 w-6" name={icon} />
                     </span>
                     <h3 className="mt-4 text-sm font-black text-[var(--text-primary)]">{title}</h3>
                     <p className="mt-2 min-h-[44px] text-sm leading-6 text-[var(--text-secondary)]">{detail}</p>
-                    <a className="mt-4 flex items-center gap-2 text-sm font-black text-red-500" href="#">
+                    <Link className="mt-4 flex items-center gap-2 text-sm font-black text-red-500" href={href}>
                       Read Guide
                       <Icon className="h-4 w-4" name="chevron" />
-                    </a>
+                    </Link>
                   </article>
                 ))}
               </div>

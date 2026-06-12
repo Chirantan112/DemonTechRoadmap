@@ -1,30 +1,62 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 
 /**
  * ActivityGraph component.
  * Renders a GitHub-style contribution graph based on completed nodes over time.
- * For now, this is a visual placeholder showing "Weekly Activity".
+ * For now, this uses total completed items from localStorage to generate a deterministic graph.
  */
 export default function ActivityGraph() {
   const weeks = 52;
   const daysPerWeek = 7;
 
-  // Generate mock contribution data
+  const [completedCount, setCompletedCount] = useState(0);
+
+  useEffect(() => {
+    let count = 0;
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i);
+      if (key && key.endsWith("-completed")) {
+        try {
+          const arr = JSON.parse(window.localStorage.getItem(key) || "[]");
+          if (Array.isArray(arr)) {
+            count += arr.length;
+          }
+        } catch (e) {}
+      }
+    }
+    setCompletedCount(count);
+  }, []);
+
+  // Generate deterministic contribution data based on completedCount
   const grid = useMemo(() => {
     const data = [];
+    let remaining = completedCount;
+    
+    // Create an empty grid
     for (let i = 0; i < weeks; i++) {
       const week = [];
       for (let j = 0; j < daysPerWeek; j++) {
-        // Randomly assign activity levels 0-4 for visual effect
-        const level = Math.random() > 0.8 ? Math.floor(Math.random() * 4) + 1 : 0;
-        week.push(level);
+        week.push(0);
       }
       data.push(week);
     }
+    
+    // Fill backwards from the most recent day
+    for (let i = weeks - 1; i >= 0 && remaining > 0; i--) {
+      for (let j = 6; j >= 0 && remaining > 0; j--) {
+        // Pseudo-random but deterministic spread based on index
+        if ((i + j) % 3 === 0 || i > weeks - 3) {
+          const level = Math.min(4, remaining, Math.floor((i * j) % 3) + 1);
+          data[i][j] = level;
+          remaining -= level;
+        }
+      }
+    }
+    
     return data;
-  }, []);
+  }, [completedCount]);
 
   const getColor = (level: number) => {
     switch (level) {

@@ -93,7 +93,7 @@ export function TopicDetailPageShell({ currentIndex, nextNode, previousNode, roa
     category,
     resources: topic.resources.filter((resource) => resource.category === category),
   }));
-  const quizItems = topic.quiz ? [topic.quiz, "Explain the answer with one real-world example.", "List one mistake a beginner might make here."] : ["Write three review questions for this topic.", "Answer each question without checking notes.", "Document one follow-up question to research."];
+  const quizItems = topic.quiz ? [topic.quiz, "Explain the answer with one real-world example.", "List one mistake a beginner might make here."] : [`What is the primary purpose of ${topic.title}?`, `What are the common alternatives to ${topic.title}?`, `How do you implement ${topic.title} in a production environment?`];
 
   useEffect(() => {
     window.localStorage.setItem(storageKeys.completed, JSON.stringify(Array.from(completedIds)));
@@ -169,15 +169,11 @@ export function TopicDetailPageShell({ currentIndex, nextNode, previousNode, roa
 
           <section className="mt-6 grid gap-5 xl:grid-cols-2">
             <TopicPanel icon="lock" title="Prerequisites" items={topic.prerequisites} />
-            <TopicPanel icon="check" title="Skills You Gain" items={topic.skillsGained} />
+            <TopicPanel icon="check" title="Key Concepts & Skills" items={Array.from(new Set([...topic.topics, ...topic.skillsGained]))} />
           </section>
 
-          <section className="mt-6 rounded-md border border-zinc-800 bg-zinc-950 p-5">
-            <h2 className="text-2xl font-black text-white">Learning Plan</h2>
-            <div className="mt-5 grid gap-5 lg:grid-cols-2">
-              <TopicPanel icon="badge" title="Key Concepts" items={topic.topics} compact />
-              {topic.learningOutcomes?.length ? <TopicPanel icon="target" title="Learning Outcomes" items={topic.learningOutcomes} compact /> : <TopicPanel icon="target" title="Learning Outcomes" items={topic.skillsGained.map((skill) => `Apply ${skill.toLowerCase()} in a project context.`)} compact />}
-            </div>
+          <section className="mt-6 grid gap-5 xl:grid-cols-1">
+            {topic.learningOutcomes?.length ? <TopicPanel icon="target" title="Learning Outcomes" items={topic.learningOutcomes} compact /> : <TopicPanel icon="target" title="Learning Outcomes" items={Array.from(new Set([...topic.topics, ...topic.skillsGained])).map((skill, index) => index % 3 === 0 ? `Understand the core principles of ${skill}` : index % 3 === 1 ? `Configure and deploy ${skill} successfully` : `Troubleshoot common issues with ${skill}`)} compact />}
           </section>
 
           <section className="mt-6 rounded-md border border-zinc-800 bg-zinc-950 p-5">
@@ -271,7 +267,7 @@ export function TopicDetailPageShell({ currentIndex, nextNode, previousNode, roa
           <section className="rounded-md border border-zinc-800 bg-zinc-950 p-5">
             <h2 className="text-sm font-black uppercase text-zinc-500">Real-World Use</h2>
             <ul className="mt-3 space-y-3 text-sm leading-6 text-zinc-300">
-              {(topic.realWorldApplications?.length ? topic.realWorldApplications : ["Portfolio projects", "Interview preparation", "Production engineering judgment"]).map((application) => (
+              {(topic.realWorldApplications?.length ? topic.realWorldApplications : [`Implement ${topic.title} in a portfolio project`, `Discuss ${topic.title} confidently in interviews`, `Apply ${topic.title} in production systems`]).map((application) => (
                 <li className="flex gap-2" key={application}>
                   <Icon className="mt-1 h-4 w-4 shrink-0 text-red-400" name="target" />
                   {application}
