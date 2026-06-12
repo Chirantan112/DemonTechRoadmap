@@ -431,7 +431,7 @@ const frontendNodes: FrontendRoadmapNode[] = [
     resources: [
       { label: "Vercel docs", href: "https://vercel.com/docs", category: "Official documentation" },
       { label: "GitHub Actions docs", href: "https://docs.github.com/en/actions", category: "Official documentation" },
-      { label: "web.dev: Deploying for the web", href: "https://web.dev/learn/performance/why-speed-matters", category: "Official documentation" },
+      { label: "web.dev: Why speed matters", href: "https://web.dev/learn/performance/why-speed-matters", category: "Official documentation" },
     ],
     practiceTasks: ["Create preview deployments.", "Protect production environment variables.", "Add build, lint, and test checks to CI."],
     miniProject: "Deploy a production Next.js app with monitoring and rollback notes.",
@@ -449,7 +449,7 @@ const frontendNodes: FrontendRoadmapNode[] = [
       { label: "web.dev PWA", href: "https://web.dev/learn/pwa/", category: "Official documentation" },
       { label: "OWASP frontend security", href: "https://owasp.org/www-project-top-ten/", category: "Official documentation" },
       { label: "Storybook docs", href: "https://storybook.js.org/docs", category: "Official documentation" },
-      { label: "web.dev: Web Workers overview", href: "https://web.dev/articles/workers-overview", category: "Community resources" },
+      { label: "web.dev: Web Workers overview", href: "https://web.dev/articles/workers-overview", category: "Official documentation" },
     ],
     practiceTasks: ["Create a design system foundation.", "Add realtime updates with WebSockets.", "Document frontend security risks and mitigations."],
     miniProject: "Build a design-system-backed realtime project board.",
