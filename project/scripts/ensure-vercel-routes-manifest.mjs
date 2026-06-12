@@ -1,27 +1,31 @@
-import { copyFile, access, mkdir } from "node:fs/promises";
+import { copyFile, access } from "node:fs/promises";
 import { constants } from "node:fs";
 
-const source = new URL("../.next/routes-manifest.json", import.meta.url);
-const target = new URL("../.next/routes-manifest-deterministic.json", import.meta.url);
+const projectNextDir = new URL("../.next", import.meta.url);
 const rootNextDir = new URL("../../.next", import.meta.url);
-const rootSource = new URL("../../.next/routes-manifest.json", import.meta.url);
-const rootTarget = new URL("../../.next/routes-manifest-deterministic.json", import.meta.url);
 
 export async function ensureVercelRoutesManifest() {
-  try {
-    await access(target, constants.F_OK);
-  } catch {
-    await copyFile(source, target);
-  }
+  const dirs = [projectNextDir, rootNextDir];
+  let succeeded = false;
 
-  // Also copy to root .next directory for Vercel's build environment
-  try {
-    await mkdir(rootNextDir, { recursive: true });
-    await copyFile(source, rootSource);
-    await copyFile(source, rootTarget);
-  } catch (err) {
-    console.error("Failed to copy routes manifest to root .next directory:", err);
+  for (const dir of dirs) {
+    const source = new URL("./routes-manifest.json", dir + "/");
+    const target = new URL("./routes-manifest-deterministic.json", dir + "/");
+
+    try {
+      await access(source, constants.F_OK);
+      try {
+        await access(target, constants.F_OK);
+      } catch {
+        await copyFile(source, target);
+        console.log(`Copied routes-manifest.json to routes-manifest-deterministic.json inside: ${dir.pathname}`);
+      }
+      succeeded = true;
+    } catch {
+      // Not found in this directory, skip
+    }
   }
+  return succeeded;
 }
 
 export async function watchVercelRoutesManifest({ signal, timeoutMs = 120000 } = {}) {
@@ -29,14 +33,10 @@ export async function watchVercelRoutesManifest({ signal, timeoutMs = 120000 } =
   let copiedRoutesManifest = false;
 
   while (!signal?.aborted && Date.now() - startedAt < timeoutMs) {
-    try {
-      await access(source, constants.F_OK);
-      await ensureVercelRoutesManifest();
+    const check = await ensureVercelRoutesManifest();
+    if (check) {
       copiedRoutesManifest = true;
-    } catch {
-      // The file appears late in Next's build. Keep polling until it exists.
     }
-
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
 
@@ -49,5 +49,6 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
     process.exit(copied ? 0 : 1);
   }
 
-  await ensureVercelRoutesManifest();
+  const done = await ensureVercelRoutesManifest();
+  process.exit(done ? 0 : 1);
 }
