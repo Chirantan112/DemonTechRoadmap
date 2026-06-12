@@ -4,7 +4,9 @@ import type { ReactNode } from "react";
 import HomeHeader, { Logo } from "@/src/components/HomeHeader";
 import ContributorLeaderboard from "@/src/components/ContributorLeaderboard";
 import SocialProof from "@/src/components/SocialProof";
+import Testimonials from "@/src/components/Testimonials";
 import RoadmapQuiz from "@/src/components/RoadmapQuiz";
+import NewsletterForm from "@/src/components/NewsletterForm";
 
 const audiences = [
   {
@@ -54,18 +56,18 @@ function Icon({ className = "", name }: { className?: string; name: keyof typeof
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#050505] text-zinc-100">
+    <main id="main-content" className="min-h-screen bg-[#050505] text-zinc-100">
       <HomeHeader />
 
       <section className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden">
         <Image
           alt="Roadmap journey background"
-          className="absolute inset-0 -z-20 h-full w-full object-cover opacity-28"
+          className="absolute inset-0 -z-20 h-full w-full object-cover opacity-20"
           fill
           priority
           src="/roadmap-journey-bg.png"
         />
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#050505_0%,rgba(5,5,5,0.9)_42%,rgba(5,5,5,0.62)_100%)]" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#050505_0%,rgba(5,5,5,0.95)_42%,rgba(5,5,5,0.85)_100%)]" />
         <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-16 lg:grid-cols-[1fr_460px] lg:px-8 lg:py-20">
           <div className="flex max-w-3xl flex-col justify-center">
             <p className="mb-5 inline-flex w-fit rounded-md border border-red-500/35 bg-red-500/10 px-3 py-1 text-sm font-black text-red-300">
@@ -83,7 +85,7 @@ export default function Home() {
                 <Icon className="h-4 w-4" name="arrow" />
               </Link>
               <Link className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-zinc-700 bg-black/35 px-5 text-sm font-black text-white transition hover:border-zinc-500" href="/dashboard">
-                Save Progress
+                Track Progress
                 <Icon className="h-4 w-4" name="lock" />
               </Link>
             </div>
@@ -106,13 +108,11 @@ export default function Home() {
                     <h3 className="font-black text-white">{roadmap.title}</h3>
                     <Icon className="h-4 w-4 text-red-400" name="arrow" />
                   </div>
-                  <div className="mt-4 grid grid-cols-5 items-center gap-2">
+                  <div className="mt-5 flex items-center justify-between relative">
+                    <div className="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-zinc-800" />
                     {roadmap.steps.map((step, index) => (
-                      <div className="contents" key={step}>
-                        <span className="grid min-h-10 place-items-center rounded-md border border-zinc-700 bg-zinc-900 px-2 text-center text-[11px] font-bold text-zinc-200">
-                          {step}
-                        </span>
-                        {index < roadmap.steps.length - 1 ? null : null}
+                      <div className="relative z-10 grid h-8 px-2 place-items-center rounded-md border-2 border-zinc-700 bg-black text-center text-[10px] font-bold text-zinc-300 shadow-sm" key={step}>
+                        {step}
                       </div>
                     ))}
                   </div>
@@ -153,6 +153,8 @@ export default function Home() {
         </div>
       </section>
 
+      <Testimonials />
+
       <section className="px-5 py-16 lg:px-8">
         <div className="mx-auto grid max-w-[1280px] gap-8 lg:grid-cols-2">
           <div className="rounded-lg border border-zinc-800 bg-[#090909] p-6">
@@ -167,22 +169,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <form className="rounded-lg border border-zinc-800 bg-[#090909] p-6">
-            <Icon className="h-8 w-8 text-amber-300" name="mail" />
-            <h2 className="mt-5 text-2xl font-black text-white">Get notified when new roadmaps drop</h2>
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <label className="sr-only" htmlFor="newsletter-email">Email address</label>
-              <input
-                className="h-11 min-w-0 flex-1 rounded-md border border-zinc-800 bg-black px-4 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-red-500"
-                id="newsletter-email"
-                placeholder="you@example.com"
-                type="email"
-              />
-              <button className="h-11 rounded-md bg-red-500 px-5 text-sm font-black text-white transition hover:bg-red-400" type="submit">
-                Notify Me
-              </button>
-            </div>
-          </form>
+          <NewsletterForm />
         </div>
       </section>
 
@@ -200,9 +187,11 @@ export default function Home() {
           <nav className="grid gap-3 text-sm font-bold text-zinc-400 sm:grid-cols-2 md:grid-cols-3">
             <Link className="hover:text-white" href="/docs/about-demontech">About</Link>
             <Link className="hover:text-white" href="https://github.com/Demon-Die/DemonTechRoadmap">GitHub</Link>
+            <Link className="hover:text-white" href="https://github.com/orgs/Demon-Die/projects/1">Public Roadmap</Link>
             <Link className="hover:text-white" href="https://discord.gg/yWtjK2Tb8T">Discord</Link>
             <Link className="hover:text-white" href="/docs/common-questions">Contact</Link>
-            <Link className="hover:text-white" href="/docs/common-questions">Privacy Policy</Link>
+            <Link className="hover:text-white" href="/privacy">Privacy Policy</Link>
+            <Link className="hover:text-white" href="/terms">Terms</Link>
             <Link className="hover:text-white" href="/docs/changelog">Changelog</Link>
           </nav>
         </div>

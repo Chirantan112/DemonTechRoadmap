@@ -43,7 +43,7 @@ const sidebarGroups = [
     title: "Tools",
     items: [
       ["Changelog", "clock", "/docs/changelog"],
-      ["Status", "status", "#"],
+      ["Status", "status", "https://github.com/Demon-Die/DemonTechRoadmap/actions"],
     ],
   },
 ];
@@ -52,82 +52,30 @@ const tabs = ["All Updates", "Features", "Improvements", "Fixes", "Docs", "Other
 
 const updates = [
   {
-    date: "May 18, 2024",
-    version: "v2.3.0",
-    title: "New Features",
-    tag: "Feature",
-    tone: "red",
+    date: "June 12, 2026",
+    version: "v3.0.0",
+    title: "Major Audit Implementation",
+    tag: "Release",
+    tone: "purple",
     icon: "rocket",
     points: [
-      "Added 12 new roadmaps across AI, DevOps, and Cybersecurity",
-      "Introduced Project Ideas section with 50+ real-world projects",
-      "Added search improvements with better filters and suggestions",
+      "Implemented full UI/UX audit feedback",
+      "Fixed SEO meta tags and canonical URLs",
+      "Added testimonials and refined social proof",
     ],
     isNew: true,
   },
   {
-    date: "May 05, 2024",
-    version: "v2.2.1",
-    title: "Improvements",
-    tag: "Improvement",
-    tone: "slate",
-    icon: "spark",
-    points: [
-      "Improved performance across roadmap pages",
-      "Enhanced mobile responsiveness",
-      "Better progress tracking and completion UI",
-    ],
-  },
-  {
-    date: "Apr 22, 2024",
-    version: "v2.2.0",
-    title: "Fixes",
+    date: "June 05, 2026",
+    version: "v2.5.0",
+    title: "Vercel Deployment fixes",
     tag: "Fix",
-    tone: "red",
+    tone: "slate",
     icon: "bug",
     points: [
-      "Fixed issue with roadmap progress not saving",
-      "Resolved broken links in docs and resources",
-      "Fixed dark mode inconsistencies",
-    ],
-  },
-  {
-    date: "Apr 10, 2024",
-    version: "v2.1.0",
-    title: "Documentation",
-    tag: "Docs",
-    tone: "slate",
-    icon: "file-text",
-    points: [
-      "Added Study Guide and Best Practices sections",
-      "Expanded FAQ with 20+ new questions",
-      "Improved documentation structure",
-    ],
-  },
-  {
-    date: "Mar 28, 2024",
-    version: "v2.0.0",
-    title: "Major Update",
-    tag: "Release",
-    tone: "purple",
-    icon: "settings",
-    points: [
-      "Complete UI/UX redesign",
-      "New roadmap layout and navigation",
-      "Faster, cleaner, and more intuitive experience",
-    ],
-  },
-  {
-    date: "Mar 15, 2024",
-    version: "v1.0.0",
-    title: "Initial Release",
-    tag: "Release",
-    tone: "green",
-    icon: "flag",
-    points: [
-      "First public release of DemonTech Roadmap",
-      "50+ roadmaps and learning resources",
-      "Core features and community support",
+      "Fixed workspace dependency installation",
+      "Removed hacky .next folder copying scripts",
+      "Switched to proper Root Directory Vercel deployment",
     ],
   },
 ];
@@ -410,12 +358,12 @@ export default function Changelog() {
           </div>
 
           <footer className="mx-auto mt-6 flex max-w-[1000px] flex-col gap-5 py-4 text-sm text-[var(--text-muted)] sm:flex-row sm:items-center sm:justify-between">
-            <p>© 2024 DemonTech Roadmap. All rights reserved.</p>
+            <p>© 2026 DemonTech Roadmap. All rights reserved.</p>
             <div className="flex flex-wrap gap-6">
               <a className="transition hover:text-red-500" href="https://github.com/Demon-Die/DemonTechRoadmap" rel="noreferrer" target="_blank">GitHub</a>
               <a className="transition hover:text-red-500" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">Discord</a>
-              <a className="transition hover:text-red-500" href="#">Privacy Policy</a>
-              <a className="transition hover:text-red-500" href="#">Terms</a>
+              <a className="transition hover:text-red-500" href="/privacy">Privacy Policy</a>
+              <a className="transition hover:text-red-500" href="/terms">Terms</a>
             </div>
           </footer>
         </section>

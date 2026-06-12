@@ -3,6 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { roadmapSeo } from "@/src/lib/roadmapSeo";
+import RoadmapGraphView from "./RoadmapGraphView";
+import ActivityGraph from "./ActivityGraph";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
@@ -93,6 +96,7 @@ export type RoadmapPageShellProps = {
   achievementBadges: string[];
   missingTopics: string[];
   readinessMetrics: ReadinessMetric[];
+  roadmapTitle?: string;
 };
 
 const icons = {
@@ -111,9 +115,10 @@ const icons = {
   server: <path d="M4 4h16v7H4V4Zm0 11h16v7H4v-7Zm3-7h.01M7 19h.01" />,
   shield: <path d="M12 3 20 6v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3Z" />,
   target: <path d="M21 12a9 9 0 1 1-9-9m6 3 3-3m0 0v5m0-5h-5M15 9l-3 3m3 0a3 3 0 1 1-3-3" />,
+  branch: <path d="M6 3v12" />,
 };
 
-const roadmapLinks = [
+export const roadmapLinks = [
   { title: "Frontend Developer Roadmap", href: "/roadmaps/frontend-developer", detail: "UI engineering, React, Next.js, accessibility, performance" },
   { title: "Backend Developer Roadmap", href: "/roadmaps/backend-developer", detail: "APIs, databases, auth, system design, production engineering" },
   { title: "Full Stack Developer Roadmap", href: "/roadmaps/full-stack-developer", detail: "Frontend, backend, databases, DevOps, cloud, product systems" },
@@ -130,7 +135,7 @@ const roadmapLinks = [
 /**
  * Icon component/function.
  */
-function Icon({ name, className = "" }: { name: keyof typeof icons; className?: string }) {
+export function Icon({ name, className = "" }: { name: keyof typeof icons; className?: string }) {
   return (
     <svg aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" viewBox="0 0 24 24">
       {icons[name]}
@@ -199,15 +204,22 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
   const [completedIds, setCompletedIds] = useState<Set<string>>(() => loadSet(storageKeys.completed));
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => loadSet(storageKeys.bookmarked));
   const [notes, setNotes] = useState<Record<string, string>>(() => loadNotes(storageKeys.notes));
+  const [showFirstBadgeModal, setShowFirstBadgeModal] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState<Stage | "All">("All");
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty | "All">("All");
   const [durationFilter, setDurationFilter] = useState("All");
   const [resourceFilter, setResourceFilter] = useState("All");
+  const [hideCompleted, setHideCompleted] = useState(false);
 
   useEffect(() => {
+    const prevCompletedCount = loadSet(storageKeys.completed).size;
     window.localStorage.setItem(storageKeys.completed, JSON.stringify(Array.from(completedIds)));
+    if (prevCompletedCount === 0 && completedIds.size > 0 && !window.localStorage.getItem(`${storageKeys.completed}-onboarded`)) {
+      setShowFirstBadgeModal(true);
+      window.localStorage.setItem(`${storageKeys.completed}-onboarded`, "true");
+    }
   }, [completedIds, storageKeys.completed]);
 
   useEffect(() => {
@@ -277,7 +289,8 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
       (stageFilter === "All" || node.stage === stageFilter) &&
       (difficultyFilter === "All" || node.difficulty === difficultyFilter) &&
       (durationFilter === "All" || node.duration === durationFilter) &&
-      (resourceFilter === "All" || node.resources.some((resource) => resource.category === resourceFilter))
+      (resourceFilter === "All" || node.resources.some((resource) => resource.category === resourceFilter)) &&
+      (!hideCompleted || !completedIds.has(node.id))
     );
   });
 
@@ -295,6 +308,22 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
 
   return (
     <main className="min-h-screen bg-[#050505] text-zinc-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Course",
+            name: props.title,
+            description: props.description,
+            provider: {
+              "@type": "Organization",
+              name: "DemonTech Roadmap",
+              sameAs: "https://demontech-roadmap.vercel.app",
+            },
+          }),
+        }}
+      />
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,#050505_0%,#090909_48%,#050505_100%)]" />
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(rgba(239,68,68,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(239,68,68,0.04)_1px,transparent_1px)] bg-[size:44px_44px]" />
 
@@ -368,6 +397,8 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
             setStageFilter={setStageFilter}
             stageFilter={stageFilter}
             totalNodeCount={props.roadmapNodes.length}
+            hideCompleted={hideCompleted}
+            setHideCompleted={setHideCompleted}
           />
           <ResourceMatrix title={props.resourceTitle} resourcesByCategory={resourcesByCategory} />
           {props.paths?.length ? <CareerPathPanel title={props.pathTitle ?? "Career Paths"} description={props.pathDescription ?? ""} paths={props.paths} /> : null}
@@ -394,7 +425,28 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
           bookmarkedCount={bookmarkedIds.size}
           progressTitle={props.progressTitle}
           readinessTitle={props.readinessTitle}
+          notes={notes}
+          roadmapTitle={props.roadmapTitle ?? props.title}
         />
+        {showFirstBadgeModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+            <div className="w-full max-w-md rounded-2xl border border-red-500/30 bg-zinc-950 p-8 text-center shadow-[0_0_50px_rgba(239,68,68,0.15)] animate-in fade-in zoom-in duration-300">
+              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-red-500/10 text-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+                <Icon className="h-12 w-12" name="badge" />
+              </div>
+              <h2 className="mt-6 text-3xl font-black text-white">First Step Taken!</h2>
+              <p className="mt-3 text-sm leading-6 text-zinc-400">
+                You've completed your very first topic and unlocked the <span className="font-bold text-red-400">Getting Started</span> achievement. Keep your momentum going and see your roadmap graph light up!
+              </p>
+              <button
+                className="mt-8 w-full rounded-md border border-red-500/40 bg-red-500 px-4 py-3 font-black text-white transition hover:bg-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.4)]"
+                onClick={() => setShowFirstBadgeModal(false)}
+              >
+                Continue Journey
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );
@@ -540,8 +592,11 @@ function RoadmapJourney(props: {
   title: string;
   toggleSet: (setter: (value: Set<string>) => void, current: Set<string>, id: string) => void;
   totalNodeCount: number;
+  hideCompleted: boolean;
+  setHideCompleted: (value: boolean) => void;
 }) {
-  const hasActiveFilters = Boolean(props.searchQuery.trim()) || props.stageFilter !== "All" || props.difficultyFilter !== "All" || props.durationFilter !== "All" || props.resourceFilter !== "All";
+  const [viewMode, setViewMode] = useState<"list" | "graph">("list");
+  const hasActiveFilters = Boolean(props.searchQuery.trim()) || props.stageFilter !== "All" || props.difficultyFilter !== "All" || props.durationFilter !== "All" || props.resourceFilter !== "All" || props.hideCompleted;
 
   return (
     <section className="mt-6">
@@ -550,7 +605,16 @@ function RoadmapJourney(props: {
           <h2 className="text-2xl font-black text-white">{props.title}</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">{props.description}</p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-4">
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-zinc-400 transition hover:text-zinc-300">
+            <input
+              checked={props.hideCompleted}
+              className="h-4 w-4 rounded border-zinc-800 bg-black text-red-500 focus:ring-1 focus:ring-red-500 focus:ring-offset-1 focus:ring-offset-black"
+              onChange={(e) => props.setHideCompleted(e.target.checked)}
+              type="checkbox"
+            />
+            Hide Completed
+          </label>
           {hasActiveFilters ? (
             <button
               className="rounded-md border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-200 transition hover:border-red-500/60"
@@ -560,12 +624,31 @@ function RoadmapJourney(props: {
                 props.setDifficultyFilter("All");
                 props.setDurationFilter("All");
                 props.setResourceFilter("All");
+                props.setHideCompleted(false);
               }}
               type="button"
             >
               Clear Filters
             </button>
           ) : null}
+          <div className="flex rounded-md border border-zinc-800 bg-black p-1">
+            <button
+              className={`flex items-center gap-2 rounded px-3 py-1.5 text-xs font-bold transition ${viewMode === "list" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+              onClick={() => setViewMode("list")}
+              type="button"
+            >
+              <Icon className="h-4 w-4" name="server" />
+              List
+            </button>
+            <button
+              className={`flex items-center gap-2 rounded px-3 py-1.5 text-xs font-bold transition ${viewMode === "graph" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+              onClick={() => setViewMode("graph")}
+              type="button"
+            >
+              <Icon className="h-4 w-4" name="branch" />
+              Graph
+            </button>
+          </div>
           <button className="rounded-md border border-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:border-red-500/60 hover:text-white" onClick={() => props.setCompletedIds(new Set())} type="button">
             Reset Progress
           </button>
@@ -587,9 +670,10 @@ function RoadmapJourney(props: {
         stageFilter={props.stageFilter}
         totalCount={props.totalNodeCount}
       />
-      <div className="relative mt-6 space-y-5">
-        <div className="absolute bottom-8 left-6 top-8 hidden w-px bg-zinc-800 sm:block" />
-        {props.nodes.length ? (
+      {viewMode === "list" ? (
+        <div className="relative mt-6 space-y-5">
+          <div className="absolute bottom-8 left-6 top-8 hidden w-px bg-zinc-800 sm:block" />
+          {props.nodes.length ? (
           props.nodes.map((node, index) => {
             const isNext = node.id === props.nextNodeId;
             return (
@@ -619,7 +703,25 @@ function RoadmapJourney(props: {
             <p className="mt-2 text-sm text-zinc-500">Try a broader search term or clear one of the filters.</p>
           </div>
         )}
-      </div>
+        </div>
+      ) : (
+        <div className="mt-6">
+          <RoadmapGraphView
+            nodes={props.nodes}
+            completedIds={props.completedIds}
+            bookmarkedIds={props.bookmarkedIds}
+            nextNodeId={props.nextNodeId}
+            onNodeClick={(id) => {
+              props.setExpandedNodeId(id);
+              setViewMode("list");
+              setTimeout(() => {
+                const el = document.getElementById(`roadmap-node-${id}`);
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+              }, 100);
+            }}
+          />
+        </div>
+      )}
     </section>
   );
 }
@@ -733,6 +835,11 @@ function CommandPalette({
 }) {
   const router = useRouter();
   const [paletteQuery, setPaletteQuery] = useState(query);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [paletteQuery]);
 
   useEffect(() => {
     if (!open) return;
@@ -829,6 +936,20 @@ function CommandPalette({
             autoFocus
             className="h-11 min-w-0 flex-1 bg-transparent text-base font-bold text-white outline-none placeholder:text-zinc-600"
             onChange={(event) => setPaletteQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                setSelectedIndex((i) => (i + 1) % (visibleResults.length || 1));
+              } else if (event.key === "ArrowUp") {
+                event.preventDefault();
+                setSelectedIndex((i) => (i - 1 + visibleResults.length) % (visibleResults.length || 1));
+              } else if (event.key === "Enter") {
+                event.preventDefault();
+                if (visibleResults[selectedIndex]) {
+                  runResult(visibleResults[selectedIndex]);
+                }
+              }
+            }}
             placeholder="Search roadmaps, topics, resources, difficulty, duration..."
             type="search"
             value={paletteQuery}
@@ -844,15 +965,19 @@ function CommandPalette({
                 <section className="py-2" key={group}>
                   <h2 className="px-2 text-xs font-black uppercase tracking-widest text-zinc-600">{group}</h2>
                   <div className="mt-2 space-y-1">
-                    {results.map((result) => (
-                      <button className="grid w-full gap-1 rounded-md border border-transparent px-3 py-3 text-left transition hover:border-red-500/40 hover:bg-red-500/10" key={result.id} onClick={() => runResult(result)} type="button">
-                        <span className="flex items-center justify-between gap-3">
-                          <span className="font-black text-zinc-100">{result.title}</span>
-                          <span className="rounded border border-zinc-800 px-2 py-1 text-[10px] font-black uppercase text-zinc-500">{result.group}</span>
-                        </span>
-                        <span className="line-clamp-2 text-sm leading-6 text-zinc-500">{result.detail}</span>
-                      </button>
-                    ))}
+                    {results.map((result) => {
+                      const flatIndex = visibleResults.indexOf(result);
+                      const isSelected = flatIndex === selectedIndex;
+                      return (
+                        <button className={`grid w-full gap-1 rounded-md border px-3 py-3 text-left transition ${isSelected ? "border-red-500/40 bg-red-500/10" : "border-transparent hover:border-red-500/40 hover:bg-red-500/10"}`} key={result.id} onClick={() => runResult(result)} type="button">
+                          <span className="flex items-center justify-between gap-3">
+                            <span className="font-black text-zinc-100">{result.title}</span>
+                            <span className="rounded border border-zinc-800 px-2 py-1 text-[10px] font-black uppercase text-zinc-500">{result.group}</span>
+                          </span>
+                          <span className="line-clamp-2 text-sm leading-6 text-zinc-500">{result.detail}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </section>
               ) : null,
@@ -926,7 +1051,7 @@ export function RoadmapNodeCard({
             <span className="mt-2 block max-w-3xl text-sm leading-6 text-zinc-400">{node.description}</span>
           </span>
           <span className="flex items-center gap-3 md:justify-end">
-            <span className={completed ? "text-sm font-bold text-red-300" : isNext ? "text-sm font-black text-red-400" : "text-sm font-bold text-zinc-500"}>{completed ? "Complete" : isNext ? "Up Next" : "In progress"}</span>
+            <span className={completed ? "text-sm font-bold text-red-300" : isNext ? "text-sm font-black text-red-400" : "text-sm font-bold text-zinc-500"}>{completed ? "Complete" : isNext ? "Up Next" : "Not started"}</span>
             <Icon className={`h-5 w-5 text-zinc-500 transition ${expanded ? "rotate-90 text-red-400" : ""}`} name="arrow" />
           </span>
         </button>
@@ -1026,7 +1151,9 @@ function NodeAside({ bookmarked, completed, miniProjectLabel, node, onToggleBook
           <Icon className="h-4 w-4" name="bookmark" />
           {bookmarked ? "Bookmarked" : "Bookmark"}
         </button>
+        <ShareProgressButton nodeTitle={node.title} completed={completed} />
       </div>
+      <NodeFeedback nodeId={node.id} />
     </aside>
   );
 }
@@ -1252,6 +1379,8 @@ export function ProgressDashboard({
   setExpandedNodeId,
   stageProgress,
   totalNodes,
+  notes,
+  roadmapTitle,
 }: {
   badges: string[];
   bookmarkedCount: number;
@@ -1269,6 +1398,8 @@ export function ProgressDashboard({
   setExpandedNodeId: (id: string) => void;
   stageProgress: Array<StageSummary & { completed: number; total: number; percentage: number }>;
   totalNodes: number;
+  notes: Record<string, string>;
+  roadmapTitle: string;
 }) {
   return (
     <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
@@ -1281,6 +1412,7 @@ export function ProgressDashboard({
             <p className="mt-4 text-sm font-bold text-red-300">{progressPercentage}% complete</p>
           </div>
         </div>
+        <DynamicEta completedCount={completedCount} totalNodes={totalNodes} stageProgress={stageProgress} estimatedTime={estimatedTime} />
       </SidebarPanel>
       <SidebarPanel title="Learning Streak">
         <div className="mt-4 flex items-center gap-4">
@@ -1357,6 +1489,65 @@ export function ProgressDashboard({
           ))}
         </ul>
       </SidebarPanel>
+      <div className="print:hidden">
+        <ActivityGraph />
+      </div>
+      <button
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded-md border border-zinc-800 bg-zinc-950/90 p-3 text-sm font-bold text-zinc-400 transition hover:border-red-500/50 hover:text-red-400 print:hidden"
+        onClick={() => typeof window !== "undefined" && window.print()}
+        type="button"
+      >
+        <svg aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" viewBox="0 0 24 24">
+          <path d="M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M7 8V4h10v4M7 17v3h10v-3" />
+        </svg>
+        Print Roadmap
+      </button>
+      <button
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded-md border border-zinc-800 bg-zinc-950/90 p-3 text-sm font-bold text-zinc-400 transition hover:border-blue-500/50 hover:text-blue-400 print:hidden"
+        onClick={async () => {
+          try {
+            const { loginWithGithub } = await import("@/src/lib/firebase");
+            const user = await loginWithGithub();
+            if (user) {
+              alert(`Successfully synced as ${user.displayName || user.email}!`);
+            }
+          } catch (e) {
+            console.error("Sync failed", e);
+          }
+        }}
+        type="button"
+      >
+        <Icon className="h-4 w-4" name="server" />
+        Sync with GitHub
+      </button>
+      <button
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded-md border border-zinc-800 bg-zinc-950/90 p-3 text-sm font-bold text-zinc-400 transition hover:border-emerald-500/50 hover:text-emerald-400 print:hidden"
+        onClick={() => {
+          if (typeof window === "undefined") return;
+          const markdown = Object.entries(notes)
+            .filter(([, content]) => content.trim() !== "")
+            .map(([id, content]) => `## Topic: ${id}\n\n${content}\n\n`)
+            .join("---\n\n");
+          if (!markdown) {
+            alert("No notes to export yet!");
+            return;
+          }
+          const content = `# Notes for ${roadmapTitle}\n\n${markdown}`;
+          const blob = new Blob([content], { type: "text/markdown" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${roadmapTitle.toLowerCase().replace(/\s+/g, "-")}-notes.md`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }}
+        type="button"
+      >
+        <Icon className="h-4 w-4" name="note" />
+        Export Notes
+      </button>
     </aside>
   );
 }
@@ -1388,5 +1579,129 @@ function SidebarPanel({ children, title }: { children: ReactNode; title: string 
       <h2 className="text-sm font-black text-white">{title}</h2>
       {children}
     </section>
+  );
+}
+
+/**
+ * ShareProgressButton – copies the current URL with a #node anchor to the clipboard.
+ */
+function ShareProgressButton({ nodeTitle, completed }: { nodeTitle: string; completed: boolean }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    const text = completed
+      ? `I just completed "${nodeTitle}" on the DemonTech Roadmap! 🎉 ${url}`
+      : `I'm learning "${nodeTitle}" on the DemonTech Roadmap 🔥 ${url}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback: ignore clipboard error
+    }
+  };
+
+  return (
+    <button
+      className="inline-flex h-10 items-center gap-2 rounded-md border border-zinc-800 bg-black px-3 text-sm font-bold text-zinc-300 transition hover:border-red-500/70"
+      onClick={handleShare}
+      title="Copy shareable link"
+      type="button"
+    >
+      {copied ? (
+        <>
+          <Icon className="h-4 w-4 text-emerald-400" name="check" />
+          Copied!
+        </>
+      ) : (
+        <>
+          <Icon className="h-4 w-4" name="shield" />
+          Share
+        </>
+      )}
+    </button>
+  );
+}
+
+/**
+ * NodeFeedback – thumbs up/down per topic, persisted in localStorage.
+ */
+function NodeFeedback({ nodeId }: { nodeId: string }) {
+  const storageKey = `feedback-${nodeId}`;
+  const [feedback, setFeedback] = useState<"up" | "down" | null>(() => {
+    if (typeof window === "undefined") return null;
+    return (localStorage.getItem(storageKey) as "up" | "down" | null) ?? null;
+  });
+
+  const vote = (value: "up" | "down") => {
+    const next = feedback === value ? null : value;
+    setFeedback(next);
+    if (next) localStorage.setItem(storageKey, next);
+    else localStorage.removeItem(storageKey);
+  };
+
+  return (
+    <div className="flex items-center gap-2 pt-1">
+      <span className="text-xs text-zinc-600">Was this helpful?</span>
+      <button
+        aria-label="Helpful"
+        aria-pressed={feedback === "up"}
+        className={`rounded-md border px-2.5 py-1.5 text-xs transition ${feedback === "up" ? "border-emerald-500/60 bg-emerald-500/15 text-emerald-300" : "border-zinc-800 bg-black text-zinc-500 hover:border-emerald-500/40 hover:text-emerald-400"}`}
+        onClick={() => vote("up")}
+        type="button"
+      >
+        👍
+      </button>
+      <button
+        aria-label="Not helpful"
+        aria-pressed={feedback === "down"}
+        className={`rounded-md border px-2.5 py-1.5 text-xs transition ${feedback === "down" ? "border-red-500/60 bg-red-500/15 text-red-300" : "border-zinc-800 bg-black text-zinc-500 hover:border-red-500/40 hover:text-red-400"}`}
+        onClick={() => vote("down")}
+        type="button"
+      >
+        👎
+      </button>
+    </div>
+  );
+}
+
+/**
+ * DynamicEta – shows a dynamic estimated completion time based on remaining topics.
+ * Assumes roughly 4 hours per topic based on industry norms.
+ */
+function DynamicEta({
+  completedCount,
+  totalNodes,
+  estimatedTime,
+}: {
+  completedCount: number;
+  totalNodes: number;
+  stageProgress: Array<StageSummary & { completed: number; total: number; percentage: number }>;
+  estimatedTime: string;
+}) {
+  const remaining = totalNodes - completedCount;
+  const hoursPerTopic = 4;
+  const hoursLeft = remaining * hoursPerTopic;
+
+  let etaText: string;
+  if (remaining === 0) {
+    etaText = "Roadmap complete! 🎉";
+  } else if (hoursLeft < 10) {
+    etaText = `~${hoursLeft}h remaining`;
+  } else if (hoursLeft < 40) {
+    const days = Math.ceil(hoursLeft / 4);
+    etaText = `~${days} study days left`;
+  } else {
+    const weeks = Math.ceil(hoursLeft / 20);
+    etaText = `~${weeks} weeks remaining`;
+  }
+
+  return (
+    <div className="mt-4 flex items-center justify-between rounded-md border border-zinc-800 bg-[#050505] px-4 py-3 text-sm">
+      <span className="text-zinc-500">Est. total</span>
+      <span className="font-bold text-zinc-300">{estimatedTime}</span>
+      <span className="text-red-400 font-bold">{etaText}</span>
+    </div>
   );
 }

@@ -357,8 +357,8 @@ export default function AboutDemonTech() {
               <div className="flex flex-wrap gap-6">
                 <a className="transition hover:text-red-500" href="https://github.com/Demon-Die/DemonTechRoadmap" rel="noreferrer" target="_blank">GitHub</a>
                 <a className="transition hover:text-red-500" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">Discord</a>
-                <a className="transition hover:text-red-500" href="#">Privacy Policy</a>
-                <a className="transition hover:text-red-500" href="#">Terms</a>
+                <a className="transition hover:text-red-500" href="/privacy">Privacy Policy</a>
+                <a className="transition hover:text-red-500" href="/terms">Terms</a>
               </div>
             </footer>
           </div>

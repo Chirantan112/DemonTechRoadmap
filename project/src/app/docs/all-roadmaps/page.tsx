@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { roadmapSeo } from "@/src/lib/roadmapSeo";
@@ -184,6 +184,13 @@ const roadmapCards: RoadmapCard[] = [
 
 const categoryFilters: RoadmapCategory[] = ["All Categories", "Frontend", "Backend", "Full Stack", "DevOps", "Data", "Mobile", "Programming", "Tooling"];
 const skillFilters: SkillLevel[] = ["All Levels", "Beginner", "Intermediate", "Advanced", "Expert"];
+type SortOption = "Default" | "A-Z" | "Most Topics" | "Beginner First" | "Recently Updated";
+
+const comingSoonCards = [
+  { title: "Cybersecurity Engineer", category: "Backend", detail: "Networking, ethical hacking, SIEM, threat modeling, and incident response." },
+  { title: "AI / ML Engineer", category: "Data", detail: "LLMs, model training, deployment, MLOps and prompt engineering." },
+  { title: "Cloud Architect", category: "DevOps", detail: "AWS, GCP, Azure, infrastructure as code, cost optimization." },
+];
 const beginnerPath = [
   { label: "Start with Git", href: "/roadmaps/git", detail: "Learn commits, branches, remotes, and pull requests." },
   { label: "Pick Frontend", href: "/roadmaps/frontend-developer", detail: "Build visual confidence with HTML, CSS, JavaScript, and React." },
@@ -214,6 +221,33 @@ function loadRoadmapProgress() {
     }
   });
   return nextProgress;
+}
+
+/**
+ * Loads roadmap bookmarks from localStorage.
+ * 
+ * @returns {Record<string, number>} An object mapping storage keys to bookmarked node counts.
+ */
+function loadRoadmapBookmarks() {
+  if (typeof window === "undefined") return {};
+
+  const nextBookmarks: Record<string, number> = {};
+  roadmapCards.forEach((roadmap) => {
+    if (!roadmap.storageKey) return;
+    const bookmarkKey = roadmap.storageKey.replace("-completed", "-bookmarked");
+    const stored = window.localStorage.getItem(bookmarkKey);
+    if (!stored) {
+      nextBookmarks[roadmap.storageKey] = 0;
+      return;
+    }
+
+    try {
+      nextBookmarks[roadmap.storageKey] = (JSON.parse(stored) as string[]).length;
+    } catch {
+      nextBookmarks[roadmap.storageKey] = 0;
+    }
+  });
+  return nextBookmarks;
 }
 
 const whyRoadmaps = [
@@ -433,30 +467,61 @@ export default function AllRoadmaps() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<RoadmapCategory>("All Categories");
   const [skillFilter, setSkillFilter] = useState<SkillLevel>("All Levels");
-  const [completedByRoadmap] = useState<Record<string, number>>(() => loadRoadmapProgress());
+  const [sortBy, setSortBy] = useState<SortOption>("Default");
+  const [viewFilter, setViewFilter] = useState<"All" | "My Roadmaps">("All");
+  const [isMounted, setIsMounted] = useState(false);
+  const [completedByRoadmap, setCompletedByRoadmap] = useState<Record<string, number>>({});
+  const [bookmarksByRoadmap, setBookmarksByRoadmap] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    setCompletedByRoadmap(loadRoadmapProgress());
+    setBookmarksByRoadmap(loadRoadmapBookmarks());
+    setIsMounted(true);
+  }, []);
   const theme = isDarkMode ? darkTheme : lightTheme;
   const roadmapCardsWithProgress = useMemo(
     () =>
       roadmapCards.map((roadmap) => {
         const completed = roadmap.storageKey ? completedByRoadmap[roadmap.storageKey] ?? 0 : 0;
+        const bookmarks = roadmap.storageKey ? bookmarksByRoadmap[roadmap.storageKey] ?? 0 : 0;
         const userProgress = roadmap.storageKey ? Math.round((completed / roadmap.nodeCount) * 100) : 0;
         return {
           ...roadmap,
           completed,
+          bookmarks,
           progress: userProgress,
           qualityScore: roadmap.curatedProgress,
         };
       }),
-    [completedByRoadmap],
+    [completedByRoadmap, bookmarksByRoadmap],
   );
   const filteredRoadmaps = roadmapCardsWithProgress.filter((roadmap) => {
     const query = searchQuery.trim().toLowerCase();
     const searchable = [roadmap.title, roadmap.detail, roadmap.category, roadmap.skillLevel, roadmap.level, roadmap.updated, roadmap.status, ...roadmap.tags].join(" ").toLowerCase();
+    const isStartedOrBookmarked = roadmap.completed > 0 || roadmap.bookmarks > 0;
+
     return (
+      (viewFilter === "All" || isStartedOrBookmarked) &&
       (!query || searchable.includes(query)) &&
       (categoryFilter === "All Categories" || roadmap.category === categoryFilter) &&
       (skillFilter === "All Levels" || roadmap.skillLevel === skillFilter)
     );
+  }).sort((a, b) => {
+    switch (sortBy) {
+      case "A-Z":
+        return a.title.localeCompare(b.title);
+      case "Most Topics":
+        return b.nodeCount - a.nodeCount;
+      case "Beginner First": {
+        const order: Record<string, number> = { Beginner: 1, Intermediate: 2, Advanced: 3, Expert: 4 };
+        return (order[a.skillLevel] || 99) - (order[b.skillLevel] || 99);
+      }
+      case "Recently Updated":
+        return new Date(b.updated || "").getTime() - new Date(a.updated || "").getTime();
+      case "Default":
+      default:
+        return 0;
+    }
   });
   const recommendedRoadmap = roadmapCardsWithProgress.find((roadmap) => roadmap.status === "Recommended" && roadmap.progress < 100) ?? roadmapCardsWithProgress[0];
   const recentlyUpdatedRoadmap = roadmapCardsWithProgress.find((roadmap) => roadmap.status === "Recently Updated") ?? roadmapCardsWithProgress[0];
@@ -617,34 +682,56 @@ export default function AllRoadmaps() {
               ))}
             </section>
 
-            <section className="mt-6 grid gap-4 xl:grid-cols-[1.35fr_0.9fr_0.9fr_auto]">
-              <label className="flex h-12 items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-4 text-sm text-[var(--text-muted)]">
-                <span className="sr-only">Search roadmaps</span>
-                <input
-                  className="min-w-0 flex-1 bg-transparent text-sm font-bold text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Search roadmaps..."
-                  type="search"
-                  value={searchQuery}
-                />
-                <Icon className="h-5 w-5" name="search" />
-              </label>
-              <FilterSelect label="Category" options={categoryFilters} value={categoryFilter} onChange={(value) => setCategoryFilter(value as RoadmapCategory)} />
-              <FilterSelect label="Skill level" options={skillFilters} value={skillFilter} onChange={(value) => setSkillFilter(value as SkillLevel)} />
-              <button
-                className="flex h-12 items-center justify-center gap-2 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-4 text-sm font-bold text-red-500"
-                onClick={() => {
-                  setSearchQuery("");
-                  setCategoryFilter("All Categories");
-                  setSkillFilter("All Levels");
-                }}
-                type="button"
-              >
-                <span className="grid h-4 w-4 place-items-center rounded-full border border-red-500 text-[10px]">
-                  x
-                </span>
-                Clear Filters
-              </button>
+            <section className="mt-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+              <div className="flex rounded-md border border-zinc-800 bg-black p-1">
+                <button
+                  className={`flex items-center gap-2 rounded px-4 py-2 text-sm font-bold transition ${viewFilter === "All" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+                  onClick={() => setViewFilter("All")}
+                  type="button"
+                >
+                  <Icon className="h-4 w-4" name="search" />
+                  All Roadmaps
+                </button>
+                <button
+                  className={`flex items-center gap-2 rounded px-4 py-2 text-sm font-bold transition ${viewFilter === "My Roadmaps" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+                  onClick={() => setViewFilter("My Roadmaps")}
+                  type="button"
+                >
+                  <Icon className="h-4 w-4" name="bookmark" />
+                  My Roadmaps
+                </button>
+              </div>
+              <div className="grid gap-4 xl:grid-cols-[1.35fr_0.9fr_0.9fr_0.9fr_auto]">
+                <label className="flex h-12 items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-4 text-sm text-[var(--text-muted)]">
+                  <span className="sr-only">Search roadmaps</span>
+                  <input
+                    className="min-w-0 flex-1 bg-transparent text-sm font-bold text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Search roadmaps..."
+                    type="search"
+                    value={searchQuery}
+                  />
+                  <Icon className="h-5 w-5" name="search" />
+                </label>
+                <FilterSelect label="Category" options={categoryFilters} value={categoryFilter} onChange={(value) => setCategoryFilter(value as RoadmapCategory)} />
+                <FilterSelect label="Skill level" options={skillFilters} value={skillFilter} onChange={(value) => setSkillFilter(value as SkillLevel)} />
+                <FilterSelect label="Sort by" options={["Default", "A-Z", "Most Topics", "Beginner First", "Recently Updated"]} value={sortBy} onChange={(value) => setSortBy(value as SortOption)} />
+                <button
+                  className="flex h-12 items-center justify-center gap-2 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-4 text-sm font-bold text-red-500"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCategoryFilter("All Categories");
+                    setSkillFilter("All Levels");
+                    setSortBy("Default");
+                  }}
+                  type="button"
+                >
+                  <span className="grid h-4 w-4 place-items-center rounded-full border border-red-500 text-[10px]">
+                    x
+                  </span>
+                  Clear Filters
+                </button>
+              </div>
             </section>
 
             <section className="mt-6 grid gap-5 xl:grid-cols-[1.1fr_1fr_1.2fr]">
@@ -694,13 +781,18 @@ export default function AllRoadmaps() {
                 const cardContent = (
                   <>
                   <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h2 className="text-lg font-black text-[var(--text-primary)]">
-                        {roadmap.title}
-                      </h2>
-                      <p className="mt-3 min-h-[52px] text-sm leading-6 text-[var(--text-secondary)]">
-                        {roadmap.detail}
-                      </p>
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-black text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.15)]">
+                        <Icon className="h-6 w-6" name={roadmap.category === "Frontend" ? "layout" : roadmap.category === "Backend" ? "server" : roadmap.category === "DevOps" ? "cloud" : roadmap.category === "Mobile" ? "smartphone" : roadmap.category === "Data" ? "database" : "code"} />
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-black text-[var(--text-primary)]">
+                          {roadmap.title}
+                        </h2>
+                        <p className="mt-3 min-h-[52px] text-sm leading-6 text-[var(--text-secondary)]">
+                          {roadmap.detail}
+                        </p>
+                      </div>
                     </div>
                     <Icon className="h-5 w-5 shrink-0 text-[var(--text-muted)]" name="star" />
                   </div>
@@ -725,13 +817,17 @@ export default function AllRoadmaps() {
                   <div className="mt-5 flex items-center gap-4">
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
                       <div
-                        className="h-full rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.45)]"
-                        style={{ width: `${roadmap.progress}%` }}
+                        className="h-full rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.45)] transition-all duration-500"
+                        style={{ width: isMounted ? `${roadmap.progress}%` : "0%" }}
                       />
                     </div>
-                    <span className="text-xs font-black text-[var(--text-secondary)]">
-                      {roadmap.progress}%
-                    </span>
+                    {isMounted ? (
+                      <span className="text-xs font-black text-[var(--text-secondary)]">
+                        {roadmap.progress}%
+                      </span>
+                    ) : (
+                      <span className="h-4 w-6 animate-pulse rounded bg-zinc-800/50" />
+                    )}
                   </div>
 
                   <div className="mt-3 flex items-center justify-between gap-3 text-xs text-[var(--text-muted)]">
@@ -753,15 +849,40 @@ export default function AllRoadmaps() {
                 );
 
                 return (
-                <Link
-                  className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5 transition hover:border-red-500/45 hover:shadow-[0_20px_60px_rgba(127,29,29,0.18)]"
-                  href={roadmap.href}
-                  key={roadmap.title}
-                >
-                  {cardContent}
-                </Link>
+                  <Link
+                    className="flex flex-col justify-between rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5 transition hover:border-red-500/45 hover:shadow-[0_20px_60px_rgba(127,29,29,0.18)]"
+                    href={roadmap.href}
+                    key={roadmap.title}
+                  >
+                    {cardContent}
+                  </Link>
                 );
               })}
+              
+              {/* Coming Soon Placeholders */}
+              {!searchQuery && comingSoonCards
+                .filter(card => categoryFilter === "All Categories" || card.category === categoryFilter)
+                .map(card => (
+                  <div className="flex flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-950/40 p-5 opacity-60 transition hover:opacity-80" key={card.title}>
+                    <div>
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <h2 className="text-lg font-black text-zinc-500">{card.title}</h2>
+                          <p className="mt-3 text-sm leading-6 text-zinc-600">{card.detail}</p>
+                        </div>
+                        <Icon className="h-5 w-5 shrink-0 text-zinc-700" name="star" />
+                      </div>
+                      <div className="mt-4 flex items-center gap-3 text-xs text-zinc-700">
+                        <span>{card.category}</span>
+                      </div>
+                    </div>
+                    <div className="mt-5 text-center">
+                      <span className="inline-block rounded-md border border-zinc-800 bg-black px-3 py-1 text-xs font-bold text-zinc-500">
+                        Coming Soon
+                      </span>
+                    </div>
+                  </div>
+              ))}
             </section>
 
             <section className="mt-9 rounded-xl border border-[var(--border)] bg-black/20 p-5">
