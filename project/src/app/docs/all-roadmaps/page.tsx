@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { roadmapSeo } from "@/src/lib/roadmapSeo";
 import type { CSSProperties, ReactNode } from "react";
+import ScrollReveal from "@/src/components/ScrollReveal";
 
 type ThemeVars = CSSProperties & Record<`--${string}`, string>;
 type SidebarGroup = {
@@ -733,7 +734,8 @@ export default function AllRoadmaps() {
                 </button>
               </div>
             </section>
-
+            
+            <ScrollReveal>
             <section className="mt-6 grid gap-5 xl:grid-cols-[1.1fr_1fr_1.2fr]">
               <DashboardFeatureCard
                 eyebrow="Recommended Roadmap"
@@ -772,6 +774,7 @@ export default function AllRoadmaps() {
                 </div>
               </section>
             </section>
+            </ScrollReveal>
 
             <section className="mt-6 grid gap-5 xl:grid-cols-3">
               {filteredRoadmaps.map((roadmap) => {
@@ -849,13 +852,14 @@ export default function AllRoadmaps() {
                 );
 
                 return (
+                  <ScrollReveal key={roadmap.title}>
                   <Link
-                    className="flex flex-col justify-between rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5 transition hover:border-red-500/45 hover:shadow-[0_20px_60px_rgba(127,29,29,0.18)]"
+                    className="flex h-full flex-col justify-between rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5 transition hover:border-red-500/45 hover:shadow-[0_20px_60px_rgba(127,29,29,0.18)]"
                     href={roadmap.href}
-                    key={roadmap.title}
                   >
                     {cardContent}
                   </Link>
+                  </ScrollReveal>
                 );
               })}
               
@@ -863,170 +867,176 @@ export default function AllRoadmaps() {
               {!searchQuery && comingSoonCards
                 .filter(card => categoryFilter === "All Categories" || card.category === categoryFilter)
                 .map(card => (
-                  <div className="flex flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-950/40 p-5 opacity-60 transition hover:opacity-80" key={card.title}>
-                    <div>
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <h2 className="text-lg font-black text-zinc-500">{card.title}</h2>
-                          <p className="mt-3 text-sm leading-6 text-zinc-600">{card.detail}</p>
+                  <ScrollReveal key={card.title}>
+                    <div className="flex h-full flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-950/40 p-5 opacity-60 transition hover:opacity-80" key={card.title}>
+                      <div>
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <h2 className="text-lg font-black text-zinc-500">{card.title}</h2>
+                            <p className="mt-3 text-sm leading-6 text-zinc-600">{card.detail}</p>
+                          </div>
+                          <Icon className="h-5 w-5 shrink-0 text-zinc-700" name="star" />
                         </div>
-                        <Icon className="h-5 w-5 shrink-0 text-zinc-700" name="star" />
+                        <div className="mt-4 flex items-center gap-3 text-xs text-zinc-700">
+                          <span>{card.category}</span>
+                        </div>
                       </div>
-                      <div className="mt-4 flex items-center gap-3 text-xs text-zinc-700">
-                        <span>{card.category}</span>
+                      <div className="mt-5 text-center">
+                        <span className="inline-block rounded-md border border-zinc-800 bg-black px-3 py-1 text-xs font-bold text-zinc-500">
+                          Coming Soon
+                        </span>
                       </div>
                     </div>
-                    <div className="mt-5 text-center">
-                      <span className="inline-block rounded-md border border-zinc-800 bg-black px-3 py-1 text-xs font-bold text-zinc-500">
-                        Coming Soon
-                      </span>
-                    </div>
-                  </div>
+                  </ScrollReveal>
               ))}
             </section>
+            
+            <ScrollReveal>
+              <section className="mt-9 rounded-xl border border-[var(--border)] bg-black/20 p-5">
+                <h2 className="flex items-center gap-3 text-2xl font-black text-[var(--text-primary)]">
+                  <Icon className="h-7 w-7 text-red-500" name="spark" />
+                  Compare Roadmaps at a Glance
+                </h2>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+                  Not sure which path to pick? Compare estimated timelines,
+                  difficulty levels, and ideal learner profiles side by side.
+                </p>
 
-            <section className="mt-9 rounded-xl border border-[var(--border)] bg-black/20 p-5">
-              <h2 className="flex items-center gap-3 text-2xl font-black text-[var(--text-primary)]">
-                <Icon className="h-7 w-7 text-red-500" name="spark" />
-                Compare Roadmaps at a Glance
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
-                Not sure which path to pick? Compare estimated timelines,
-                difficulty levels, and ideal learner profiles side by side.
-              </p>
-
-              <div className="mt-6 overflow-x-auto rounded-lg border border-[var(--border)]">
-                <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-                  <caption className="sr-only">
-                    Comparison of roadmap paths by learner fit, duration, and starting difficulty.
-                  </caption>
-                  <thead>
-                    <tr className="border-b border-[var(--border)] bg-[var(--panel-strong)]">
-                      <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
-                        Roadmap
-                      </th>
-                      <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
-                        Best For
-                      </th>
-                      <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
-                        Est. Duration
-                      </th>
-                      <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
-                        Starting Difficulty
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--border)]">
-                    {([
-                      {
-                        name: "Frontend Developer",
-                        bestFor: "Visual thinkers who love crafting user interfaces",
-                        duration: "4–6 months",
-                        difficulty: "Beginner" as const,
-                        href: "/roadmaps/frontend-developer",
-                        icon: "paint",
-                      },
-                      {
-                        name: "Backend Developer",
-                        bestFor: "Problem solvers who enjoy working with data and logic",
-                        duration: "5–7 months",
-                        difficulty: "Intermediate" as const,
-                        href: "/roadmaps/backend-developer",
-                        icon: "gear",
-                      },
-                      {
-                        name: "Full Stack Developer",
-                        bestFor: "Generalists who want to build complete applications",
-                        duration: "8–12 months",
-                        difficulty: "Intermediate" as const,
-                        href: "/roadmaps/full-stack-developer",
-                        icon: "layers",
-                      },
-                      {
-                        name: "DevOps Engineer",
-                        bestFor: "System thinkers who enjoy automation and infrastructure",
-                        duration: "6–9 months",
-                        difficulty: "Intermediate" as const,
-                        href: "/roadmaps/devops-engineer",
-                        icon: "rocket",
-                      },
-                      {
-                        name: "Data Scientist",
-                        bestFor: "Analytical minds drawn to data, statistics, and ML",
-                        duration: "8–12 months",
-                        difficulty: "Intermediate" as const,
-                        href: "/roadmaps/data-scientist",
-                        icon: "target",
-                      },
-                      {
-                        name: "Mobile Developer",
-                        bestFor: "Builders who want to create apps for phones and tablets",
-                        duration: "6–9 months",
-                        difficulty: "Intermediate" as const,
-                        href: "/roadmaps/mobile-developer",
-                        icon: "bolt",
-                      },
-                    ] as const).map((row) => (
-                      <tr
-                        className="transition hover:bg-[var(--panel-strong)]"
-                        key={row.name}
-                      >
-                        <td className="px-5 py-4">
-                          <Link
-                            className="inline-flex items-center gap-2 font-black text-[var(--text-primary)] transition hover:text-red-500"
-                            href={row.href}
-                          >
-                            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-red-500/25 bg-red-950/20 text-red-500">
-                              <Icon className="h-4 w-4" name={row.icon} />
-                            </span>
-                            {row.name}
-                          </Link>
-                        </td>
-                        <td className="px-5 py-4 text-[var(--text-secondary)]">
-                          {row.bestFor}
-                        </td>
-                        <td className="px-5 py-4 font-bold text-[var(--text-secondary)]">
-                          {row.duration}
-                        </td>
-                        <td className="px-5 py-4">
-                          <span
-                            className={`inline-block rounded border px-2.5 py-1 text-xs font-black ${
-                              row.difficulty === "Beginner"
-                                ? "border-emerald-500/25 bg-emerald-950/20 text-emerald-400"
-                                : "border-amber-500/25 bg-amber-950/20 text-amber-400"
-                            }`}
-                          >
-                            {row.difficulty}
-                          </span>
-                        </td>
+                <div className="mt-6 overflow-x-auto rounded-lg border border-[var(--border)]">
+                  <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+                    <caption className="sr-only">
+                      Comparison of roadmap paths by learner fit, duration, and starting difficulty.
+                    </caption>
+                    <thead>
+                      <tr className="border-b border-[var(--border)] bg-[var(--panel-strong)]">
+                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
+                          Roadmap
+                        </th>
+                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
+                          Best For
+                        </th>
+                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
+                          Est. Duration
+                        </th>
+                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
+                          Starting Difficulty
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
+                    </thead>
+                    <tbody className="divide-y divide-[var(--border)]">
+                      {([
+                        {
+                          name: "Frontend Developer",
+                          bestFor: "Visual thinkers who love crafting user interfaces",
+                          duration: "4–6 months",
+                          difficulty: "Beginner" as const,
+                          href: "/roadmaps/frontend-developer",
+                          icon: "paint",
+                        },
+                        {
+                          name: "Backend Developer",
+                          bestFor: "Problem solvers who enjoy working with data and logic",
+                          duration: "5–7 months",
+                          difficulty: "Intermediate" as const,
+                          href: "/roadmaps/backend-developer",
+                          icon: "gear",
+                        },
+                        {
+                          name: "Full Stack Developer",
+                          bestFor: "Generalists who want to build complete applications",
+                          duration: "8–12 months",
+                          difficulty: "Intermediate" as const,
+                          href: "/roadmaps/full-stack-developer",
+                          icon: "layers",
+                        },
+                        {
+                          name: "DevOps Engineer",
+                          bestFor: "System thinkers who enjoy automation and infrastructure",
+                          duration: "6–9 months",
+                          difficulty: "Intermediate" as const,
+                          href: "/roadmaps/devops-engineer",
+                          icon: "rocket",
+                        },
+                        {
+                          name: "Data Scientist",
+                          bestFor: "Analytical minds drawn to data, statistics, and ML",
+                          duration: "8–12 months",
+                          difficulty: "Intermediate" as const,
+                          href: "/roadmaps/data-scientist",
+                          icon: "target",
+                        },
+                        {
+                          name: "Mobile Developer",
+                          bestFor: "Builders who want to create apps for phones and tablets",
+                          duration: "6–9 months",
+                          difficulty: "Intermediate" as const,
+                          href: "/roadmaps/mobile-developer",
+                          icon: "bolt",
+                        },
+                      ] as const).map((row) => (
+                        <tr
+                          className="transition hover:bg-[var(--panel-strong)]"
+                          key={row.name}
+                        >
+                          <td className="px-5 py-4">
+                            <Link
+                              className="inline-flex items-center gap-2 font-black text-[var(--text-primary)] transition hover:text-red-500"
+                              href={row.href}
+                            >
+                              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-red-500/25 bg-red-950/20 text-red-500">
+                                <Icon className="h-4 w-4" name={row.icon} />
+                              </span>
+                              {row.name}
+                            </Link>
+                          </td>
+                          <td className="px-5 py-4 text-[var(--text-secondary)]">
+                            {row.bestFor}
+                          </td>
+                          <td className="px-5 py-4 font-bold text-[var(--text-secondary)]">
+                            {row.duration}
+                          </td>
+                          <td className="px-5 py-4">
+                            <span
+                              className={`inline-block rounded border px-2.5 py-1 text-xs font-black ${
+                                row.difficulty === "Beginner"
+                                  ? "border-emerald-500/25 bg-emerald-950/20 text-emerald-400"
+                                  : "border-amber-500/25 bg-amber-950/20 text-amber-400"
+                              }`}
+                            >
+                              {row.difficulty}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </ScrollReveal>
 
-            <section className="mt-9 rounded-xl border border-[var(--border)] bg-black/20 p-5">
-              <h2 className="flex items-center gap-3 text-2xl font-black text-[var(--text-primary)]">
-                <Icon className="h-7 w-7 text-red-500" name="spark" />
-                Why Choose Our Roadmaps?
-              </h2>
-              <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-                {whyRoadmaps.map((item) => (
-                  <article className="text-center" key={item.title}>
-                    <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-red-500/20 bg-red-950/20 text-red-500">
-                      <Icon className="h-8 w-8" name={item.icon} />
-                    </span>
-                    <h3 className="mt-4 text-sm font-black text-[var(--text-primary)]">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-6 text-[var(--text-muted)]">
-                      {item.detail}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </section>
+            <ScrollReveal>
+              <section className="mt-9 rounded-xl border border-[var(--border)] bg-black/20 p-5">
+                <h2 className="flex items-center gap-3 text-2xl font-black text-[var(--text-primary)]">
+                  <Icon className="h-7 w-7 text-red-500" name="spark" />
+                  Why Choose Our Roadmaps?
+                </h2>
+                <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+                  {whyRoadmaps.map((item) => (
+                    <article className="text-center" key={item.title}>
+                      <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-red-500/20 bg-red-950/20 text-red-500">
+                        <Icon className="h-8 w-8" name={item.icon} />
+                      </span>
+                      <h3 className="mt-4 text-sm font-black text-[var(--text-primary)]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-6 text-[var(--text-muted)]">
+                        {item.detail}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            </ScrollReveal>
           </div>
         </section>
       </div>
