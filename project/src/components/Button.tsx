@@ -26,7 +26,7 @@ export type ButtonProps = ButtonAsButtonProps | ButtonAsAnchorProps;
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-950/20 hover:bg-cyan-300 focus:ring-cyan-200/70",
+    "bg-red-600 text-white shadow-lg shadow-red-950/20 hover:bg-red-500 focus:ring-red-500/40",
   secondary:
     "border backdrop-blur",
   icon:
@@ -34,14 +34,14 @@ const variantClasses: Record<ButtonVariant, string> = {
 };
 
 const secondaryToneClasses: Record<ButtonTone, string> = {
-  dark: "border-white/30 bg-white/10 text-white hover:bg-white/20 focus:ring-white/30",
+  dark: "border-white/20 bg-white/5 text-white hover:bg-white/10 focus:ring-white/30",
   light:
-    "border-slate-200 bg-white/10 text-slate-700 hover:bg-slate-50 focus:ring-cyan-200",
+    "border-zinc-200 bg-white/10 text-zinc-700 hover:bg-zinc-50 focus:ring-red-200/50",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: "min-h-0 rounded-full px-3 py-2 text-sm",
-  md: "min-h-12 rounded-md px-5 py-3 text-base",
+  sm: "min-h-0 rounded-full px-3 py-1.5 text-xs",
+  md: "min-h-11 rounded-md px-5 py-2.5 text-sm",
   icon: "h-10 w-10 rounded-full p-0",
 };
 
@@ -56,7 +56,7 @@ export default function Button({
 }: ButtonProps) {
   const buttonSize = size ?? (variant === "icon" ? "icon" : "md");
   const classes = [
-    "inline-flex items-center justify-center font-bold transition focus:outline-none focus:ring-4",
+    "inline-flex items-center justify-center font-black uppercase tracking-wider transition focus:outline-none focus:ring-4",
     variantClasses[variant],
     variant === "secondary" ? secondaryToneClasses[tone] : "",
     sizeClasses[buttonSize],

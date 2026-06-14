@@ -119,7 +119,7 @@ export default function RoadmapQuiz() {
             <span>{progress}%</span>
           </div>
           <div className="mt-3 h-1.5 rounded-full bg-zinc-900">
-            <div className="h-full rounded-full bg-red-500 transition-all duration-300" style={{ width: `${progress}%` }} />
+            <div className="h-full rounded-full bg-zinc-600 transition-all duration-300" style={{ width: `${progress}%` }} />
           </div>
 
           <h3 className="mt-6 text-base font-black text-white">{questions[currentStep].question}</h3>
@@ -131,18 +131,18 @@ export default function RoadmapQuiz() {
                 onClick={() => handleSelect(option.score)}
                 type="button"
               >
-                <Icon className="h-6 w-6 text-red-400 group-hover:text-red-300" name={option.icon} />
+                <Icon className="h-6 w-6 text-zinc-500 group-hover:text-white" name={option.icon} />
                 <span className="mt-2 text-[12px] font-black text-white">{option.label}</span>
               </button>
             ))}
           </div>
-          <button className="mt-5 inline-flex items-center gap-2 text-sm font-black text-red-400 transition hover:text-red-300" onClick={() => handleSelect(questions[currentStep].options[0].score)} type="button">
+          <button className="mt-5 inline-flex items-center gap-2 text-sm font-black text-zinc-400 transition hover:text-red-400" onClick={() => handleSelect(questions[currentStep].options[0].score)} type="button">
             Next Question <Icon className="h-4 w-4" name="arrow" />
           </button>
         </div>
       ) : (
         <div className="mt-6 text-center">
-          <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-red-500/15 text-red-400">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-zinc-900 text-zinc-400">
             <Icon className="h-7 w-7" name="spark" />
           </div>
           <p className="mt-4 text-sm font-bold text-zinc-400">We recommend</p>
