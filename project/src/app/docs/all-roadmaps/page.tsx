@@ -1013,30 +1013,6 @@ export default function AllRoadmaps() {
                 </div>
               </section>
             </ScrollReveal>
-
-            <ScrollReveal>
-              <section className="mt-9 rounded-xl border border-[var(--border)] bg-black/20 p-5">
-                <h2 className="flex items-center gap-3 text-2xl font-black text-[var(--text-primary)]">
-                  <Icon className="h-7 w-7 text-red-500" name="spark" />
-                  Why Choose Our Roadmaps?
-                </h2>
-                <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-                  {whyRoadmaps.map((item) => (
-                    <article className="text-center" key={item.title}>
-                      <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-red-500/20 bg-red-950/20 text-red-500">
-                        <Icon className="h-8 w-8" name={item.icon} />
-                      </span>
-                      <h3 className="mt-4 text-sm font-black text-[var(--text-primary)]">
-                        {item.title}
-                      </h3>
-                      <p className="mt-3 text-sm leading-6 text-[var(--text-muted)]">
-                        {item.detail}
-                      </p>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            </ScrollReveal>
           </div>
         </section>
       </div>
