@@ -56,26 +56,69 @@ const categories: QuestionCategory[] = [
   { title: "Community", icon: "users" },
 ];
 
-const questions = [
-  "What is a roadmap and how does it help me?",
-  "How do I choose the right roadmap for me?",
-  "What do beginner, intermediate, and advanced levels mean?",
-  "Are the roadmaps free?",
-  "How often are the roadmaps updated?",
-  "Can I suggest changes or improvements to a roadmap?",
-  "What if I get stuck while learning?",
-  "Do I need prior experience to follow a roadmap?",
-  "How do learning paths differ from roadmaps?",
-  "Can I access roadmaps on mobile?",
-  "How can I track my progress?",
-];
-
-const topQuestions = [
-  "What is a roadmap and how does it help me?",
-  "How do I choose the right roadmap for me?",
-  "Are the roadmaps free?",
-  "How often are the roadmaps updated?",
-  "What if I get stuck while learning?",
+const faqData = [
+  {
+    id: "what-is-roadmap",
+    question: "What is a roadmap and how does it help me?",
+    answer: (
+      <>
+        <p>A roadmap is a structured guide that shows you what to learn and in what order to achieve a specific goal.</p>
+        <p className="mt-2">It helps you stay focused, avoid confusion, and track your progress step by step.</p>
+      </>
+    ),
+    isTop: true,
+  },
+  {
+    id: "how-to-choose",
+    question: "How do I choose the right roadmap for me?",
+    answer: "Think about your goals. Do you want to build websites (Frontend/Backend), mobile apps, or work with data? We recommend starting with our 'Which roadmap is right for me?' quiz on the homepage.",
+    isTop: true,
+  },
+  {
+    id: "levels-explained",
+    question: "What do beginner, intermediate, and advanced levels mean?",
+    answer: (
+      <>
+        <p>These labels show how deep the topics usually are before moving to the next stage:</p>
+        <ul className="mt-4 list-disc space-y-2 pl-5">
+          <li><span className="font-semibold text-[var(--text-primary)]">Beginner:</span> foundation topics that build the core concepts and terms.</li>
+          <li><span className="font-semibold text-[var(--text-primary)]">Intermediate:</span> practical topics that combine core ideas with real examples and common pitfalls.</li>
+          <li><span className="font-semibold text-[var(--text-primary)]">Advanced:</span> project-scale, architecture-heavy topics where independent problem-solving is expected.</li>
+        </ul>
+      </>
+    ),
+    isTop: false,
+  },
+  {
+    id: "are-free",
+    question: "Are the roadmaps free?",
+    answer: "Yes, DemonTech Roadmaps are 100% free and open source. We believe high-quality education should be accessible to everyone.",
+    isTop: true,
+  },
+  {
+    id: "update-frequency",
+    question: "How often are the roadmaps updated?",
+    answer: "We update our core roadmaps weekly to ensure they stay current with industry trends and community feedback.",
+    isTop: true,
+  },
+  {
+    id: "suggest-changes",
+    question: "Can I suggest changes or improvements to a roadmap?",
+    answer: "Absolutely! We are community-driven. You can suggest changes via GitHub or by joining our Discord community.",
+    isTop: false,
+  },
+  {
+    id: "get-stuck",
+    question: "What if I get stuck while learning?",
+    answer: "Don't worry! Join our Discord community where thousands of developers help each other every day. You can also check our Study Guide for tips.",
+    isTop: true,
+  },
+  {
+    id: "prior-experience",
+    question: "Do I need prior experience to follow a roadmap?",
+    answer: "No. Our beginner roadmaps start from absolute zero. If you've never coded before, we recommend starting with the Git or HTML/CSS roadmaps.",
+    isTop: false,
+  },
 ];
 
 const helpTopics = [
@@ -181,7 +224,16 @@ function DemonTechLogo() {
 
 export default function CommonQuestions() {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [openIds, setOpenIds] = useState<string[]>([faqData[0].id]);
   const theme = isDarkMode ? darkTheme : lightTheme;
+
+  const toggleFaq = (id: string) => {
+    setOpenIds((prev) => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const topQuestions = faqData.filter(f => f.isTop);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[var(--page-bg)] text-[var(--text-primary)] transition-colors duration-300" style={theme}>
@@ -242,8 +294,7 @@ export default function CommonQuestions() {
               </p>
               <a className="mt-6 flex h-10 items-center justify-center gap-2 rounded-md bg-red-700/70 px-4 text-sm font-bold text-white" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">
                 <Icon className="h-4 w-4" name="discord" />
-                Join Discord
-                <Icon className="h-4 w-4" name="chevron" />
+                Join Discord Community
               </a>
             </div>
           </div>
@@ -252,205 +303,181 @@ export default function CommonQuestions() {
         <section className="px-5 py-6 sm:px-8 lg:px-8">
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel-bg)] px-5 py-6 shadow-2xl shadow-[var(--shadow)] sm:px-8">
             <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--text-muted)]">
-              <Icon className="h-4 w-4 text-[var(--text-muted)]" name="home" />
+              <Icon className="h-4 w-4 text-zinc-500" name="home" />
               <span>Home</span>
               <Icon className="h-3 w-3" name="chevron" />
               <span className="font-semibold text-[var(--text-primary)]">Common Questions</span>
             </div>
 
-            <section className="mt-6 grid gap-6 xl:grid-cols-[1fr_310px]">
+            <section className="mt-10 grid gap-10 xl:grid-cols-[1fr_310px]">
               <div>
                 <h1 className="text-4xl font-black tracking-normal text-[var(--text-primary)] sm:text-5xl">
                   Common Questions
                   <Icon className="ml-5 inline-block h-8 w-8 align-top text-red-500" name="spark" />
                 </h1>
-                <div className="mt-2 h-1 w-72 rounded-full bg-[linear-gradient(90deg,#ef4444,rgba(239,68,68,0))]" />
-                <p className="mt-6 max-w-2xl text-base leading-8 text-[var(--text-secondary)]">
+                <div className="mt-4 h-1 w-72 rounded-full bg-zinc-800" />
+                <p className="mt-8 max-w-2xl text-base leading-8 text-[var(--text-secondary)]">
                   Find answers to the most common questions about roadmaps,
                   learning, and everything in between.
                 </p>
+
+                <div className="mt-12 max-w-2xl">
+                  <label className="flex h-14 items-center gap-4 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-5 text-sm text-[var(--text-muted)] focus-within:ring-4 focus-within:ring-red-500/20 transition-all">
+                    <Icon className="h-5 w-5" name="search" />
+                    <input className="bg-transparent flex-1 outline-none text-[var(--text-primary)] font-bold placeholder:text-zinc-600" placeholder="Search questions..." />
+                  </label>
+                </div>
               </div>
 
-              <aside className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5">
-                <h2 className="text-lg font-black text-[var(--text-primary)]">Can&apos;t find your answer?</h2>
-                <p className="mt-5 text-sm leading-7 text-[var(--text-secondary)]">
+              <aside className="rounded-xl border border-[var(--border)] bg-[var(--panel-strong)] p-6">
+                <h2 className="text-lg font-black text-[var(--text-primary)]">Quick Help</h2>
+                <p className="mt-4 text-sm leading-7 text-[var(--text-secondary)]">
                   Our community is super helpful. Ask your question there.
                 </p>
-                <a className="mt-5 flex h-12 items-center justify-center gap-3 rounded-md bg-[linear-gradient(135deg,rgba(185,28,28,0.9),rgba(69,22,22,0.72))] px-5 text-sm font-black text-white" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">
-                  Ask in Community
-                  <Icon className="h-4 w-4" name="external" />
-                </a>
-                <Link className="mt-5 flex items-center gap-2 text-sm font-black text-red-500" href="/docs/contributing">
-                  Contribute to Roadmaps
-                  <Icon className="h-4 w-4" name="chevron" />
-                </Link>
+                <div className="mt-8 space-y-4">
+                  <a className="flex h-12 items-center justify-center gap-3 rounded-md bg-red-600 px-5 text-sm font-black text-white hover:bg-red-500 transition-colors" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">
+                    Ask in Community
+                    <Icon className="h-4 w-4" name="external" />
+                  </a>
+                  <Link className="flex h-12 items-center justify-center gap-3 rounded-md border border-[var(--border)] px-5 text-sm font-black text-[var(--text-primary)] hover:bg-white/5 transition-colors" href="/docs/contributing">
+                    Contribute
+                  </Link>
+                </div>
               </aside>
             </section>
 
-            <section className="mt-10 max-w-2xl">
-              <label className="flex h-14 items-center gap-4 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-5 text-sm text-[var(--text-muted)]">
-                <Icon className="h-5 w-5" name="search" />
-                <span>Search questions...</span>
-              </label>
-            </section>
+            <div className="my-16 h-px w-full bg-zinc-900" />
 
-            <section className="mt-6">
-              <h2 className="text-lg font-black text-[var(--text-primary)]">Browse by Category</h2>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
+            <section>
+              <h2 className="text-xl font-black text-[var(--text-primary)]">Browse by Category</h2>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                 {categories.map(({ title, icon, active }) => (
-                  <article className={`rounded-lg border p-5 transition ${active ? "border-red-500 bg-red-950/15" : "border-[var(--border)] bg-[var(--panel-strong)] hover:border-red-500/45"}`} key={title}>
-                    <Icon className={`h-8 w-8 ${active ? "text-red-500" : "text-[var(--text-primary)]"}`} name={icon} />
-                    <h3 className="mt-5 text-sm font-black text-[var(--text-primary)]">{title}</h3>
-                  </article>
+                  <button className={`flex items-center gap-4 rounded-lg border p-5 transition text-left ${active ? "border-red-500 bg-red-500/5" : "border-[var(--border)] bg-[var(--panel-strong)] hover:border-red-500/45"}`} key={title}>
+                    <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-md ${active ? "bg-red-500 text-white" : "bg-zinc-900 text-zinc-400"}`}>
+                      <Icon className="h-5 w-5" name={icon} />
+                    </span>
+                    <h3 className="text-sm font-black text-[var(--text-primary)]">{title}</h3>
+                  </button>
                 ))}
               </div>
             </section>
 
-            <section className="mt-6 grid gap-5 xl:grid-cols-[1fr_240px]">
+            <section className="mt-16 grid gap-10 lg:grid-cols-[1fr_260px]">
               <div>
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
-                  <h2 className="text-lg font-black text-[var(--text-primary)]">All Questions ({questions.length})</h2>
-                  <label className="flex h-11 items-center gap-3 text-sm text-[var(--text-muted)]">
+                <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+                  <h2 className="text-xl font-black text-[var(--text-primary)]">All Questions ({faqData.length})</h2>
+                  <div className="flex items-center gap-3 text-sm text-zinc-500">
                     Sort by:
-                    <button className="flex h-11 items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-4 font-bold text-[var(--text-primary)]" type="button">
+                    <button className="flex h-10 items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-4 font-bold text-[var(--text-primary)]">
                       Most Popular
-                      <Icon className="h-4 w-4 rotate-90" name="chevron" />
+                      <Icon className="h-4 w-4 rotate-90 text-zinc-500" name="chevron" />
                     </button>
-                  </label>
+                  </div>
                 </div>
 
-                <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--panel-strong)]">
-                  {questions.map((question, index) => (
-                    <article className="border-b border-[var(--border)] px-5 py-5 last:border-b-0" key={question}>
-                      <div className="flex items-center gap-4">
-                        <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full border border-red-500 text-red-500">
-                          <Icon className="h-3 w-3" name={index === 0 ? "minus" : "plus"} />
-                        </span>
-                        <h3 className="flex-1 text-base font-black text-[var(--text-primary)]">{question}</h3>
-                        <Icon className={`h-4 w-4 ${index === 0 ? "-rotate-90" : "rotate-90"}`} name="chevron" />
-                      </div>
-                      {index === 0 && (
-                        <div className="ml-9 mt-6 text-sm leading-7 text-[var(--text-secondary)]">
-                          <p>
-                            A roadmap is a structured guide that shows you what
-                            to learn and in what order to achieve a specific goal.
-                          </p>
-                          <p className="mt-2">
-                            It helps you stay focused, avoid confusion, and track
-                            your progress step by step.
-                          </p>
-                          <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-[var(--text-muted)]">
-                            <span>Was this helpful?</span>
-                            <button className="flex items-center gap-2 hover:text-red-500 transition">
-                              <Icon className="h-4 w-4" name="thumbsUp" />
-                            </button>
-                            <button className="flex items-center gap-2 hover:text-red-500 transition">
-                              <Icon className="h-4 w-4" name="thumbsDown" />
-                            </button>
+                <div className="space-y-4">
+                  {faqData.map((item) => {
+                    const isOpen = openIds.includes(item.id);
+                    return (
+                      <article 
+                        id={item.id} 
+                        className={`rounded-lg border transition-all scroll-mt-24 ${isOpen ? "border-zinc-700 bg-[var(--panel-strong)]" : "border-[var(--border)] bg-zinc-950/20 hover:border-zinc-800"}`} 
+                        key={item.id}
+                      >
+                        <button 
+                          onClick={() => toggleFaq(item.id)}
+                          className="flex w-full items-center gap-4 px-6 py-5 text-left"
+                        >
+                          <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border transition-colors ${isOpen ? "border-red-500 text-red-500" : "border-zinc-700 text-zinc-600"}`}>
+                            <Icon className="h-3.5 w-3.5" name={isOpen ? "minus" : "plus"} />
+                          </span>
+                          <h3 className="flex-1 text-base font-black text-[var(--text-primary)]">{item.question}</h3>
+                          <Icon className={`h-5 w-5 text-zinc-600 transition-transform duration-300 ${isOpen ? "-rotate-90" : "rotate-90"}`} name="chevron" />
+                        </button>
+                        {isOpen && (
+                          <div className="px-6 pb-6 ml-10">
+                            <div className="h-px w-full bg-zinc-900 mb-6" />
+                            <div className="text-sm leading-8 text-[var(--text-secondary)]">
+                              {typeof item.answer === "string" ? <p>{item.answer}</p> : item.answer}
+                            </div>
+                            <div className="mt-8 flex flex-wrap items-center gap-6 text-xs font-bold text-zinc-500 uppercase tracking-widest">
+                              <span>Helpful?</span>
+                              <div className="flex gap-4">
+                                <button className="hover:text-red-500 transition-colors flex items-center gap-2">
+                                  <Icon className="h-4 w-4" name="thumbsUp" /> Yes
+                                </button>
+                                <button className="hover:text-red-500 transition-colors flex items-center gap-2">
+                                  <Icon className="h-4 w-4" name="thumbsDown" /> No
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      )}
-                      {index === 2 && (
-                        <div className="ml-9 mt-6 text-sm leading-7 text-[var(--text-secondary)]">
-                          <p className="text-[var(--text-secondary)]">
-                            These labels show how deep the topics usually are before
-                            moving to the next stage:
-                          </p>
-                          <ul className="mt-4 list-disc space-y-2 pl-5 text-[var(--text-secondary)]">
-                            <li>
-                              <span className="font-semibold text-[var(--text-primary)]">Beginner:</span>{" "}
-                              foundation topics that build the core concepts and terms.
-                            </li>
-                            <li>
-                              <span className="font-semibold text-[var(--text-primary)]">Intermediate:</span>{" "}
-                              practical topics that combine core ideas with real examples and common pitfalls.
-                            </li>
-                            <li>
-                              <span className="font-semibold text-[var(--text-primary)]">Advanced:</span>{" "}
-                              project-scale, architecture-heavy topics where independent problem-solving is expected.
-                            </li>
-                          </ul>
-                          <p className="mt-4">
-                            In this roadmap you may also see labels such as Starter, Core,
-                            Applied, Advanced, and Expert. Treat them as finer-grained
-                            steps on the same path from beginner to advanced mastery.
-                          </p>
-                        </div>
-                      )}
-                    </article>
-                  ))}
+                        )}
+                      </article>
+                    );
+                  })}
                 </div>
               </div>
 
-              <aside className="space-y-5">
-                <section className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5">
-                  <h2 className="text-lg font-black text-[var(--text-primary)]">Top Questions</h2>
-                  <div className="mt-5 space-y-5">
-                    {topQuestions.map((question) => (
-                      <div className="block text-sm leading-6 text-[var(--text-primary)]" key={question}>
-                        {question}
-                      </div>
+              <aside className="space-y-8">
+                <section className="rounded-xl border border-[var(--border)] bg-[var(--panel-strong)] p-6">
+                  <h2 className="text-sm font-black uppercase tracking-widest text-zinc-500">Top Questions</h2>
+                  <div className="mt-6 space-y-5">
+                    {topQuestions.map((item) => (
+                      <a 
+                        className="block text-sm font-bold leading-6 text-[var(--text-primary)] hover:text-red-500 transition-colors" 
+                        href={`#${item.id}`}
+                        key={item.id}
+                        onClick={(e) => {
+                          if (!openIds.includes(item.id)) toggleFaq(item.id);
+                        }}
+                      >
+                        {item.question}
+                      </a>
                     ))}
                   </div>
                 </section>
 
-                <section className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h2 className="text-lg font-black text-[var(--text-primary)]">Have a Question?</h2>
-                      <p className="mt-4 text-sm leading-7 text-[var(--text-secondary)]">
-                        If you can&apos;t find the answer you&apos;re looking for,
-                        feel free to reach out to us.
-                      </p>
-                    </div>
-                    <Icon className="h-12 w-12 shrink-0 text-[var(--border)]" name="headset" />
+                <section className="rounded-xl border border-red-500/10 bg-red-500/[0.02] p-6 text-center">
+                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-red-500/10 text-red-500">
+                    <Icon className="h-7 w-7" name="headset" />
                   </div>
-                  <a className="mt-6 flex h-11 items-center justify-center gap-2 rounded-md border border-red-500/45 px-4 text-sm font-black text-[var(--text-primary)] transition hover:bg-red-500 hover:text-white" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">
-                    Join Discord
-                    <Icon className="h-4 w-4 text-red-500" name="discord" />
+                  <h2 className="mt-6 text-lg font-black text-[var(--text-primary)]">Need more help?</h2>
+                  <p className="mt-4 text-sm leading-7 text-[var(--text-secondary)]">
+                    Join our Discord community for real-time support.
+                  </p>
+                  <a className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-red-600 px-6 text-sm font-black text-white hover:bg-red-500 transition-colors" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">
+                    Join Community
                   </a>
                 </section>
               </aside>
             </section>
 
-            <section className="mt-10 rounded-lg border border-red-500/35 bg-red-950/10 p-5">
+            <div className="my-16 h-px w-full bg-zinc-900" />
+
+            <section>
               <div className="flex items-center gap-4">
-                <span className="grid h-12 w-12 place-items-center rounded-md border border-red-500/20 bg-red-950/25 text-red-500">
+                <span className="grid h-12 w-12 place-items-center rounded-md border border-zinc-800 bg-zinc-900 text-zinc-500">
                   <Icon className="h-7 w-7" name="book" />
                 </span>
                 <div>
-                  <h2 className="text-lg font-black text-[var(--text-primary)]">Explore Help Topics</h2>
-                  <p className="mt-1 text-sm text-[var(--text-secondary)]">Quick guides and resources to help you on your journey.</p>
+                  <h2 className="text-xl font-black text-[var(--text-primary)]">Explore Help Topics</h2>
+                  <p className="mt-1 text-sm text-[var(--text-secondary)]">Quick guides to help you on your journey.</p>
                 </div>
               </div>
-              <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
                 {helpTopics.map(([title, detail, icon, href]) => (
-                  <article className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5" key={title}>
-                    <span className="grid h-11 w-11 place-items-center rounded-md border border-red-500/20 bg-red-950/25 text-red-500">
-                      <Icon className="h-6 w-6" name={icon} />
+                  <article className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-6 transition hover:border-zinc-700" key={title}>
+                    <span className="grid h-11 w-11 place-items-center rounded-md bg-zinc-900 text-zinc-500">
+                      <Icon className="h-6 w-6" name={icon as string} />
                     </span>
-                    <h3 className="mt-4 text-sm font-black text-[var(--text-primary)]">{title}</h3>
-                    <p className="mt-2 min-h-[44px] text-sm leading-6 text-[var(--text-secondary)]">{detail}</p>
-                    <Link className="mt-4 flex items-center gap-2 text-sm font-black text-red-500" href={href}>
-                      Read Guide
-                      <Icon className="h-4 w-4" name="chevron" />
+                    <h3 className="mt-5 text-sm font-black text-[var(--text-primary)]">{title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-zinc-500 min-h-[48px]">{detail}</p>
+                    <Link className="mt-6 inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-red-500 hover:text-red-400" href={href}>
+                      Read Guide →
                     </Link>
                   </article>
                 ))}
-              </div>
-
-              <div className="mt-7 flex flex-col gap-5 rounded-lg border border-red-500/35 bg-red-950/10 p-5 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h2 className="text-lg font-black text-[var(--text-primary)]">Still have questions?</h2>
-                  <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-                    Our community is always here to help you grow and succeed.
-                  </p>
-                </div>
-                <a className="flex h-12 shrink-0 items-center justify-center gap-3 rounded-md bg-red-700/80 px-5 text-sm font-black text-white transition hover:bg-red-600" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">
-                  <Icon className="h-5 w-5" name="discord" />
-                  Join Discord Community
-                  <Icon className="h-4 w-4" name="chevron" />
-                </a>
               </div>
             </section>
           </div>

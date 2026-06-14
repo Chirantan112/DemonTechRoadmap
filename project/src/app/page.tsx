@@ -54,6 +54,42 @@ const journey = [
   { n: "", title: "Job Ready", detail: "Apply with confidence", icon: "trophy", color: "text-orange-300 border-orange-500/70 shadow-orange-500/30", href: "/docs/study-guide", offset: false },
 ] as const;
 
+const features = [
+  { icon: "check", title: "Track Your Progress", text: "Mark topics as complete and visualize your learning journey.", href: "/dashboard" },
+  { icon: "bookmark", title: "Save & Organize", text: "Bookmark resources and keep everything in one place.", href: "/dashboard" },
+  { icon: "pen", title: "Notes & Reflections", text: "Write notes, save learnings, and reinforce your knowledge.", href: "/dashboard" },
+  { icon: "bell", title: "Stay Updated", text: "Get notified when new roadmaps and resources are added.", href: "#newsletter" },
+  { icon: "code", title: "100% Free", text: "No paywalls. No premium tier. Just learning.", href: "/docs/about-demontech" },
+] as const;
+
+const whyRoadmaps = [
+  {
+    title: "Curated by Experts",
+    detail: "Created and reviewed by industry professionals.",
+    icon: "target",
+  },
+  {
+    title: "Up-to-Date Content",
+    detail: "Regularly updated with the latest tools and trends.",
+    icon: "zap",
+  },
+  {
+    title: "Practical Learning",
+    detail: "Focus on real-world projects and hands-on skills.",
+    icon: "code",
+  },
+  {
+    title: "Flexible Learning",
+    detail: "Learn at your own pace with structured guidance.",
+    icon: "zap",
+  },
+  {
+    title: "Community Support",
+    detail: "Get help and support from a strong developer community.",
+    icon: "community",
+  },
+];
+
 const footerGroups = [
   { title: "Explore", links: [["Roadmaps", "/docs/all-roadmaps"], ["Resources", "/docs/resources"], ["Guides", "/docs/study-guide"], ["Docs", "/docs/quick-start"]] },
   { title: "Community", links: [["GitHub", "https://github.com/Demon-Die/DemonTechRoadmap"], ["Discord", "https://discord.gg/yWtjK2Tb8T"], ["Twitter", "https://twitter.com"], ["Contribute", "/docs/contributing"]] },
@@ -130,53 +166,82 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.95fr] items-start">
-          <RoadmapQuiz />
-          
-          <div className="space-y-6">
-            <section className="rounded-xl border border-zinc-800 bg-[#08090f]/90 p-8">
-              <h2 className="text-xl font-black text-white">Everything you need to master tech</h2>
-              <div className="mt-8 grid gap-6 sm:grid-cols-2">
-                {consolidatedFeatures.map((item) => (
-                  <article key={item.title}>
-                    <span className="grid h-12 w-12 place-items-center rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-400">
-                      <Icon className="h-6 w-6" name={item.icon as any} />
-                    </span>
-                    <h3 className="mt-4 text-sm font-black text-white">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-[12px] leading-5 text-zinc-500">
-                      {item.detail}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </section>
-
-            <section className="rounded-lg border border-zinc-800 bg-[#08090f]/90 p-6">
-              <p className="text-[11px] font-black uppercase text-zinc-500">Community Impact</p>
-              <h2 className="mt-3 text-2xl font-black text-white">Open source & community driven</h2>
-              <p className="mt-2 text-sm text-zinc-400">We learn, build, and grow together.</p>
-              <div className="mt-7 grid grid-cols-4 divide-x divide-zinc-800 text-center">
-                {[["20+", "Contributors"], ["500+", "GitHub Stars"], ["100+", "Pull Requests"], ["50+", "Roadmap Updates"]].map(([value, label]) => (
-                  <div className="px-2" key={label}>
-                    <div className="text-2xl font-black text-white">{value}</div>
-                    <div className="mt-2 text-[11px] text-zinc-500">{label}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-8 flex items-center">
-                {["RS", "AK", "JD", "MP", "SN", "LV", "RT", "YU", "GH"].map((avatar, index) => (
-                  <span className="-ml-2 grid h-9 w-9 place-items-center rounded-full border-2 border-[#08090f] bg-gradient-to-br from-zinc-200 to-zinc-700 text-[10px] font-black text-black first:ml-0" key={avatar + index}>{avatar}</span>
-                ))}
-                <span className="-ml-2 grid h-9 w-9 place-items-center rounded-full border-2 border-[#08090f] bg-zinc-900 text-[11px] font-black text-white">+15</span>
-              </div>
-              <Link className="mt-6 inline-flex items-center gap-2 text-sm font-black text-zinc-500 hover:text-red-400" href="https://github.com/Demon-Die/DemonTechRoadmap">
-                View on GitHub <Icon className="h-4 w-4" name="arrow" />
-              </Link>
-            </section>
+        <section className="mt-6 rounded-xl border border-zinc-800 bg-[#08090f]/90 p-8">
+          <h2 className="text-center text-2xl font-black text-white">Why Choose Our Roadmaps?</h2>
+          <div className="mt-8 grid gap-8 md:grid-cols-2 xl:grid-cols-5">
+            {whyRoadmaps.map((item) => (
+              <article className="text-center" key={item.title}>
+                <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-zinc-800 bg-zinc-900 text-zinc-400">
+                  <Icon className="h-8 w-8" name={item.icon as any} />
+                </span>
+                <h3 className="mt-4 text-sm font-black text-white">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-zinc-500">
+                  {item.detail}
+                </p>
+              </article>
+            ))}
           </div>
+        </section>
+
+        <div className="mt-6 grid gap-3 lg:grid-cols-[0.95fr_1fr_0.95fr]">
+          <section className="rounded-lg border border-zinc-800 bg-[#08090f]/90 p-6">
+            <p className="text-[11px] font-black uppercase text-zinc-500">Who is this for?</p>
+            <h2 className="mt-3 text-2xl font-black text-white">A practical path for self-taught builders</h2>
+            <div className="mt-6 grid gap-5 grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              {audience.map((item) => (
+                <article className="border-zinc-800/80 sm:border-r sm:pr-5 sm:last:border-r-0 lg:border-r-0 lg:border-b lg:pb-5 lg:last:border-b-0 xl:border-b-0 xl:border-r xl:pb-0" key={item.title}>
+                  <Icon className="h-8 w-8 text-zinc-500" name={item.icon as any} />
+                  <h3 className="mt-4 text-sm font-black text-white">{item.title}</h3>
+                  <p className="mt-3 text-[12px] leading-6 text-zinc-400">{item.text}</p>
+                </article>
+              ))}
+            </div>
+            <Link className="mt-6 inline-flex items-center gap-2 text-sm font-black text-zinc-400 hover:text-red-400" href="/docs/common-questions">
+              Read FAQ <Icon className="h-4 w-4" name="arrow" />
+            </Link>
+          </section>
+
+          <RoadmapQuiz />
+
+          <section className="rounded-lg border border-zinc-800 bg-[#08090f]/90 p-6">
+            <p className="text-[11px] font-black uppercase text-zinc-500">Community Impact</p>
+            <h2 className="mt-3 text-2xl font-black text-white">Open source & community driven</h2>
+            <p className="mt-2 text-sm text-zinc-400">We learn, build, and grow together.</p>
+            <div className="mt-7 grid grid-cols-4 divide-x divide-zinc-800 text-center">
+              {[["20+", "Contributors"], ["500+", "GitHub Stars"], ["100+", "Pull Requests"], ["50+", "Roadmap Updates"]].map(([value, label]) => (
+                <div className="px-2" key={label}>
+                  <div className="text-2xl font-black text-white">{value}</div>
+                  <div className="mt-2 text-[11px] text-zinc-500">{label}</div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex items-center">
+              {["RS", "AK", "JD", "MP", "SN", "LV", "RT", "YU", "GH"].map((avatar, index) => (
+                <span className="-ml-2 grid h-9 w-9 place-items-center rounded-full border-2 border-[#08090f] bg-gradient-to-br from-zinc-200 to-zinc-700 text-[10px] font-black text-black first:ml-0" key={avatar + index}>{avatar}</span>
+              ))}
+              <span className="-ml-2 grid h-9 w-9 place-items-center rounded-full border-2 border-[#08090f] bg-zinc-900 text-[11px] font-black text-white">+15</span>
+            </div>
+            <Link className="mt-6 inline-flex items-center gap-2 text-sm font-black text-zinc-500 hover:text-red-400" href="https://github.com/Demon-Die/DemonTechRoadmap">
+              View on GitHub <Icon className="h-4 w-4" name="arrow" />
+            </Link>
+          </section>
         </div>
+
+        <section className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {features.map((feature) => (
+            <Link className="flex min-h-[86px] items-center gap-4 rounded-lg border border-zinc-800 bg-[#08090f]/90 p-4 transition hover:border-red-500/60 hover:bg-[#0d0e15]" href={feature.href} key={feature.title}>
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-zinc-900 text-zinc-400">
+                <Icon className="h-6 w-6" name={feature.icon as any} />
+              </span>
+              <span>
+                <span className="block text-sm font-black text-white">{feature.title}</span>
+                <span className="mt-1 block text-[12px] leading-5 text-zinc-400">{feature.text}</span>
+              </span>
+            </Link>
+          ))}
+        </section>
       </section>
 
       <footer className="border-t border-zinc-900 bg-black/70 px-5 py-5 lg:px-8">
