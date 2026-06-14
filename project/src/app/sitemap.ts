@@ -29,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const topicRoutes: MetadataRoute.Sitemap = getAllRoadmapTopicParams().map(({ roadmapSlug, topicId }) => ({
-    url: `${baseUrl}/roadmaps/${roadmapSlug}/topics/${topicId}`,
+    url: `${baseUrl}/roadmaps/${roadmapSlug}/${topicId}`,
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.7,
