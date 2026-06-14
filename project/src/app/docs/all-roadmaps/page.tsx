@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { roadmapSeo } from "@/src/lib/roadmapSeo";
 import type { CSSProperties, ReactNode } from "react";
+import Badge from "@/src/components/Badge";
 import ScrollReveal from "@/src/components/ScrollReveal";
 
 type ThemeVars = CSSProperties & Record<`--${string}`, string>;
@@ -251,34 +252,6 @@ function loadRoadmapBookmarks() {
   return nextBookmarks;
 }
 
-const whyRoadmaps = [
-  {
-    title: "Curated by Experts",
-    detail: "Created and reviewed by industry professionals.",
-    icon: "user",
-  },
-  {
-    title: "Up-to-Date Content",
-    detail: "Regularly updated with the latest tools and trends.",
-    icon: "refresh",
-  },
-  {
-    title: "Practical Learning",
-    detail: "Focus on real-world projects and hands-on skills.",
-    icon: "code",
-  },
-  {
-    title: "Flexible Learning",
-    detail: "Learn at your own pace with structured guidance.",
-    icon: "clock",
-  },
-  {
-    title: "Community Support",
-    detail: "Get help and support from a strong developer community.",
-    icon: "users",
-  },
-];
-
 const iconPaths: Record<string, ReactNode> = {
   home: <path d="M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1v-8.5Z" />,
   bolt: <path d="m13 2-9 13h7l-1 7 9-13h-7l1-7Z" />,
@@ -310,6 +283,9 @@ const iconPaths: Record<string, ReactNode> = {
   refresh: <path d="M20 7v5h-5M4 17v-5h5m10-1a7 7 0 0 0-12-4l-3 3m1 3a7 7 0 0 0 12 4l3-3" />,
   star: <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 18.2 6.4 21.2 7.5 15 3 10.6l6.2-.9L12 3Z" />,
   flame: <path d="M12 22c4 0 7-2.8 7-6.8 0-3.2-2.1-5.1-4.2-7.1-.9-.8-1.5-2-1.5-3.4C10 6.4 7 9.4 7 13c0 1.2.4 2.2 1 3-1.4-.5-2.3-1.7-2.7-3C4.5 14.1 4 15.3 4 16.5 4 19.7 7 22 12 22Z" />,
+  chart: <path d="M18 20V10M12 20V4M6 20v-6" />,
+  layout: <path d="M3 3h18v18H3V3Zm0 6h18M9 9v12" />,
+  server: <path d="M2 10V4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v6M2 14v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6M6 6h.01M6 18h.01" />,
 };
 
 const darkTheme: ThemeVars = {
@@ -418,42 +394,6 @@ function FilterSelect({ label, onChange, options, value }: { label: string; onCh
         ))}
       </select>
     </label>
-  );
-}
-
-/**
- * Renders a card highlighting a specific feature or section on the dashboard.
- * 
- * @param {Object} props
- * @param {string} props.detail - Description of the feature.
- * @param {string} props.eyebrow - Small text above the title.
- * @param {string} props.href - Link destination.
- * @param {string} props.icon - Name of the icon to display.
- * @param {string} props.metric - Key metric or statistic to show.
- * @param {string} props.title - Title of the feature card.
- * @returns {JSX.Element} The dashboard feature card component.
- */
-function DashboardFeatureCard({ detail, eyebrow, href, icon, metric, title }: { detail: string; eyebrow: string; href: string; icon: string; metric: string; title: string }) {
-  return (
-    <Link className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5 transition hover:border-red-500/45 hover:shadow-[0_20px_60px_rgba(127,29,29,0.18)]" href={href}>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-red-400">{eyebrow}</p>
-          <h2 className="mt-2 text-xl font-black text-[var(--text-primary)]">{title}</h2>
-        </div>
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-md border border-red-500/25 bg-red-950/20 text-red-500">
-          <Icon className="h-5 w-5" name={icon} />
-        </span>
-      </div>
-      <p className="mt-4 line-clamp-3 text-sm leading-6 text-[var(--text-secondary)]">{detail}</p>
-      <div className="mt-5 flex items-center justify-between gap-3">
-        <span className="text-sm font-black text-red-400">{metric}</span>
-        <span className="inline-flex items-center gap-2 text-xs font-black uppercase text-[var(--text-muted)]">
-          Open
-          <Icon className="h-3.5 w-3.5" name="chevron" />
-        </span>
-      </div>
-    </Link>
   );
 }
 
@@ -639,7 +579,7 @@ export default function AllRoadmaps() {
         <section className="px-5 py-6 sm:px-8 lg:px-8">
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel-bg)] px-5 py-6 shadow-2xl shadow-[var(--shadow)] sm:px-8">
             <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--text-muted)]">
-              <Icon className="h-4 w-4 text-red-500" name="home" />
+              <Icon className="h-4 w-4 text-zinc-500" name="home" />
               <span>Home</span>
               <Icon className="h-3 w-3" name="chevron" />
               <span className="font-semibold text-[var(--text-primary)]">
@@ -648,45 +588,43 @@ export default function AllRoadmaps() {
             </div>
 
             <section className="mt-6">
-              <div className="inline-flex items-center gap-2 rounded-md border border-red-500/30 bg-red-950/20 px-4 py-2 text-xs font-black uppercase tracking-[0.12em] text-red-400">
+              <div className="inline-flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900 px-4 py-2 text-[10px] sm:text-xs font-black uppercase tracking-[0.12em] text-zinc-400">
                 <Icon className="h-4 w-4" name="flame" />
                 Explore All Possibilities
               </div>
-              <h1 className="mt-5 text-4xl font-black tracking-normal text-[var(--text-primary)] sm:text-5xl">
+              <h1 className="mt-5 text-3xl font-black tracking-normal text-[var(--text-primary)] sm:text-5xl">
                 All Roadmaps
               </h1>
-              <div className="mt-2 h-1 w-64 rounded-full bg-[linear-gradient(90deg,#ef4444,rgba(239,68,68,0))]" />
-              <p className="mt-6 max-w-2xl text-base leading-8 text-[var(--text-secondary)]">
+              <div className="mt-2 h-1 w-32 sm:w-64 rounded-full bg-zinc-800" />
+              <p className="mt-6 max-w-2xl text-sm sm:text-base leading-8 text-[var(--text-secondary)]">
                 Explore our collection of developer roadmaps across different
                 technologies and domains. Choose a roadmap that fits your goals
                 and start your journey to mastery.
               </p>
             </section>
 
-            <section className="mt-9 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <section className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-6 rounded-xl border border-[var(--border)] bg-[var(--panel-strong)] px-5 sm:px-8 py-5">
               {[
-                [String(roadmapCards.length), "Roadmaps"],
-                [String(activeCategories), "Categories"],
-                [`${overallProgress}%`, "Your Progress"],
-                [`${totalCompleted}/${totalNodes}`, "Topics Completed"],
-                ["Weekly", "Content Updates"],
-              ].map(([value, label]) => (
-                <article
-                  className="rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5"
-                  key={label}
-                >
-                  <p className="text-2xl font-black text-red-500">{value}</p>
-                  <p className="mt-2 text-sm text-[var(--text-secondary)]">
-                    {label}
-                  </p>
-                </article>
+                [String(roadmapCards.length), "Roadmaps", "grid"],
+                [String(activeCategories), "Categories", "folder"],
+                [`${overallProgress}%`, "Progress", "chart"],
+                [`${totalCompleted}/${totalNodes}`, "Topics", "check"],
+                ["Weekly", "Updates", "refresh"],
+              ].map(([value, label, icon]) => (
+                <div className="flex items-center gap-3 sm:gap-4" key={label}>
+                  <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-zinc-500" name={icon} />
+                  <div>
+                    <p className="text-base sm:text-lg font-black leading-none text-white">{value}</p>
+                    <p className="mt-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-zinc-500">{label}</p>
+                  </div>
+                </div>
               ))}
             </section>
 
-            <section className="mt-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-              <div className="flex rounded-md border border-zinc-800 bg-black p-1">
+            <section className="mt-8 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+              <div className="flex flex-col sm:flex-row rounded-md border border-zinc-800 bg-black p-1">
                 <button
-                  className={`flex items-center gap-2 rounded px-4 py-2 text-sm font-bold transition ${viewFilter === "All" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+                  className={`flex items-center justify-center gap-2 rounded px-4 py-2 text-sm font-bold transition ${viewFilter === "All" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
                   onClick={() => setViewFilter("All")}
                   type="button"
                 >
@@ -694,7 +632,7 @@ export default function AllRoadmaps() {
                   All Roadmaps
                 </button>
                 <button
-                  className={`flex items-center gap-2 rounded px-4 py-2 text-sm font-bold transition ${viewFilter === "My Roadmaps" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+                  className={`flex items-center justify-center gap-2 rounded px-4 py-2 text-sm font-bold transition ${viewFilter === "My Roadmaps" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
                   onClick={() => setViewFilter("My Roadmaps")}
                   type="button"
                 >
@@ -702,7 +640,7 @@ export default function AllRoadmaps() {
                   My Roadmaps
                 </button>
               </div>
-              <div className="grid gap-4 xl:grid-cols-[1.35fr_0.9fr_0.9fr_0.9fr_auto]">
+              <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-[1.35fr_0.9fr_0.9fr_0.9fr_auto]">
                 <label className="flex h-12 items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-4 text-sm text-[var(--text-muted)]">
                   <span className="sr-only">Search roadmaps</span>
                   <input
@@ -736,120 +674,60 @@ export default function AllRoadmaps() {
             </section>
             
             <ScrollReveal>
-            <section className="mt-6 grid gap-5 xl:grid-cols-[1.1fr_1fr_1.2fr]">
-              <DashboardFeatureCard
-                eyebrow="Recommended Roadmap"
-                href={recommendedRoadmap.href}
-                icon="rocket"
-                metric={`${recommendedRoadmap.progress}%`}
-                title={recommendedRoadmap.title}
-                detail={recommendedRoadmap.detail}
-              />
-              <DashboardFeatureCard
-                eyebrow="Recently Updated"
-                href={recentlyUpdatedRoadmap.href}
-                icon="refresh"
-                metric=""
-                title={recentlyUpdatedRoadmap.title}
-                detail={recentlyUpdatedRoadmap.detail}
-              />
-              <section className="rounded-lg border border-red-500/25 bg-red-950/15 p-5">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-red-400">Start Here</p>
-                    <h2 className="mt-2 text-xl font-black text-[var(--text-primary)]">Beginner launch path</h2>
-                  </div>
-                  <Icon className="h-7 w-7 text-red-500" name="route" />
+              <section className="mt-8 rounded-xl border border-zinc-800 bg-zinc-950/20 p-6">
+                <div className="flex items-center gap-3">
+                  <Icon className="h-6 w-6 text-zinc-500" name="spark" />
+                  <h2 className="text-xl font-black text-white">Featured & Recommended</h2>
                 </div>
-                <div className="mt-5 space-y-3">
-                  {beginnerPath.map((step, index) => (
-                    <Link className="flex gap-3 rounded-md border border-[var(--border)] bg-[var(--panel-strong)] p-3 transition hover:border-red-500/50" href={step.href} key={step.label}>
-                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-red-500 text-xs font-black text-white">{index + 1}</span>
-                      <span>
-                        <span className="block text-sm font-black text-[var(--text-primary)]">{step.label}</span>
-                        <span className="mt-1 block text-xs leading-5 text-[var(--text-muted)]">{step.detail}</span>
-                      </span>
-                    </Link>
-                  ))}
+                <div className="mt-6 grid gap-5 xl:grid-cols-3">
+                  <Link className="group relative flex flex-col justify-between overflow-hidden rounded-lg border border-red-500/30 bg-red-500/5 p-5 transition hover:border-red-500/60" href={recommendedRoadmap.href}>
+                    <div>
+                      <Badge variant="red" className="mb-4">Recommended</Badge>
+                      <h3 className="text-xl font-black text-white">{recommendedRoadmap.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-zinc-300">{recommendedRoadmap.detail}</p>
+                    </div>
+                    <div className="mt-6 flex items-center justify-between">
+                      <span className="text-sm font-black text-red-400">{recommendedRoadmap.progress}% Started</span>
+                      <Icon className="h-5 w-5 text-red-500 transition group-hover:translate-x-1" name="arrow" />
+                    </div>
+                  </Link>
+
+                  <Link className="group relative flex flex-col justify-between overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 p-5 transition hover:border-zinc-700" href={recentlyUpdatedRoadmap.href}>
+                    <div>
+                      <Badge variant="outline" className="mb-4 border-zinc-700 text-zinc-400">Recently Updated</Badge>
+                      <h3 className="text-xl font-black text-white">{recentlyUpdatedRoadmap.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-zinc-400">{recentlyUpdatedRoadmap.detail}</p>
+                    </div>
+                    <div className="mt-6 flex items-center justify-between text-zinc-500">
+                      <span className="text-sm font-bold">Updated weekly</span>
+                      <Icon className="h-5 w-5 transition group-hover:translate-x-1" name="arrow" />
+                    </div>
+                  </Link>
+
+                  <section className="flex flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-900/50 p-5">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-4">Start Here</p>
+                      <div className="space-y-4">
+                        {beginnerPath.map((step, index) => (
+                          <Link className="flex items-center gap-3 transition hover:text-red-400" href={step.href} key={step.label}>
+                            <span className="grid h-6 w-6 shrink-0 place-items-center rounded bg-zinc-800 text-[10px] font-black text-zinc-400">{index + 1}</span>
+                            <span className="text-sm font-bold">{step.label}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-zinc-800">
+                      <Link className="text-xs font-black uppercase tracking-wider text-zinc-500 hover:text-white" href="/docs/quick-start">View Guide →</Link>
+                    </div>
+                  </section>
                 </div>
               </section>
-            </section>
             </ScrollReveal>
 
-            <section className="mt-6 grid gap-5 xl:grid-cols-3">
+            <section className="mt-8 grid gap-5 xl:grid-cols-3">
               {filteredRoadmaps.map((roadmap) => {
                 const slug = roadmap.href.split("/").pop() || "";
                 const duration = roadmapSeo[slug]?.duration;
-
-                const cardContent = (
-                  <>
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-black text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.15)]">
-                        <Icon className="h-6 w-6" name={roadmap.category === "Frontend" ? "layout" : roadmap.category === "Backend" ? "server" : roadmap.category === "DevOps" ? "cloud" : roadmap.category === "Mobile" ? "smartphone" : roadmap.category === "Data" ? "database" : "code"} />
-                      </div>
-                      <div>
-                        <h2 className="text-lg font-black text-[var(--text-primary)]">
-                          {roadmap.title}
-                        </h2>
-                        <p className="mt-3 min-h-[52px] text-sm leading-6 text-[var(--text-secondary)]">
-                          {roadmap.detail}
-                        </p>
-                      </div>
-                    </div>
-                    <Icon className="h-5 w-5 shrink-0 text-[var(--text-muted)]" name="star" />
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-[var(--text-muted)]">
-                    <span>{roadmap.topics}</span>
-                    <span className="h-4 w-px bg-[var(--border)]" />
-                    <span>{roadmap.level}</span>
-                    {duration && (
-                      <>
-                        <span className="h-4 w-px bg-[var(--border)]" />
-                        <span className="flex items-center gap-1 font-medium">
-                          <Icon className="h-3.5 w-3.5 text-red-400" name="clock" />
-                          {duration}
-                        </span>
-                      </>
-                    )}
-                    <span className="h-4 w-px bg-[var(--border)]" />
-
-                  </div>
-
-                  <div className="mt-5 flex items-center gap-4">
-                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
-                      <div
-                        className="h-full rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.45)] transition-all duration-500"
-                        style={{ width: isMounted ? `${roadmap.progress}%` : "0%" }}
-                      />
-                    </div>
-                    {isMounted ? (
-                      <span className="text-xs font-black text-[var(--text-secondary)]">
-                        {roadmap.progress}%
-                      </span>
-                    ) : (
-                      <span className="h-4 w-6 animate-pulse rounded bg-zinc-800/50" />
-                    )}
-                  </div>
-
-                  <div className="mt-3 flex items-center justify-between gap-3 text-xs text-[var(--text-muted)]">
-                    <span>{roadmap.completed}/{roadmap.nodeCount} completed</span>
-                    <span className="rounded border border-red-500/25 bg-red-950/20 px-2 py-1 font-black text-red-400">{roadmap.status}</span>
-                  </div>
-
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {roadmap.tags.map((tag) => (
-                      <span
-                        className="rounded bg-[var(--field-bg)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)]"
-                        key={tag}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  </>
-                );
 
                 return (
                   <ScrollReveal key={roadmap.title}>
@@ -857,49 +735,86 @@ export default function AllRoadmaps() {
                     className="flex h-full flex-col justify-between rounded-lg border border-[var(--border)] bg-[var(--panel-strong)] p-5 transition hover:border-red-500/45 hover:shadow-[0_20px_60px_rgba(127,29,29,0.18)]"
                     href={roadmap.href}
                   >
-                    {cardContent}
+                    <div>
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-400 shadow-sm">
+                          <Icon className="h-6 w-6" name={roadmap.category === "Frontend" ? "layout" : roadmap.category === "Backend" ? "server" : roadmap.category === "DevOps" ? "cloud" : roadmap.category === "Mobile" ? "smartphone" : roadmap.category === "Data" ? "database" : "code"} />
+                        </div>
+                        <h2 className="text-lg font-black text-[var(--text-primary)]">
+                          {roadmap.title}
+                        </h2>
+                      </div>
+                      <p className="mt-4 line-clamp-1 text-sm leading-6 text-[var(--text-secondary)]">
+                        {roadmap.detail}
+                      </p>
+                      
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {roadmap.tags.slice(0, 3).map((tag) => (
+                          <Badge key={tag} variant="default" className="text-[10px] px-2 py-0">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-6">
+                      <div className="flex items-center justify-between text-[11px] font-bold text-zinc-500">
+                        <span>
+                          {roadmap.topics}
+                        </span>
+                        <span>{roadmap.progress}% complete</span>
+                      </div>
+                      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-zinc-800">
+                        <div
+                          className="h-full rounded-full bg-zinc-600 transition-all duration-500"
+                          style={{ width: isMounted ? `${roadmap.progress}%` : "0%" }}
+                        />
+                      </div>
+                    </div>
                   </Link>
                   </ScrollReveal>
                 );
               })}
-              
-              {/* Coming Soon Placeholders */}
-              {!searchQuery && comingSoonCards
-                .filter(card => categoryFilter === "All Categories" || card.category === categoryFilter)
-                .map(card => (
-                  <ScrollReveal key={card.title}>
-                    <div className="flex h-full flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-950/40 p-5 opacity-60 transition hover:opacity-80" key={card.title}>
-                      <div>
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <h2 className="text-lg font-black text-zinc-500">{card.title}</h2>
-                            <p className="mt-3 text-sm leading-6 text-zinc-600">{card.detail}</p>
-                          </div>
-                          <Icon className="h-5 w-5 shrink-0 text-zinc-700" name="star" />
-                        </div>
-                        <div className="mt-4 flex items-center gap-3 text-xs text-zinc-700">
-                          <span>{card.category}</span>
-                        </div>
-                      </div>
-                      <div className="mt-5 text-center">
-                        <span className="inline-block rounded-md border border-zinc-800 bg-black px-3 py-1 text-xs font-bold text-zinc-500">
-                          Coming Soon
-                        </span>
-                      </div>
-                    </div>
-                  </ScrollReveal>
-              ))}
             </section>
+
+            {!searchQuery && (
+              <section className="mt-12 border-t border-zinc-900 pt-12">
+                <div className="flex items-center gap-3">
+                  <div className="h-px flex-1 bg-zinc-900" />
+                  <h2 className="text-xl font-black text-zinc-500">Coming Soon</h2>
+                  <div className="h-px flex-1 bg-zinc-900" />
+                </div>
+                <div className="mt-8 grid gap-5 xl:grid-cols-3">
+                  {comingSoonCards
+                    .filter(card => categoryFilter === "All Categories" || card.category === categoryFilter)
+                    .map(card => (
+                      <ScrollReveal key={card.title}>
+                        <div className="flex h-full flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-950/20 p-5 opacity-60">
+                          <div>
+                            <div className="flex items-start justify-between gap-4">
+                              <h2 className="text-lg font-black text-zinc-500">{card.title}</h2>
+                              <Badge variant="outline" className="opacity-50">Draft</Badge>
+                            </div>
+                            <p className="mt-3 line-clamp-2 text-sm leading-6 text-zinc-600">{card.detail}</p>
+                          </div>
+                          <div className="mt-5">
+                            <span className="text-xs font-bold text-zinc-700">{card.category} Roadmap</span>
+                          </div>
+                        </div>
+                      </ScrollReveal>
+                  ))}
+                </div>
+              </section>
+            )}
             
             <ScrollReveal>
-              <section className="mt-9 rounded-xl border border-[var(--border)] bg-black/20 p-5">
+              <section className="mt-12 rounded-xl border border-[var(--border)] bg-black/20 p-6">
                 <h2 className="flex items-center gap-3 text-2xl font-black text-[var(--text-primary)]">
-                  <Icon className="h-7 w-7 text-red-500" name="spark" />
+                  <Icon className="h-7 w-7 text-zinc-500" name="spark" />
                   Compare Roadmaps at a Glance
                 </h2>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
-                  Not sure which path to pick? Compare estimated timelines,
-                  difficulty levels, and ideal learner profiles side by side.
+                  Compare estimated timelines and starting difficulty levels side by side.
                 </p>
 
                 <div className="mt-6 overflow-x-auto rounded-lg border border-[var(--border)]">
@@ -909,16 +824,16 @@ export default function AllRoadmaps() {
                     </caption>
                     <thead>
                       <tr className="border-b border-[var(--border)] bg-[var(--panel-strong)]">
-                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
+                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-zinc-500" scope="col">
                           Roadmap
                         </th>
-                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
+                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-zinc-500" scope="col">
                           Best For
                         </th>
-                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
+                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-zinc-500" scope="col">
                           Est. Duration
                         </th>
-                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-red-400" scope="col">
+                        <th className="px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-zinc-500" scope="col">
                           Starting Difficulty
                         </th>
                       </tr>
@@ -983,7 +898,7 @@ export default function AllRoadmaps() {
                               className="inline-flex items-center gap-2 font-black text-[var(--text-primary)] transition hover:text-red-500"
                               href={row.href}
                             >
-                              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-red-500/25 bg-red-950/20 text-red-500">
+                              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-zinc-800 bg-zinc-900 text-zinc-400">
                                 <Icon className="h-4 w-4" name={row.icon} />
                               </span>
                               {row.name}
@@ -996,44 +911,12 @@ export default function AllRoadmaps() {
                             {row.duration}
                           </td>
                           <td className="px-5 py-4">
-                            <span
-                              className={`inline-block rounded border px-2.5 py-1 text-xs font-black ${
-                                row.difficulty === "Beginner"
-                                  ? "border-emerald-500/25 bg-emerald-950/20 text-emerald-400"
-                                  : "border-amber-500/25 bg-amber-950/20 text-amber-400"
-                              }`}
-                            >
-                              {row.difficulty}
-                            </span>
+                            <Badge variant={row.difficulty.toLowerCase() as any}>{row.difficulty}</Badge>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                </div>
-              </section>
-            </ScrollReveal>
-
-            <ScrollReveal>
-              <section className="mt-9 rounded-xl border border-[var(--border)] bg-black/20 p-5">
-                <h2 className="flex items-center gap-3 text-2xl font-black text-[var(--text-primary)]">
-                  <Icon className="h-7 w-7 text-red-500" name="spark" />
-                  Why Choose Our Roadmaps?
-                </h2>
-                <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-                  {whyRoadmaps.map((item) => (
-                    <article className="text-center" key={item.title}>
-                      <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-red-500/20 bg-red-950/20 text-red-500">
-                        <Icon className="h-8 w-8" name={item.icon} />
-                      </span>
-                      <h3 className="mt-4 text-sm font-black text-[var(--text-primary)]">
-                        {item.title}
-                      </h3>
-                      <p className="mt-3 text-sm leading-6 text-[var(--text-muted)]">
-                        {item.detail}
-                      </p>
-                    </article>
-                  ))}
                 </div>
               </section>
             </ScrollReveal>

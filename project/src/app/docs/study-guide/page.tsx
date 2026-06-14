@@ -466,14 +466,14 @@ export default function StudyGuide() {
               </span>
             </div>
 
-            <section className="mt-6 grid gap-6 xl:grid-cols-[1fr_430px]">
+            <section className="mt-6 grid gap-6 grid-cols-1 xl:grid-cols-[1fr_430px]">
               <div>
-                <h1 className="text-4xl font-black tracking-normal text-[var(--text-primary)] sm:text-5xl">
+                <h1 className="text-3xl font-black tracking-normal text-[var(--text-primary)] sm:text-5xl">
                   Study Guide
-                  <Icon className="ml-5 inline-block h-8 w-8 align-top text-red-500" name="spark" />
+                  <Icon className="ml-3 sm:ml-5 inline-block h-6 w-6 sm:h-8 sm:w-8 align-top text-red-500" name="spark" />
                 </h1>
-                <div className="mt-2 h-1 w-72 rounded-full bg-[linear-gradient(90deg,#ef4444,rgba(239,68,68,0))]" />
-                <p className="mt-6 max-w-2xl text-base leading-8 text-[var(--text-secondary)]">
+                <div className="mt-2 h-1 w-32 sm:w-72 rounded-full bg-[linear-gradient(90deg,#ef4444,rgba(239,68,68,0))]" />
+                <p className="mt-6 max-w-2xl text-sm sm:text-base leading-8 text-[var(--text-secondary)]">
                   Curated study materials, cheat sheets, and notes to help you
                   learn and revise effectively.
                 </p>
@@ -486,7 +486,7 @@ export default function StudyGuide() {
                 <p className="mt-4 max-w-xs text-sm leading-7 text-[var(--text-secondary)]">
                   Everything you need to learn faster and remember better.
                 </p>
-                <div className="mt-5 grid gap-2 md:grid-cols-[1fr_92px]">
+                <div className="mt-5 grid gap-2 grid-cols-1 md:grid-cols-[1fr_92px]">
                   <div className="space-y-3">
                     {learnItems.map((item) => (
                       <div
