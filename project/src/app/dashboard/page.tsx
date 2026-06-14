@@ -157,7 +157,7 @@ function loadProgress() {
 function DemonTechLogo() {
   return (
     <Link className="flex min-w-fit items-center gap-3" href="/">
-      <span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md border border-red-500/30 bg-black">
+      <span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md border border-zinc-800 bg-black">
         <Image alt="DemonTech logo" className="h-full w-full object-cover" height={48} src="/demontech-logo.png" width={48} />
       </span>
       <span>
@@ -210,12 +210,12 @@ export default function DashboardPage() {
         <div className="mx-auto flex h-16 max-w-[1280px] items-center gap-5 px-5 lg:px-6">
           <DemonTechLogo />
           <nav className="ml-auto hidden items-center gap-7 text-sm font-bold text-zinc-400 lg:flex">
-            <Link className="text-red-400" href="/dashboard">Dashboard</Link>
+            <Link className="text-red-500 hover:text-red-400" href="/dashboard">Dashboard</Link>
             <Link className="transition hover:text-white" href="/docs/all-roadmaps">Roadmaps</Link>
             <Link className="transition hover:text-white" href="/docs/learning-paths">Learning Paths</Link>
             <Link className="transition hover:text-white" href="/docs/project-ideas">Projects</Link>
           </nav>
-          <Link className="hidden rounded-md border border-red-500/40 bg-red-500 px-4 py-2 text-sm font-black text-white transition hover:bg-red-400 md:inline-flex" href={dashboard.activeRoadmap.href}>
+          <Link className="hidden rounded-md border border-red-500/40 bg-red-600 px-4 py-2 text-sm font-black text-white transition hover:bg-red-500 md:inline-flex" href={dashboard.activeRoadmap.href}>
             Continue
           </Link>
         </div>
@@ -224,7 +224,7 @@ export default function DashboardPage() {
       <div className="mx-auto grid max-w-[1280px] gap-6 px-5 py-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-6">
         <section>
           <div className="flex flex-wrap items-center gap-2 text-sm text-zinc-500">
-            <Link className="hover:text-red-400" href="/">Home</Link>
+            <Link className="hover:text-white" href="/">Home</Link>
             <Icon className="h-3.5 w-3.5" name="arrow" />
             <span className="font-bold text-zinc-300">Dashboard</span>
           </div>
@@ -232,7 +232,7 @@ export default function DashboardPage() {
           <section className="mt-6 rounded-md border border-zinc-800 bg-zinc-950 p-5 lg:p-6">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-red-300">
+                <div className="inline-flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-zinc-400">
                   <Icon className="h-4 w-4" name="rocket" />
                   Learning Command Center
                 </div>
@@ -241,15 +241,15 @@ export default function DashboardPage() {
                   Track your active roadmap, completed topics, notes, streak, achievements, and estimated learning hours from one focused workspace.
                 </p>
               </div>
-              <div className="rounded-md border border-red-500/25 bg-red-500/10 p-5">
-                <p className="text-sm font-black uppercase tracking-[0.12em] text-red-300">Current Roadmap</p>
+              <div className="rounded-md border border-zinc-800 bg-black/40 p-5">
+                <p className="text-sm font-black uppercase tracking-[0.12em] text-zinc-500">Current Roadmap</p>
                 <h2 className="mt-3 text-2xl font-black text-white">{dashboard.activeRoadmap.title}</h2>
                 <p className="mt-2 text-sm leading-6 text-zinc-400">{dashboard.activeRoadmap.category} / {dashboard.activeRoadmap.level}</p>
-                <div className="mt-5 h-2 overflow-hidden rounded-full bg-black">
-                  <div className="h-full rounded-full bg-red-500" style={{ width: `${dashboard.activeRoadmap.percentage}%` }} />
+                <div className="mt-5 h-2 overflow-hidden rounded-full bg-zinc-900">
+                  <div className="h-full rounded-full bg-zinc-600" style={{ width: `${dashboard.activeRoadmap.percentage}%` }} />
                 </div>
                 <div className="mt-3 flex items-center justify-between text-sm">
-                  <span className="font-bold text-red-200">{dashboard.activeRoadmap.percentage}% complete</span>
+                  <span className="font-bold text-zinc-300">{dashboard.activeRoadmap.percentage}% complete</span>
                   <span className="text-zinc-500">{dashboard.activeRoadmap.completed}/{dashboard.activeRoadmap.totalNodes}</span>
                 </div>
               </div>
@@ -270,22 +270,22 @@ export default function DashboardPage() {
                   <h2 className="text-2xl font-black text-white">Roadmap Progress</h2>
                   <p className="mt-2 text-sm leading-6 text-zinc-500">Progress is pulled from saved completions in each roadmap.</p>
                 </div>
-                <Link className="rounded-md border border-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:border-red-500/60 hover:text-white" href="/docs/all-roadmaps">
+                <Link className="rounded-md border border-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:border-zinc-700 hover:text-white" href="/docs/all-roadmaps">
                   Browse roadmaps
                 </Link>
               </div>
               <div className="mt-5 grid gap-3">
                 {roadmaps.map((roadmap) => (
-                  <Link className="rounded-md border border-zinc-800 bg-[#050505] p-4 transition hover:border-red-500/50" href={roadmap.href} key={roadmap.storageKey}>
+                  <Link className="rounded-md border border-zinc-800 bg-[#050505] p-4 transition hover:border-zinc-700" href={roadmap.href} key={roadmap.storageKey}>
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <h3 className="font-black text-white">{roadmap.title}</h3>
-                        <p className="mt-1 text-xs font-bold text-zinc-500">{roadmap.completed}/{roadmap.totalNodes} topics / {roadmap.activeNotes} notes / {roadmap.bookmarked} bookmarks</p>
+                        <p className="mt-1 text-[11px] font-bold text-zinc-500">{roadmap.completed}/{roadmap.totalNodes} topics · {roadmap.activeNotes} notes · {roadmap.bookmarked} bookmarks</p>
                       </div>
-                      <span className="rounded border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs font-black text-red-200">{roadmap.percentage}%</span>
+                      <span className="rounded border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-xs font-black text-zinc-400">{roadmap.percentage}%</span>
                     </div>
-                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-zinc-900">
-                      <div className="h-full rounded-full bg-red-500" style={{ width: `${roadmap.percentage}%` }} />
+                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-900">
+                      <div className="h-full rounded-full bg-zinc-600" style={{ width: `${roadmap.percentage}%` }} />
                     </div>
                   </Link>
                 ))}
@@ -294,13 +294,13 @@ export default function DashboardPage() {
 
             <section className="rounded-md border border-zinc-800 bg-zinc-950 p-5">
               <h2 className="text-2xl font-black text-white">Achievement Badges</h2>
-              <p className="mt-2 text-sm leading-6 text-zinc-500">Badges unlock as you complete topics, write notes, and build momentum.</p>
+              <p className="mt-2 text-sm leading-6 text-zinc-500">Badges unlock as you build momentum.</p>
               <div className="mt-5 grid gap-3">
                 {dashboard.badges.map((badge) => (
-                  <div className={`flex items-center gap-3 rounded-md border p-3 ${badge.unlocked ? "border-red-500/40 bg-red-500/10 text-red-100" : "border-zinc-800 bg-[#050505] text-zinc-500"}`} key={badge.label}>
-                    <Icon className="h-5 w-5" name="badge" />
+                  <div className={`flex items-center gap-3 rounded-md border p-3 ${badge.unlocked ? "border-zinc-700 bg-zinc-900 text-zinc-100" : "border-zinc-900 bg-[#050505] text-zinc-600"}`} key={badge.label}>
+                    <Icon className={`h-5 w-5 ${badge.unlocked ? "text-red-500" : "text-zinc-700"}`} name="badge" />
                     <span className="text-sm font-bold">{badge.label}</span>
-                    <span className="ml-auto text-xs font-black uppercase">{badge.unlocked ? "Unlocked" : "Locked"}</span>
+                    <span className="ml-auto text-[10px] font-black uppercase tracking-wider">{badge.unlocked ? "Unlocked" : "Locked"}</span>
                   </div>
                 ))}
               </div>
@@ -310,10 +310,10 @@ export default function DashboardPage() {
 
         <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
           <SidebarPanel title="Recommended Next Topic">
-            <span className="inline-flex rounded-md border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs font-black text-red-200">{dashboard.activeRoadmap.category}</span>
+            <span className="inline-flex rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-zinc-400">{dashboard.activeRoadmap.category}</span>
             <h2 className="mt-3 text-xl font-black text-white">{dashboard.nextTopic}</h2>
             <p className="mt-2 text-sm leading-6 text-zinc-400">Continue this topic inside your current roadmap to keep your streak alive.</p>
-            <Link className="mt-4 inline-flex items-center gap-2 rounded-md border border-red-500/40 bg-red-500 px-4 py-2 text-sm font-black text-white transition hover:bg-red-400" href={dashboard.activeRoadmap.href}>
+            <Link className="mt-4 inline-flex items-center gap-2 rounded-md border border-red-500/40 bg-red-600 px-4 py-2 text-sm font-black text-white transition hover:bg-red-500" href={dashboard.activeRoadmap.href}>
               Open roadmap
               <Icon className="h-4 w-4" name="arrow" />
             </Link>
@@ -341,7 +341,7 @@ export default function DashboardPage() {
 function StatCard({ icon, label, value }: { icon: keyof typeof icons; label: string; value: string }) {
   return (
     <article className="rounded-md border border-zinc-800 bg-zinc-950 p-5">
-      <Icon className="h-5 w-5 text-red-400" name={icon} />
+      <Icon className="h-5 w-5 text-zinc-500" name={icon} />
       <p className="mt-4 text-3xl font-black text-white">{value}</p>
       <p className="mt-1 text-sm text-zinc-500">{label}</p>
     </article>
@@ -351,7 +351,7 @@ function StatCard({ icon, label, value }: { icon: keyof typeof icons; label: str
 function SidebarPanel({ children, title }: { children: ReactNode; title: string }) {
   return (
     <section className="rounded-md border border-zinc-800 bg-zinc-950/90 p-5">
-      <h2 className="text-sm font-black uppercase tracking-[0.12em] text-zinc-400">{title}</h2>
+      <h2 className="text-sm font-black uppercase tracking-[0.12em] text-zinc-500">{title}</h2>
       {children}
     </section>
   );
@@ -361,7 +361,7 @@ function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border border-zinc-800 bg-[#050505] p-3">
       <p className="text-lg font-black text-white">{value}</p>
-      <p className="mt-1 text-xs text-zinc-500">{label}</p>
+      <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-zinc-500">{label}</p>
     </div>
   );
 }

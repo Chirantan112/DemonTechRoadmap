@@ -37,10 +37,11 @@ const stats = [
   { icon: "community", value: "15K+", label: "Learners", note: "Growing community" },
 ] as const;
 
-const audience = [
-  { icon: "target", title: "Choose a path", text: "Pick a roadmap that matches your goal and follow a step-by-step path." },
-  { icon: "code", title: "Build projects", text: "Turn concepts into real projects with prompts and practical checkpoints." },
-  { icon: "community", title: "Grow with feedback", text: "Use notes, bookmarks, and community support to stay consistent." },
+const consolidatedFeatures = [
+  { icon: "target", title: "Expert-Curated Paths", detail: "Step-by-step roadmaps from industry professionals, kept weekly up-to-date." },
+  { icon: "code", title: "Practical Build-First", detail: "Turn concepts into real projects with hand-picked resources and prompts." },
+  { icon: "check", title: "Track Your Mastery", detail: "Mark topics complete, take notes, and visualize your progress journey." },
+  { icon: "community", title: "Community Driven", detail: "Get support from thousands of developers and contribute to the source." },
 ] as const;
 
 const journey = [
