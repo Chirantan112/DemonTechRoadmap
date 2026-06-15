@@ -1,7 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Play, Maximize2, LayoutGrid } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { 
+  Play, 
+  Maximize2, 
+  Minimize2, 
+  LayoutGrid, 
+  RefreshCw,
+  Terminal,
+  Zap,
+  ChevronRight
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/src/lib/utils";
 
 interface PlaygroundProps {
@@ -12,8 +22,8 @@ interface PlaygroundProps {
 }
 
 export default function Playground({
-  initialHtml = "<h1>Hello DemonTech!</h1>\n<p>Welcome to the interactive playground.</p>",
-  initialCss = "body {\n  font-family: system-ui, sans-serif;\n  background: #fff;\n  color: #000;\n  padding: 2rem;\n}\n\nh1 {\n  color: #ef4444;\n}",
+  initialHtml = "<h1>Hello DemonTech!</h1>",
+  initialCss = "h1 { color: #ef4444; font-family: sans-serif; }",
   initialJs = "console.log('Playground ready!');",
   title = "Interactive Playground",
 }: PlaygroundProps) {
@@ -22,15 +32,19 @@ export default function Playground({
   const [css, setCss] = useState(initialCss);
   const [js, setJs] = useState(initialJs);
   const [srcDoc, setSrcDoc] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [dividerPosition, setDividerPosition] = useState(50); // percentage
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const updatePreview = () => {
     const document = `
       <!DOCTYPE html>
-      <html lang="en">
+      <html>
         <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <style>${css}</style>
+          <style>
+            body { margin: 0; padding: 2rem; background: #000; color: #fff; font-family: -apple-system, system-ui, sans-serif; }
+            ${css}
+          </style>
         </head>
         <body>
           ${html}
@@ -41,63 +55,92 @@ export default function Playground({
     setSrcDoc(document);
   };
 
-  // Initial render
   useEffect(() => {
     updatePreview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const tabs = [
-    { id: "html", label: "index.html" },
-    { id: "css", label: "styles.css" },
-    { id: "js", label: "script.js" },
-  ] as const;
+  const resetCode = () => {
+    setHtml(initialHtml);
+    setCss(initialCss);
+    setJs(initialJs);
+  };
 
   return (
-    <div className="my-10 rounded-xl overflow-hidden bg-[#0f0f0f] border border-[#1f1f1f] shadow-2xl flex flex-col">
+    <div 
+      className={cn(
+        "my-16 rounded-[2rem] overflow-hidden border border-[#1f1f1f] bg-[#050505] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] flex flex-col transition-all duration-500",
+        isFullscreen ? "fixed inset-4 z-[100] m-0" : "relative"
+      )}
+      ref={containerRef}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#050505] border-b border-[#1f1f1f]">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between px-6 py-4 bg-[#0a0a0a] border-b border-[#1f1f1f]">
+        <div className="flex items-center gap-6">
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-[#ef4444]" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500" />
-            <div className="w-3 h-3 rounded-full bg-green-500" />
+            <div className="w-3 h-3 rounded-full bg-[#ef4444]/20 border border-[#ef4444]/40" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/40" />
+            <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/40" />
           </div>
-          <span className="text-xs font-bold text-[#ffffff] uppercase tracking-widest ml-2">
-            {title}
-          </span>
+          <div className="flex items-center gap-2">
+            <Terminal className="h-4 w-4 text-[#ef4444]" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
+              {title}
+            </span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+        
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={resetCode}
+            className="p-2 text-[#555] hover:text-white transition-colors"
+            title="Reset Code"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </button>
+          <button 
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            className="p-2 text-[#555] hover:text-white transition-colors"
+          >
+            {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          </button>
           <button
             onClick={updatePreview}
-            className="flex items-center gap-2 px-3 py-1.5 bg-[#ef4444] hover:bg-[#dc2626] text-white text-xs font-bold rounded-md transition-colors"
+            className="flex items-center gap-2 px-5 py-2 bg-[#ef4444] hover:bg-[#dc2626] text-white text-[11px] font-black uppercase tracking-widest rounded-xl transition-all shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:scale-105 active:scale-95"
           >
-            <Play className="h-3.5 w-3.5" />
-            Run Code
+            <Play className="h-3.5 w-3.5 fill-white" />
+            Run Preview
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 h-[500px]">
+      {/* Editor & Preview Area */}
+      <div className="flex flex-col lg:flex-row h-[600px] bg-[#050505]">
         {/* Editor Pane */}
-        <div className="flex flex-col border-b lg:border-b-0 lg:border-r border-[#1f1f1f]">
-          <div className="flex bg-[#050505] border-b border-[#1f1f1f]">
-            {tabs.map((tab) => (
+        <div className="flex flex-col flex-1 border-b lg:border-b-0 lg:border-r border-[#1f1f1f] bg-[#050505]">
+          <div className="flex px-4 bg-[#0a0a0a] border-b border-[#1f1f1f]">
+            {(['html', 'css', 'js'] as const).map((tab) => (
               <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                key={tab}
+                onClick={() => setActiveTab(tab)}
                 className={cn(
-                  "px-4 py-2.5 text-xs font-mono transition-colors border-b-2",
-                  activeTab === tab.id
-                    ? "border-[#ef4444] text-[#ffffff] bg-[#0f0f0f]"
-                    : "border-transparent text-[#a1a1aa] hover:text-[#ffffff] hover:bg-[#0f0f0f]/50"
+                  "px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all relative",
+                  activeTab === tab
+                    ? "text-[#ef4444]"
+                    : "text-[#444] hover:text-[#a1a1aa]"
                 )}
               >
-                {tab.label}
+                {tab === 'js' ? 'script.js' : tab === 'css' ? 'style.css' : 'index.html'}
+                {activeTab === tab && (
+                  <motion.div 
+                    layoutId="activePlaygroundTab"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ef4444]" 
+                  />
+                )}
               </button>
             ))}
           </div>
-          <div className="flex-1 p-4 bg-[#050505]">
+          <div className="flex-1 relative group">
             <textarea
               value={activeTab === "html" ? html : activeTab === "css" ? css : js}
               onChange={(e) => {
@@ -106,25 +149,45 @@ export default function Playground({
                 if (activeTab === "css") setCss(value);
                 if (activeTab === "js") setJs(value);
               }}
-              className="w-full h-full bg-transparent text-[#a1a1aa] font-mono text-sm resize-none focus:outline-none focus:text-[#ffffff] transition-colors"
+              className="w-full h-full bg-[#050505] p-6 text-[#a1a1aa] font-mono text-[14px] leading-relaxed resize-none focus:outline-none focus:text-white selection:bg-[#ef4444]/30"
               spellCheck={false}
+              autoCapitalize="off"
+              autoComplete="off"
             />
+            {/* Line number simulation */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-[#080808] border-r border-[#151515] flex flex-col pt-6 pointer-events-none items-center">
+              {[...Array(20)].map((_, i) => (
+                <span key={i} className="text-[10px] font-mono text-[#333] leading-[21px]">{i + 1}</span>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Preview Pane */}
-        <div className="flex flex-col bg-white h-full relative">
-          <div className="absolute top-0 right-0 left-0 h-8 bg-[#f8fafc] border-b border-gray-200 flex items-center px-4">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-              Live Preview
-            </span>
+        <div className="flex-1 flex flex-col bg-black">
+          <div className="px-6 py-3 bg-[#0a0a0a] border-b border-[#1f1f1f] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Zap className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#555]">
+                Live Preview
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-[#111]" />
+              <div className="w-12 h-1 bg-[#111] rounded-full" />
+            </div>
           </div>
-          <iframe
-            srcDoc={srcDoc}
-            title="Live Preview"
-            sandbox="allow-scripts"
-            className="w-full flex-1 pt-8 border-none"
-          />
+          <div className="flex-1 relative p-4 lg:p-8 overflow-hidden">
+             {/* Device frame simulation */}
+             <div className="w-full h-full border border-[#1f1f1f] rounded-2xl overflow-hidden bg-black shadow-2xl relative">
+                <iframe
+                  srcDoc={srcDoc}
+                  title="Live Preview"
+                  sandbox="allow-scripts"
+                  className="w-full h-full border-none bg-black"
+                />
+             </div>
+          </div>
         </div>
       </div>
     </div>

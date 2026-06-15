@@ -3,91 +3,141 @@ import CodeBlock from '@/src/components/docs/CodeBlock';
 import DocNote from '@/src/components/docs/DocNote';
 import DocsHeader from '@/src/components/docs/DocsHeader';
 import Playground from '@/src/components/docs/Playground';
+import LearningOutcomes from '@/src/components/docs/LearningOutcomes';
 
 export default function HtmlIntroduction() {
   return (
     <div>
       <DocsHeader 
         title="HTML Introduction"
-        description="HTML is the standard markup language for creating Web pages. It defines the structure and layout of a web document by using various tags and attributes."
+        description="Master the essential building blocks of the web. Learn how to structure documents with HTML5, the foundational language for every website on the internet."
         category="Getting Started"
-        readingTime="4 min read"
+        difficulty="Beginner"
+        readingTime="6 min read"
+        prerequisites={["Basic Computer Literacy", "Text Editor Knowledge"]}
+      />
+
+      <LearningOutcomes 
+        outcomes={[
+          "Understand the core purpose of HTML",
+          "Identify basic HTML5 document structure",
+          "Write your first semantic HTML elements",
+          "Differentiate between tags and attributes",
+          "Build and preview a simple webpage"
+        ]}
       />
       
       <h2 id="what-is-html">What is HTML?</h2>
-      <p>HTML stands for Hyper Text Markup Language. It is the backbone of any website, providing the essential structure that browsers use to render content.</p>
+      <p>
+        HTML stands for <strong>Hyper Text Markup Language</strong>. It is not a programming language; 
+        it is a markup language that tells web browsers how to structure the web pages you visit. 
+        It can be as complicated or as simple as the web developer wants it to be.
+      </p>
       
       <ul>
-        <li><strong>HyperText:</strong> Links that connect web pages to one another.</li>
-        <li><strong>Markup Language:</strong> A way to annotate text so that a computer can understand and manipulate it.</li>
+        <li><strong>HyperText:</strong> Refers to the way in which Web pages (HTML documents) are linked together. Thus, the link available on a webpage is called Hypertext.</li>
+        <li><strong>Markup Language:</strong> Refers to the way tags are used to define the page layout and elements within the page.</li>
       </ul>
 
-      <DocNote type="info" title="Why Learn HTML?">
-        Every web developer starts with HTML. Whether you want to build simple websites or complex web applications like Facebook or Gmail, HTML is where it all begins.
+      <DocNote type="info" title="Hacker Insight">
+        Every single website you've ever visited—from Google to DemonTech—is built on a foundation of HTML. 
+        JavaScript and CSS are powerful, but they both rely on the structure that HTML provides.
       </DocNote>
 
       <h2 id="simple-document">A Simple HTML Document</h2>
-      <p>Every HTML5 document follows a standard structure. Copy the code below and try it in our interactive playground.</p>
+      <p>
+        To create a basic web page, you need to follow a standard structure. This structure ensures 
+        that browsers can interpret your content correctly and consistently across different devices.
+      </p>
 
       <CodeBlock 
         language="html"
         title="index.html"
         code={`<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Page Title</title>
+  <meta charset="UTF-8">
+  <title>My First Webpage</title>
 </head>
 <body>
 
-  <h1>My First Heading</h1>
-  <p>My first paragraph.</p>
+  <h1>Leveling Up with DemonTech</h1>
+  <p>The journey to becoming a world-class engineer starts here.</p>
 
 </body>
 </html>`}
       />
 
       <h2 id="interactive-playground">Interactive Playground</h2>
-      <p>Experiment with the code below. Change the heading text or add new elements to see them appear instantly in the live preview.</p>
+      <p>
+        Experience the power of real-time editing. Modify the heading or style the button below to see 
+        how HTML and CSS work together in a production environment.
+      </p>
       
       <Playground 
-        title="HTML Basic Playground"
-        initialHtml={`<h1>Hello DemonTech!</h1>
-<p>Try changing this text in the editor to the left.</p>
-<button class="btn">Click Me</button>`}
-        initialCss={`.btn {
+        title="HTML5 Live Editor"
+        initialHtml={`<div class="card">
+  <h1>Welcome, Developer</h1>
+  <p>Modify this code to start your journey.</p>
+  <button class="cta-btn">Access Terminal</button>
+</div>`}
+        initialCss={`.card {
+  background: #0a0a0a;
+  padding: 3rem;
+  border-radius: 2rem;
+  border: 1px solid #1f1f1f;
+  text-align: center;
+}
+
+h1 {
+  color: #fff;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  color: #a1a1aa;
+  margin-bottom: 2rem;
+}
+
+.cta-btn {
   background: #ef4444;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 12px 32px;
+  border-radius: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   cursor: pointer;
-  font-weight: bold;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(239,68,68,0.2);
 }
 
-.btn:hover {
+.cta-btn:hover {
   background: #dc2626;
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(239,68,68,0.4);
 }`}
       />
 
-      <h2 id="elements-explained">Elements Explained</h2>
+      <h2 id="elements-explained">Core Elements Breakdown</h2>
       <ul>
-        <li>The <code>&lt;!DOCTYPE html&gt;</code> declaration defines that this document is an HTML5 document.</li>
-        <li>The <code>&lt;html&gt;</code> element is the root element of an HTML page.</li>
-        <li>The <code>&lt;head&gt;</code> element contains meta information about the HTML page.</li>
-        <li>The <code>&lt;body&gt;</code> element defines the document's body, and is a container for all the visible contents.</li>
+        <li><code>&lt;!DOCTYPE html&gt;</code>: Tells the browser that this is an HTML5 document.</li>
+        <li><code>&lt;html&gt;</code>: The root element that wraps all your content.</li>
+        <li><code>&lt;head&gt;</code>: Contains meta-information like titles, character sets, and links to styles.</li>
+        <li><code>&lt;body&gt;</code>: Everything inside this tag is what the user actually sees on their screen.</li>
       </ul>
 
       <DocNote type="tip">
-        Always close your tags! While some browsers might fix missing tags for you, it can lead to unexpected layout issues and poor SEO.
+        Search engines like Google use your HTML structure to understand what your page is about. 
+        Using correct tags (Semantic HTML) is the secret to ranking higher in search results.
       </DocNote>
 
-      <div className="mt-12 p-8 rounded-2xl bg-gradient-to-br from-[#0f0f0f] to-[#1a0a0a] border border-[#1f1f1f]">
-        <h3 className="text-xl font-bold mb-2 text-[#ffffff]">What's Next?</h3>
-        <p className="text-[#a1a1aa] mb-6">In the next chapter, we will deep dive into HTML Elements and how to use them effectively to build content.</p>
-        <a href="/docs/html/elements" className="inline-flex items-center gap-2 text-[#ef4444] font-bold hover:underline">
-          Go to HTML Elements ❯
-        </a>
-      </div>
+      <DocNote type="warning">
+        Browsers are very forgiving. If you forget to close a tag, it might still look fine, 
+        but it can cause "ghost" bugs that are incredibly hard to debug later. Always close your tags!
+      </DocNote>
     </div>
   );
 }

@@ -47,6 +47,17 @@ export default function DocsSidebar({ language, activeTopicSlug }: DocsSidebarPr
         />
       </div>
 
+      {/* Language Header */}
+      <div className="flex items-center gap-3 mb-8 px-2">
+        <div className="w-10 h-10 rounded-xl bg-[#ef4444]/10 border border-[#ef4444]/20 flex items-center justify-center text-xl">
+          {language.icon}
+        </div>
+        <div>
+          <h2 className="text-sm font-black text-white uppercase tracking-widest">{language.label}</h2>
+          <p className="text-[10px] font-bold text-[#555] uppercase tracking-widest">Documentation</p>
+        </div>
+      </div>
+
       {/* Progress Card */}
       <div className="mb-8 p-4 rounded-xl border border-[#1f1f1f] bg-[#0f0f0f] bg-gradient-to-br from-[#0f0f0f] to-[#1a0a0a]">
         <h4 className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider mb-2">Your Progress</h4>
