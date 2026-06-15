@@ -183,9 +183,18 @@ export default function AboutDemonTech() {
           <DemonTechLogo />
           <nav className="ml-auto hidden items-center gap-12 text-[15px] font-bold text-[var(--text-secondary)] lg:flex">
             {navItems.map((item) => (
-              <a className={`relative transition hover:text-red-500 ${item.label === "Docs" ? "text-red-500" : ""}`} href={item.href} key={item.label}>
+              <a
+                className={`relative transition hover:text-red-500 ${
+                  item.label === "Docs" ? "text-red-500" : ""
+                }`}
+                href={item.href}
+                key={item.label}
+                {...(item.label === "Community" ? { target: "_blank", rel: "noreferrer" } : {})}
+              >
                 {item.label}
-                {item.label === "Docs" && <span className="absolute -bottom-[30px] left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.8)]" />}
+                {item.label === "Docs" && (
+                  <span className="absolute -bottom-[30px] left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.8)]" />
+                )}
               </a>
             ))}
           </nav>

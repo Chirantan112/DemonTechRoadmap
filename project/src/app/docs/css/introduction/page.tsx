@@ -16,7 +16,7 @@ export default function CssIntroduction() {
         <li>External stylesheets are stored in CSS files</li>
       </ul>
 
-      <DocNote type="example" title="CSS Example">
+      <DocNote type="info" title="CSS Example">
         <CodeBlock 
           language="css"
           code={`body {

@@ -280,13 +280,14 @@ export default function AllRoadmaps() {
             {navItems.map((item) => (
               <a
                 className={`relative transition hover:text-red-500 ${
-                  item === "Roadmaps" ? "text-red-500" : ""
+                  item.label === "Roadmaps" ? "text-red-500" : ""
                 }`}
-                href="#"
-                key={item}
+                href={item.href}
+                key={item.label}
+                {...(item.label === "Community" ? { target: "_blank", rel: "noreferrer" } : {})}
               >
-                {item}
-                {item === "Roadmaps" && (
+                {item.label}
+                {item.label === "Roadmaps" && (
                   <span className="absolute -bottom-[30px] left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.8)]" />
                 )}
               </a>

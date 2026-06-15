@@ -35,7 +35,7 @@ export default function NodeIntroduction() {
       </ol>
       <p>Node.js eliminates the waiting, and simply continues with the next request.</p>
 
-      <DocNote type="example" title="Node.js Example">
+      <DocNote type="info" title="Node.js Example">
         <CodeBlock 
           language="javascript"
           code={`var http = require('http');

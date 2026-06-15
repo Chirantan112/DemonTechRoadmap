@@ -17,7 +17,7 @@ export default function JsIntroduction() {
         <li><strong>JavaScript</strong> to program the behavior of web pages</li>
       </ul>
 
-      <DocNote type="example" title="JavaScript Example">
+      <DocNote type="info" title="JavaScript Example">
         <p>JavaScript can change HTML content:</p>
         <CodeBlock 
           language="javascript"

@@ -9,7 +9,7 @@ export default function JsFunctions() {
       <p>A JavaScript function is a block of code designed to perform a particular task.</p>
       <p>A JavaScript function is executed when "something" invokes it (calls it).</p>
 
-      <DocNote type="example" title="JavaScript Function Example">
+      <DocNote type="info" title="JavaScript Function Example">
         <CodeBlock 
           language="javascript"
           code={`function myFunction(p1, p2) {

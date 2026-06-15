@@ -15,7 +15,7 @@ export default function ReactIntroduction() {
       <p>Instead of manipulating the browser's DOM directly, React creates a virtual DOM in memory, where it does all the necessary manipulating, before making the changes in the browser DOM.</p>
       <p>React only changes what needs to be changed!</p>
 
-      <DocNote type="example" title="React Example">
+      <DocNote type="info" title="React Example">
         <CodeBlock 
           language="jsx"
           code={`import React from 'react';

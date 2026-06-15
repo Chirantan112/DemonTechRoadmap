@@ -4,153 +4,129 @@ import React from 'react';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { DOC_LANGUAGES } from '@/src/config/docs-content';
+import DocsSidebar from '@/src/components/docs/DocsSidebar';
+import TableOfContents from '@/src/components/docs/TableOfContents';
 
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const pathname = usePathname();
   
-  // Extract lang and topic from pathname if params are missing (for static routes)
-  // Path format: /docs/[lang]/[topic]
+  // Extract lang and topic from pathname
   const pathParts = pathname.split('/');
   const langId = (params.lang as string) || pathParts[2];
   const topicSlug = (params.topic as string) || pathParts[3];
 
   const currentLanguage = DOC_LANGUAGES.find(l => l.id === langId);
   
-  // If we're not in a supported language doc, just render children without the W3Schools layout
+  // If we're not in a supported language doc, just render children
   if (!currentLanguage && pathname !== '/docs') {
     return <>{children}</>;
   }
 
   // Fallback to HTML if we're at /docs exactly
   const activeLanguage = currentLanguage || DOC_LANGUAGES[0];
-  const topics = activeLanguage.topics;
+  const flatTopics = activeLanguage.topics;
   
-  const currentIndex = topics.findIndex(t => t.slug === topicSlug);
-  const prevTopic = currentIndex > 0 ? topics[currentIndex - 1] : null;
-  const nextTopic = currentIndex < topics.length - 1 ? topics[currentIndex + 1] : null;
-
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const currentIndex = flatTopics.findIndex(t => t.slug === topicSlug);
+  const prevTopic = currentIndex > 0 ? flatTopics[currentIndex - 1] : null;
+  const nextTopic = currentIndex < flatTopics.length - 1 ? flatTopics[currentIndex + 1] : null;
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0a0a0a] text-white">
-      {/* Mobile Sidebar Toggle (Floating button) */}
-      <button 
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="md:hidden fixed bottom-6 right-6 z-50 bg-[#ef4444] text-white p-4 rounded-full shadow-lg"
-      >
-        {isSidebarOpen ? '✕' : '☰'}
-      </button>
-
-      {/* Language Tab Bar */}
-      <div className="sticky top-0 z-30 w-full bg-[#111] border-b border-[#333] overflow-x-auto no-scrollbar">
-        <div className="flex min-w-max">
+    <div className="flex flex-col min-h-screen bg-[#050505] text-[#ffffff] selection:bg-[#ef4444]/30">
+      
+      {/* Sticky Language Tab Bar */}
+      <div className="sticky top-0 z-40 w-full bg-[#050505]/90 backdrop-blur-xl border-b border-[#1f1f1f]">
+        <div className="flex min-w-max px-4">
           {DOC_LANGUAGES.map((lang) => (
             <Link
               key={lang.id}
               href={`/docs/${lang.id}/home`}
-              className={`px-6 py-3 text-sm font-medium transition-colors ${
+              className={`px-6 py-4 text-sm font-bold transition-all relative ${
                 langId === lang.id
-                  ? 'bg-[#ef4444] text-white'
-                  : 'text-gray-300 hover:bg-[#222] hover:text-white'
+                  ? 'text-[#ffffff]'
+                  : 'text-[#a1a1aa] hover:text-[#ffffff]'
               }`}
             >
-              {lang.label}
+              <div className="flex items-center gap-2">
+                <span className={langId === lang.id ? "text-[#ef4444]" : ""}>{lang.icon}</span>
+                {lang.label}
+              </div>
+              {langId === lang.id && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ef4444] shadow-[0_0_12px_rgba(239,68,68,0.8)] rounded-t-full" />
+              )}
             </Link>
           ))}
         </div>
       </div>
 
-      <div className="flex flex-1 relative">
+      <div className="flex justify-center w-full max-w-[1536px] mx-auto">
         {/* Left Sidebar */}
-        <aside className={`
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-          md:translate-x-0 transition-transform duration-300
-          w-[200px] fixed top-[45px] bottom-0 bg-[#111] border-r border-[#333] overflow-y-auto no-scrollbar z-40
-        `}>
-          <nav className="py-4">
-            <div className="px-4 mb-4">
-              <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-                {activeLanguage.label} Tutorial
-              </h2>
-            </div>
-            <div className="flex flex-col">
-              {topics.map((topic) => {
-                const isActive = topicSlug === topic.slug;
-                return (
-                  <Link
-                    key={topic.slug}
-                    href={topic.path}
-                    className={`px-4 py-2 text-sm transition-all border-l-4 ${
-                      isActive
-                        ? 'border-[#ef4444] text-[#ef4444] bg-[#1a0a0a] font-medium'
-                        : 'border-transparent text-gray-400 hover:bg-[#1a1a1a] hover:text-white'
-                    }`}
-                  >
-                    {topic.title}
-                  </Link>
-                );
-              })}
-            </div>
-          </nav>
-        </aside>
+        <DocsSidebar language={activeLanguage} activeTopicSlug={topicSlug} />
 
         {/* Main Content */}
-        <main className="flex-1 md:ml-[200px] p-4 md:p-8 flex justify-center">
-          <div className="w-full max-w-[900px]">
-            {/* Top Navigation Buttons */}
-            <div className="flex justify-between items-center mb-8">
-              {prevTopic ? (
-                <Link
-                  href={prevTopic.path}
-                  className="bg-[#22c55e] hover:bg-[#1ea34d] text-white px-6 py-2 rounded font-medium text-sm transition-colors"
-                >
-                  ❮ Previous
-                </Link>
-              ) : (
-                <div />
-              )}
-              {nextTopic ? (
-                <Link
-                  href={nextTopic.path}
-                  className="bg-[#22c55e] hover:bg-[#1ea34d] text-white px-6 py-2 rounded font-medium text-sm transition-colors"
-                >
-                  Next ❯
-                </Link>
-              ) : (
-                <div />
-              )}
-            </div>
+        <main className="flex-1 min-w-0 px-6 py-8 md:px-12 md:py-12 lg:max-w-4xl relative">
+          
+          {/* Top Navigation Buttons - Subtle Version */}
+          <div className="flex justify-between items-center mb-10 pb-4 border-b border-[#1f1f1f] text-sm font-bold text-[#a1a1aa]">
+            {prevTopic ? (
+              <Link href={prevTopic.path} className="hover:text-[#ef4444] transition-colors flex items-center gap-2">
+                ❮ {prevTopic.title}
+              </Link>
+            ) : <div />}
+            {nextTopic ? (
+              <Link href={nextTopic.path} className="hover:text-[#ef4444] transition-colors flex items-center gap-2">
+                {nextTopic.title} ❯
+              </Link>
+            ) : <div />}
+          </div>
 
-            <article className="prose prose-invert max-w-none prose-h1:text-4xl prose-h1:font-bold prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-10 prose-h2:mb-4 prose-p:text-gray-300 prose-p:leading-relaxed prose-li:text-gray-300 prose-code:text-red-400 prose-code:bg-red-950/30 prose-code:px-1 prose-code:rounded">
-              {children}
-            </article>
+          <article className="prose prose-invert max-w-none 
+            prose-h1:text-4xl prose-h1:font-black prose-h1:tracking-tight prose-h1:text-[#ffffff]
+            prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-12 prose-h2:mb-6 prose-h2:text-[#ffffff] prose-h2:border-b prose-h2:border-[#1f1f1f] prose-h2:pb-2
+            prose-h3:text-xl prose-h3:font-bold prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-[#ffffff]
+            prose-p:text-[#a1a1aa] prose-p:leading-relaxed prose-p:text-[16px]
+            prose-ul:text-[#a1a1aa] prose-ul:leading-relaxed
+            prose-li:marker:text-[#ef4444]
+            prose-strong:text-[#ffffff] prose-strong:font-bold
+            prose-code:text-[#ef4444] prose-code:bg-[#ef4444]/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
+            prose-a:text-[#ef4444] prose-a:no-underline hover:prose-a:underline hover:prose-a:underline-offset-4
+          ">
+            {children}
+          </article>
 
-            {/* Bottom Navigation Buttons */}
-            <div className="flex justify-between items-center mt-12 pt-8 border-t border-[#333]">
-              {prevTopic ? (
-                <Link
-                  href={prevTopic.path}
-                  className="bg-[#22c55e] hover:bg-[#1ea34d] text-white px-6 py-2 rounded font-medium text-sm transition-colors"
-                >
-                  ❮ Previous
-                </Link>
-              ) : (
-                <div />
-              )}
-              {nextTopic ? (
-                <Link
-                  href={nextTopic.path}
-                  className="bg-[#22c55e] hover:bg-[#1ea34d] text-white px-6 py-2 rounded font-medium text-sm transition-colors"
-                >
-                  Next ❯
-                </Link>
-              ) : (
-                <div />
-              )}
-            </div>
+          {/* Bottom Pagination */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-16 pt-8 border-t border-[#1f1f1f]">
+            {prevTopic ? (
+              <Link
+                href={prevTopic.path}
+                className="flex flex-col items-start p-4 rounded-xl border border-[#1f1f1f] bg-[#0f0f0f] hover:border-[#ef4444] hover:bg-[#ef4444]/5 transition-all group"
+              >
+                <span className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider mb-1">Previous</span>
+                <span className="text-sm font-bold text-[#ffffff] group-hover:text-[#ef4444] transition-colors">
+                  {prevTopic.title}
+                </span>
+              </Link>
+            ) : (
+              <div />
+            )}
+            {nextTopic ? (
+              <Link
+                href={nextTopic.path}
+                className="flex flex-col items-end text-right p-4 rounded-xl border border-[#1f1f1f] bg-[#0f0f0f] hover:border-[#ef4444] hover:bg-[#ef4444]/5 transition-all group"
+              >
+                <span className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider mb-1">Next</span>
+                <span className="text-sm font-bold text-[#ffffff] group-hover:text-[#ef4444] transition-colors">
+                  {nextTopic.title}
+                </span>
+              </Link>
+            ) : (
+              <div />
+            )}
           </div>
         </main>
+
+        {/* Right Sidebar (Table of Contents) */}
+        <TableOfContents />
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ export default function TsIntroduction() {
         <li>TypeScript makes it easier to find and fix bugs before you run your code</li>
       </ul>
 
-      <DocNote type="example" title="TypeScript Example">
+      <DocNote type="info" title="TypeScript Example">
         <CodeBlock 
           language="typescript"
           code={`interface User {

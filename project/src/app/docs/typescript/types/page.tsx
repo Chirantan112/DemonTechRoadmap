@@ -32,7 +32,7 @@ color = 'red';`}
       />
 
       <DocNote type="tip">
-        You can also use template strings, which can span multiple lines and have embedded expressions. These strings are surrounded by the backtick/backquote (`) character, and embedded expressions are of the form <code>\${ expression }</code>.
+        You can also use template strings, which can span multiple lines and have embedded expressions. These strings are surrounded by the backtick/backquote (`) character, and embedded expressions are of the form <code>{`\${expression}`}</code>.
       </DocNote>
 
       <div className="mt-8 p-4 bg-[#111] border border-[#333] rounded-lg">

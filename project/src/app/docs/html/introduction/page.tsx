@@ -1,61 +1,92 @@
 import React from 'react';
 import CodeBlock from '@/src/components/docs/CodeBlock';
 import DocNote from '@/src/components/docs/DocNote';
-import ExampleOutput from '@/src/components/docs/ExampleOutput';
+import DocsHeader from '@/src/components/docs/DocsHeader';
+import Playground from '@/src/components/docs/Playground';
 
 export default function HtmlIntroduction() {
   return (
     <div>
-      <h1>HTML Introduction</h1>
-      <p>HTML is the standard markup language for creating Web pages.</p>
+      <DocsHeader 
+        title="HTML Introduction"
+        description="HTML is the standard markup language for creating Web pages. It defines the structure and layout of a web document by using various tags and attributes."
+        category="Getting Started"
+        readingTime="4 min read"
+      />
       
-      <h2>What is HTML?</h2>
+      <h2 id="what-is-html">What is HTML?</h2>
+      <p>HTML stands for Hyper Text Markup Language. It is the backbone of any website, providing the essential structure that browsers use to render content.</p>
+      
       <ul>
-        <li>HTML stands for Hyper Text Markup Language</li>
-        <li>HTML is the standard markup language for creating Web pages</li>
-        <li>HTML describes the structure of a Web page</li>
-        <li>HTML consists of a series of elements</li>
-        <li>HTML elements tell the browser how to display the content</li>
+        <li><strong>HyperText:</strong> Links that connect web pages to one another.</li>
+        <li><strong>Markup Language:</strong> A way to annotate text so that a computer can understand and manipulate it.</li>
       </ul>
 
-      <DocNote type="example">
-        <h3>A Simple HTML Document</h3>
-        <CodeBlock 
-          language="html"
-          code={`<!DOCTYPE html>
+      <DocNote type="info" title="Why Learn HTML?">
+        Every web developer starts with HTML. Whether you want to build simple websites or complex web applications like Facebook or Gmail, HTML is where it all begins.
+      </DocNote>
+
+      <h2 id="simple-document">A Simple HTML Document</h2>
+      <p>Every HTML5 document follows a standard structure. Copy the code below and try it in our interactive playground.</p>
+
+      <CodeBlock 
+        language="html"
+        title="index.html"
+        code={`<!DOCTYPE html>
 <html>
 <head>
-<title>Page Title</title>
+  <title>Page Title</title>
 </head>
 <body>
 
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
+  <h1>My First Heading</h1>
+  <p>My first paragraph.</p>
 
 </body>
 </html>`}
-        />
-        <ExampleOutput html="<h1>My First Heading</h1><p>My first paragraph.</p>" />
-      </DocNote>
+      />
 
-      <h2>Example Explained</h2>
+      <h2 id="interactive-playground">Interactive Playground</h2>
+      <p>Experiment with the code below. Change the heading text or add new elements to see them appear instantly in the live preview.</p>
+      
+      <Playground 
+        title="HTML Basic Playground"
+        initialHtml={`<h1>Hello DemonTech!</h1>
+<p>Try changing this text in the editor to the left.</p>
+<button class="btn">Click Me</button>`}
+        initialCss={`.btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background: #dc2626;
+}`}
+      />
+
+      <h2 id="elements-explained">Elements Explained</h2>
       <ul>
-        <li>The <code>&lt;!DOCTYPE html&gt;</code> declaration defines that this document is an HTML5 document</li>
-        <li>The <code>&lt;html&gt;</code> element is the root element of an HTML page</li>
-        <li>The <code>&lt;head&gt;</code> element contains meta information about the HTML page</li>
-        <li>The <code>&lt;title&gt;</code> element specifies a title for the HTML page (which is shown in the browser's title bar or in the page's tab)</li>
-        <li>The <code>&lt;body&gt;</code> element defines the document's body, and is a container for all the visible contents, such as headings, paragraphs, images, hyperlinks, tables, lists, etc.</li>
-        <li>The <code>&lt;h1&gt;</code> element defines a large heading</li>
-        <li>The <code>&lt;p&gt;</code> element defines a paragraph</li>
+        <li>The <code>&lt;!DOCTYPE html&gt;</code> declaration defines that this document is an HTML5 document.</li>
+        <li>The <code>&lt;html&gt;</code> element is the root element of an HTML page.</li>
+        <li>The <code>&lt;head&gt;</code> element contains meta information about the HTML page.</li>
+        <li>The <code>&lt;body&gt;</code> element defines the document's body, and is a container for all the visible contents.</li>
       </ul>
 
       <DocNote type="tip">
-        HTML tags are not case sensitive: <code>&lt;P&gt;</code> means the same as <code>&lt;p&gt;</code>.
+        Always close your tags! While some browsers might fix missing tags for you, it can lead to unexpected layout issues and poor SEO.
       </DocNote>
 
-      <div className="mt-8 p-4 bg-[#111] border border-[#333] rounded-lg">
-        <h3 className="text-xl font-bold mb-2">What's Next?</h3>
-        <p>In the next chapter, we will look at HTML Elements.</p>
+      <div className="mt-12 p-8 rounded-2xl bg-gradient-to-br from-[#0f0f0f] to-[#1a0a0a] border border-[#1f1f1f]">
+        <h3 className="text-xl font-bold mb-2 text-[#ffffff]">What's Next?</h3>
+        <p className="text-[#a1a1aa] mb-6">In the next chapter, we will deep dive into HTML Elements and how to use them effectively to build content.</p>
+        <a href="/docs/html/elements" className="inline-flex items-center gap-2 text-[#ef4444] font-bold hover:underline">
+          Go to HTML Elements ❯
+        </a>
       </div>
     </div>
   );

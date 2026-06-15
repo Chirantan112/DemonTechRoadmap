@@ -357,6 +357,7 @@ export default function StudyGuide() {
                 }`}
                 href={item.href}
                 key={item.label}
+                {...(item.label === "Community" ? { target: "_blank", rel: "noreferrer" } : {})}
               >
                 {item.label}
                 {item.label === "Guides" && (
