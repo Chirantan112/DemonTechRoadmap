@@ -11,7 +11,13 @@ type SidebarGroup = {
   items: Array<{ label: string; icon: string; href?: string; active?: boolean }>;
 };
 
-const navItems = ["Roadmaps", "Resources", "Docs", "Guides", "Community"];
+const navItems = [
+  { label: "Roadmaps", href: "/docs/all-roadmaps" },
+  { label: "Resources", href: "/docs/resources" },
+  { label: "Docs", href: "/docs/html/home" },
+  { label: "Guides", href: "/docs/study-guide" },
+  { label: "Community", href: "https://discord.gg/yWtjK2Tb8T" },
+];
 
 const sidebarGroups: SidebarGroup[] = [
   {
@@ -257,20 +263,21 @@ export default function ProjectIdeas() {
         <div className="mx-auto flex h-[72px] max-w-[1260px] items-center gap-6 px-5 lg:px-8">
           <DemonTechLogo />
           <nav className="ml-auto hidden items-center gap-12 text-[15px] font-bold text-[var(--text-secondary)] lg:flex">
-            {navItems.map((item) => (
-              <a
-                className={`relative transition hover:text-red-500 ${
-                  item === "Roadmaps" ? "text-red-500" : ""
-                }`}
-                href="#"
-                key={item}
-              >
-                {item}
-                {item === "Roadmaps" && (
-                  <span className="absolute -bottom-[30px] left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.8)]" />
-                )}
-              </a>
-            ))}
+           {navItems.map((item) => (
+             <a
+               className={`relative transition hover:text-red-500 ${
+                 item.label === "Roadmaps" ? "text-red-500" : ""
+               }`}
+               href={item.href}
+               key={item.label}
+               {...(item.label === "Community" ? { target: "_blank", rel: "noreferrer" } : {})}
+             >
+               {item.label}
+               {item.label === "Roadmaps" && (
+                 <span className="absolute -bottom-[30px] left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.8)]" />
+               )}
+             </a>
+           ))}
           </nav>
           <label className="ml-auto hidden h-11 w-[235px] items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--field-bg)] px-4 text-sm text-[var(--text-muted)] lg:ml-8 xl:flex">
             <Icon className="h-5 w-5" name="search" />

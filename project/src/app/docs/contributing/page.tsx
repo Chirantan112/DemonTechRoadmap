@@ -11,7 +11,13 @@ type SidebarGroup = {
   items: Array<{ label: string; icon: string; href?: string; active?: boolean }>;
 };
 
-const navItems = ["Roadmaps", "Resources", "Docs", "Guides", "Community"];
+const navItems = [
+  { label: "Roadmaps", href: "/docs/all-roadmaps" },
+  { label: "Resources", href: "/docs/resources" },
+  { label: "Docs", href: "/docs/html/home" },
+  { label: "Guides", href: "/docs/study-guide" },
+  { label: "Community", href: "https://discord.gg/yWtjK2Tb8T" },
+];
 
 const sidebarGroups: SidebarGroup[] = [
   {
@@ -51,7 +57,7 @@ const whyContribute = [
 ];
 
 const steps = [
-  ["Find an Issue", "Browse issues labeled good first issue or pick one you&apos;d like to work on.", "search"],
+  ["Find an Issue", "Browse issues labeled <a href='https://github.com/Demon-Die/DemonTechRoadmap/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22' target='_blank' rel='noreferrer' class='text-red-500 hover:underline'>good first issue</a> or pick one you&apos;d like to work on.", "search"],
   ["Fork the Repo", "Fork the repository to your GitHub account.", "git-branch"],
   ["Make Changes", "Create a new branch and make your changes.", "code"],
   ["Commit & Push", "Commit your changes and push them to your fork.", "git-branch"],
@@ -187,9 +193,14 @@ export default function Contributing() {
           <DemonTechLogo />
           <nav className="ml-auto hidden items-center gap-12 text-[15px] font-bold text-[var(--text-secondary)] lg:flex">
             {navItems.map((item) => (
-              <a className={`relative transition hover:text-red-500 ${item === "Guides" ? "text-red-500" : ""}`} href="#" key={item}>
-                {item}
-                {item === "Guides" && <span className="absolute -bottom-[30px] left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.8)]" />}
+              <a 
+                className={`relative transition hover:text-red-500 ${item.label === "Guides" ? "text-red-500" : ""}`} 
+                href={item.href} 
+                key={item.label}
+                {...(item.label === "Community" ? { target: "_blank", rel: "noreferrer" } : {})}
+              >
+                {item.label}
+                {item.label === "Guides" && <span className="absolute -bottom-[30px] left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.8)]" />}
               </a>
             ))}
           </nav>
@@ -321,7 +332,7 @@ export default function Contributing() {
                     <p className="mt-2 text-sm text-[var(--text-secondary)]">Check out our Contribution Guide to get started with everything you need to know.</p>
                   </div>
                 </div>
-                <a className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-md bg-red-700/75 px-5 text-sm font-black text-white transition hover:bg-red-600" href="#">
+                <a className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-md bg-red-700/75 px-5 text-sm font-black text-white transition hover:bg-red-600" href="https://github.com/Demon-Die/DemonTechRoadmap/blob/main/CONTRIBUTING.md" target="_blank" rel="noreferrer">
                   Read Contribution Guide
                   <Icon className="h-4 w-4" name="chevron" />
                 </a>
@@ -362,7 +373,7 @@ export default function Contributing() {
                   <div>
                     <h3 className="text-lg font-black text-[var(--text-primary)]">Code of Conduct</h3>
                     <p className="mt-4 text-sm leading-7 text-[var(--text-secondary)]">We are committed to providing a welcoming and inclusive environment for everyone.</p>
-                    <a className="mt-4 flex items-center gap-2 text-sm font-black text-red-500" href="#">
+                    <a className="mt-4 flex items-center gap-2 text-sm font-black text-red-500" href="https://github.com/Demon-Die/DemonTechRoadmap/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noreferrer">
                       Read Code of Conduct
                       <Icon className="h-4 w-4" name="chevron" />
                     </a>

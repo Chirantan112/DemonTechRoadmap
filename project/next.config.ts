@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
+import path from "path";
+
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: __dirname,
+  outputFileTracingRoot: path.join(__dirname, ".."),
   turbopack: {
-    root: __dirname,
+    root: path.join(__dirname, ".."),
   },
   images: {
     remotePatterns: [

@@ -32,15 +32,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: npm
-          cache-dependency-path: project/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm --prefix project ci
+        run: npm ci
 
       - name: Lint
-        run: npm --prefix project run lint
+        run: npm run lint
 
       - name: Build
-        run: npm --prefix project run build
+        run: npm run build

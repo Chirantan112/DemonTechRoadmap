@@ -11,7 +11,13 @@ type SidebarGroup = {
   items: Array<{ label: string; icon: string; href?: string; active?: boolean }>;
 };
 
-const navItems = ["Roadmaps", "Resources", "Docs", "Guides", "Community"];
+const navItems = [
+  { label: "Roadmaps", href: "/docs/all-roadmaps" },
+  { label: "Resources", href: "/docs/resources" },
+  { label: "Docs", href: "/docs/html/home" },
+  { label: "Guides", href: "/docs/study-guide" },
+  { label: "Community", href: "https://discord.gg/yWtjK2Tb8T" },
+];
 
 const sidebarGroups: SidebarGroup[] = [
   {
@@ -46,10 +52,10 @@ const sidebarGroups: SidebarGroup[] = [
 ];
 
 const stats = [
-  ["100K+", "Developers Trust Us", "users"],
-  ["150+", "Roadmaps & Guides", "book-open"],
-  ["500+", "Learning Resources", "file-text"],
-  ["Open Source", "Community Driven", "code"],
+  ["8", "Core Tech Tracks", "users"],
+  ["150+", "Topics & Projects", "book-open"],
+  ["100%", "Free & Open Source", "file-text"],
+  ["Community", "Driven Platform", "code"],
 ];
 
 const purpose = [
@@ -59,7 +65,7 @@ const purpose = [
 ];
 
 const timeline = [
-  ["2023", "DemonTech Roadmap was founded.", "flag"],
+  ["2024", "DemonTech Roadmap was founded.", "flag"],
   ["Built with heart", "Passion, late nights, and countless coffees.", "heart"],
   ["Open Source", "Because knowledge should be free.", "code"],
   ["Growing Together", "A global community of learners and builders.", "users"],
@@ -177,9 +183,18 @@ export default function AboutDemonTech() {
           <DemonTechLogo />
           <nav className="ml-auto hidden items-center gap-12 text-[15px] font-bold text-[var(--text-secondary)] lg:flex">
             {navItems.map((item) => (
-              <a className={`relative transition hover:text-red-500 ${item === "Docs" ? "text-red-500" : ""}`} href="#" key={item}>
-                {item}
-                {item === "Docs" && <span className="absolute -bottom-[30px] left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.8)]" />}
+              <a
+                className={`relative transition hover:text-red-500 ${
+                  item.label === "Docs" ? "text-red-500" : ""
+                }`}
+                href={item.href}
+                key={item.label}
+                {...(item.label === "Community" ? { target: "_blank", rel: "noreferrer" } : {})}
+              >
+                {item.label}
+                {item.label === "Docs" && (
+                  <span className="absolute -bottom-[30px] left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.8)]" />
+                )}
               </a>
             ))}
           </nav>
@@ -353,12 +368,12 @@ export default function AboutDemonTech() {
             </section>
 
             <footer className="mt-10 flex flex-col gap-5 border-t border-[var(--border)] py-7 text-sm text-[var(--text-muted)] sm:flex-row sm:items-center sm:justify-between">
-              <p>© 2024 DemonTech. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} DemonTech. All rights reserved.</p>
               <div className="flex flex-wrap gap-6">
                 <a className="transition hover:text-red-500" href="https://github.com/Demon-Die/DemonTechRoadmap" rel="noreferrer" target="_blank">GitHub</a>
                 <a className="transition hover:text-red-500" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">Discord</a>
-                <a className="transition hover:text-red-500" href="#">Privacy Policy</a>
-                <a className="transition hover:text-red-500" href="#">Terms</a>
+                <a className="transition hover:text-red-500" href="/privacy">Privacy Policy</a>
+                <a className="transition hover:text-red-500" href="/terms">Terms</a>
               </div>
             </footer>
           </div>

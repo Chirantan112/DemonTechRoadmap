@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { roadmapRegistry, getAllRoadmapTopicParams } from "../data/roadmaps";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://demon-tech-roadmap.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://demontech-roadmap.vercel.app";
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/`, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
@@ -29,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const topicRoutes: MetadataRoute.Sitemap = getAllRoadmapTopicParams().map(({ roadmapSlug, topicId }) => ({
-    url: `${baseUrl}/roadmaps/${roadmapSlug}/topics/${topicId}`,
+    url: `${baseUrl}/roadmaps/${roadmapSlug}/${topicId}`,
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.7,
