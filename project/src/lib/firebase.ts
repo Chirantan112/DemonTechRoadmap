@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, GithubAuthProvider, signInWithPopup, signOut as fbSignOut, onAuthStateChanged, User } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "firebase/firestore";
+import { getAuth, GithubAuthProvider, signInWithPopup, signOut as fbSignOut, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "mock-key",

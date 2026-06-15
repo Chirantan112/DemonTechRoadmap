@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { roadmapSeo } from "@/src/lib/roadmapSeo";
 import RoadmapGraphView from "./RoadmapGraphView";
 import ActivityGraph from "./ActivityGraph";
 import { useEffect, useMemo, useState } from "react";
@@ -213,6 +212,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
     const prevCompletedCount = loadSet(storageKeys.completed).size;
     window.localStorage.setItem(storageKeys.completed, JSON.stringify(Array.from(completedIds)));
     if (prevCompletedCount === 0 && completedIds.size > 0 && !window.localStorage.getItem(`${storageKeys.completed}-onboarded`)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowFirstBadgeModal(true);
       window.localStorage.setItem(`${storageKeys.completed}-onboarded`, "true");
     }
@@ -420,7 +420,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
               </div>
               <h2 className="mt-6 text-3xl font-black text-white">First Step Taken!</h2>
               <p className="mt-3 text-sm leading-6 text-zinc-400">
-                You've completed your very first topic. Keep your momentum going and see your roadmap graph light up!
+                You&apos;ve completed your very first topic. Keep your momentum going and see your roadmap graph light up!
               </p>
               <button
                 className="mt-8 w-full rounded-md bg-red-600 px-4 py-3 font-black text-white transition hover:bg-red-500"
@@ -754,6 +754,7 @@ function CommandPalette({
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedIndex(0);
   }, [paletteQuery]);
 

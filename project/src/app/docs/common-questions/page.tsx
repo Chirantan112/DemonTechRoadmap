@@ -428,7 +428,7 @@ export default function CommonQuestions() {
                         className="block text-sm font-bold leading-6 text-[var(--text-primary)] hover:text-red-500 transition-colors" 
                         href={`#${item.id}`}
                         key={item.id}
-                        onClick={(e) => {
+                        onClick={() => {
                           if (!openIds.includes(item.id)) toggleFaq(item.id);
                         }}
                       >

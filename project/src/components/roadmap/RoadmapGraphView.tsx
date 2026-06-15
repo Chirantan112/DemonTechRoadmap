@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { ReactFlow, Controls, Background, Edge, Node, Position, MarkerType } from "@xyflow/react";
+import { useMemo } from "react";
+import { ReactFlow, Controls, Background, Edge, Node, Position, MarkerType, Handle } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import dagre from "dagre";
 import { Icon, RoadmapNode } from "./RoadmapPageShell";
@@ -131,9 +131,17 @@ export default function RoadmapGraphView({ nodes, completedIds, bookmarkedIds, n
   );
 }
 
-import { Handle } from "@xyflow/react";
+interface CustomNodeData {
+  label: string;
+  stage: string;
+  difficulty: string;
+  duration?: string;
+  isCompleted: boolean;
+  isNext: boolean;
+  isBookmarked: boolean;
+}
 
-function CustomNode({ data }: { data: any }) {
+function CustomNode({ data }: { data: CustomNodeData }) {
   return (
     <div className={`relative w-[280px] rounded-md border p-3 shadow-lg transition-transform hover:scale-[1.02] cursor-pointer ${data.isCompleted ? "border-red-500 bg-red-500/10" : data.isNext ? "border-red-500/50 bg-[#050505] shadow-[0_0_15px_rgba(239,68,68,0.25)]" : "border-zinc-800 bg-[#050505]"}`}>
       <Handle type="target" position={Position.Top} className="!bg-zinc-600 !w-2 !h-2 !border-none" />
