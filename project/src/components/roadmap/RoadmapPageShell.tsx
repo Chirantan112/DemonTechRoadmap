@@ -324,6 +324,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
           <DemonTechLogo />
           <nav className="ml-auto hidden items-center gap-7 text-sm font-bold text-zinc-400 lg:flex">
             <Link className="text-red-500 hover:text-red-400" href="/docs/all-roadmaps">Roadmaps</Link>
+            <Link className="transition hover:text-white" href="/docs/html/home">Docs</Link>
             <Link className="transition hover:text-white" href="/docs/learning-paths">Learning Paths</Link>
             <Link className="transition hover:text-white" href="/docs/project-ideas">Projects</Link>
             <Link className="transition hover:text-white" href="/docs/best-practices">Best Practices</Link>

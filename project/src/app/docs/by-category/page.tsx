@@ -11,7 +11,13 @@ type SidebarGroup = {
   items: Array<{ label: string; icon: string; href?: string; active?: boolean }>;
 };
 
-const navItems = ["Roadmaps", "Resources", "Docs", "Guides", "Community"];
+const navItems = [
+  { label: "Roadmaps", href: "/docs/all-roadmaps" },
+  { label: "Resources", href: "/docs/resources" },
+  { label: "Docs", href: "/docs/html/home" },
+  { label: "Guides", href: "/docs/study-guide" },
+  { label: "Community", href: "https://discord.gg/yWtjK2Tb8T" },
+];
 
 const sidebarGroups: SidebarGroup[] = [
   {

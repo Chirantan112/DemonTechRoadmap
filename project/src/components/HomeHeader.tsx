@@ -10,7 +10,7 @@ const navItems = [
   { label: "Roadmaps", href: "/docs/all-roadmaps" },
   { label: "Resources", href: "/docs/resources" },
   { label: "Guides", href: "/docs/study-guide" },
-  { label: "Docs", href: "/docs/quick-start" },
+  { label: "Docs", href: "/docs/html/home" },
   { label: "Community", href: "https://discord.gg/yWtjK2Tb8T" },
 ];
 
