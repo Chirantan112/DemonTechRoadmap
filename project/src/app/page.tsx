@@ -37,13 +37,6 @@ const stats = [
   { icon: "community", value: "15K+", label: "Learners", note: "Growing community" },
 ] as const;
 
-const consolidatedFeatures = [
-  { icon: "target", title: "Expert-Curated Paths", detail: "Step-by-step roadmaps from industry professionals, kept weekly up-to-date." },
-  { icon: "code", title: "Practical Build-First", detail: "Turn concepts into real projects with hand-picked resources and prompts." },
-  { icon: "check", title: "Track Your Mastery", detail: "Mark topics complete, take notes, and visualize your progress journey." },
-  { icon: "community", title: "Community Driven", detail: "Get support from thousands of developers and contribute to the source." },
-] as const;
-
 const journey = [
   { n: "01", title: "HTML & CSS", detail: "Build the foundation", icon: "code", color: "text-red-300 border-red-500/70 shadow-red-500/30", href: "/roadmaps/html5", offset: false },
   { n: "02", title: "JavaScript", detail: "Learn the language", icon: "code", color: "text-amber-300 border-amber-500/70 shadow-amber-500/30", href: "/roadmaps/javascript", offset: true },
@@ -88,7 +81,25 @@ const whyRoadmaps = [
     detail: "Get help and support from a strong developer community.",
     icon: "community",
   },
-];
+] as const;
+
+const audience = [
+  {
+    icon: "rocket",
+    title: "Absolute Beginners",
+    text: "Starting from scratch? We provide a step-by-step guide to get you from hello world to your first job.",
+  },
+  {
+    icon: "code",
+    title: "Self-Taught Builders",
+    text: "Already learning? Fill in the gaps in your knowledge with our comprehensive and structured paths.",
+  },
+  {
+    icon: "target",
+    title: "Project Seekers",
+    text: "Need to build? Every roadmap ends with real-world projects to add to your portfolio.",
+  },
+] as const;
 
 const footerGroups = [
   { title: "Explore", links: [["Roadmaps", "/docs/all-roadmaps"], ["Resources", "/docs/resources"], ["Guides", "/docs/study-guide"], ["Docs", "/docs/quick-start"]] },
@@ -127,7 +138,7 @@ export default function Home() {
             <div className="mt-8 grid rounded-lg border border-zinc-800/90 bg-[#0a0a10]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:grid-cols-2 lg:max-w-[760px] xl:grid-cols-4">
               {stats.map((item) => (
                 <div className="flex min-h-[88px] gap-4 border-zinc-800/80 p-5 xl:border-r xl:last:border-r-0" key={item.label}>
-                  <Icon className="mt-1 h-7 w-7 shrink-0 text-zinc-500" name={item.icon as any} />
+                  <Icon className="mt-1 h-7 w-7 shrink-0 text-zinc-500" name={item.icon} />
                   <div>
                     <div className="text-2xl font-black text-white">{item.value}</div>
                     <div className="text-xs text-zinc-400">{item.label}</div>
@@ -154,7 +165,7 @@ export default function Home() {
                     {step.n || <Icon className="h-6 w-6" name="trophy" />}
                   </span>
                   <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-zinc-700/80 bg-black/70">
-                    <Icon className={`h-5 w-5 ${step.color.split(" ")[0]}`} name={step.icon as any} />
+                    <Icon className={`h-5 w-5 ${step.color.split(" ")[0]}`} name={step.icon} />
                   </span>
                   <span className="min-w-0">
                     <span className="block text-sm font-black text-white">{step.title}</span>
@@ -172,7 +183,7 @@ export default function Home() {
             {whyRoadmaps.map((item) => (
               <article className="text-center" key={item.title}>
                 <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-zinc-800 bg-zinc-900 text-zinc-400">
-                  <Icon className="h-8 w-8" name={item.icon as any} />
+                  <Icon className="h-8 w-8" name={item.icon} />
                 </span>
                 <h3 className="mt-4 text-sm font-black text-white">
                   {item.title}
@@ -192,7 +203,7 @@ export default function Home() {
             <div className="mt-6 grid gap-5 grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
               {audience.map((item) => (
                 <article className="border-zinc-800/80 sm:border-r sm:pr-5 sm:last:border-r-0 lg:border-r-0 lg:border-b lg:pb-5 lg:last:border-b-0 xl:border-b-0 xl:border-r xl:pb-0" key={item.title}>
-                  <Icon className="h-8 w-8 text-zinc-500" name={item.icon as any} />
+                  <Icon className="h-8 w-8 text-zinc-500" name={item.icon} />
                   <h3 className="mt-4 text-sm font-black text-white">{item.title}</h3>
                   <p className="mt-3 text-[12px] leading-6 text-zinc-400">{item.text}</p>
                 </article>
@@ -233,7 +244,7 @@ export default function Home() {
           {features.map((feature) => (
             <Link className="flex min-h-[86px] items-center gap-4 rounded-lg border border-zinc-800 bg-[#08090f]/90 p-4 transition hover:border-red-500/60 hover:bg-[#0d0e15]" href={feature.href} key={feature.title}>
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-zinc-900 text-zinc-400">
-                <Icon className="h-6 w-6" name={feature.icon as any} />
+                <Icon className="h-6 w-6" name={feature.icon} />
               </span>
               <span>
                 <span className="block text-sm font-black text-white">{feature.title}</span>

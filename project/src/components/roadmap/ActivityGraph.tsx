@@ -23,9 +23,10 @@ export default function ActivityGraph() {
           if (Array.isArray(arr)) {
             count += arr.length;
           }
-        } catch (e) {}
+        } catch {}
       }
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCompletedCount(count);
   }, []);
 

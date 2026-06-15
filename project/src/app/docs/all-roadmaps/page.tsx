@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { roadmapSeo } from "@/src/lib/roadmapSeo";
 import type { CSSProperties, ReactNode } from "react";
 import Badge from "@/src/components/Badge";
 import ScrollReveal from "@/src/components/ScrollReveal";
@@ -415,7 +414,9 @@ export default function AllRoadmaps() {
   const [bookmarksByRoadmap, setBookmarksByRoadmap] = useState<Record<string, number>>({});
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCompletedByRoadmap(loadRoadmapProgress());
+     
     setBookmarksByRoadmap(loadRoadmapBookmarks());
     setIsMounted(true);
   }, []);
@@ -726,9 +727,6 @@ export default function AllRoadmaps() {
 
             <section className="mt-8 grid gap-5 xl:grid-cols-3">
               {filteredRoadmaps.map((roadmap) => {
-                const slug = roadmap.href.split("/").pop() || "";
-                const duration = roadmapSeo[slug]?.duration;
-
                 return (
                   <ScrollReveal key={roadmap.title}>
                   <Link
@@ -911,7 +909,7 @@ export default function AllRoadmaps() {
                             {row.duration}
                           </td>
                           <td className="px-5 py-4">
-                            <Badge variant={row.difficulty.toLowerCase() as any}>{row.difficulty}</Badge>
+                            <Badge variant={row.difficulty.toLowerCase() as "beginner" | "intermediate" | "advanced" | "default" | "outline" | "red"}>{row.difficulty}</Badge>
                           </td>
                         </tr>
                       ))}

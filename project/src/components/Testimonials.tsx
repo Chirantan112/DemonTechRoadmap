@@ -26,7 +26,7 @@ export default function Testimonials() {
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((t, i) => (
             <div key={i} className="rounded-lg border border-zinc-800 bg-[#090909] p-6 flex flex-col justify-between">
-              <p className="text-zinc-300 text-sm leading-relaxed mb-6">"{t.quote}"</p>
+              <p className="text-zinc-300 text-sm leading-relaxed mb-6">&quot;{t.quote}&quot;</p>
               <div>
                 <p className="font-bold text-white text-sm">{t.author}</p>
                 <p className="text-zinc-500 text-xs mt-1">{t.role}</p>
