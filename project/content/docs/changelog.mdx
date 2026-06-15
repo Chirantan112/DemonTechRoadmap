@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Changelog | DemonTech Documentation",
+  description: "Track all recent updates, features, and fixes to the platform."
+};
+
+# Changelog
+
+Stay up-to-date with the latest changes to the DemonTech Roadmap platform. We regularly deploy updates to improve performance, add new learning paths, and squash bugs.
+
+## Release History
+
+### Version 2.1.0 - The MDX Migration Update
+*Released on October 24, 2023*
+
+This release completely overhauls our documentation architecture, moving from hardcoded React components to a highly scalable `@next/mdx` implementation.
+
+#### Features Added
+- **MDX Support**: All documentation pages now support rich markdown with embedded React components.
+- **Dynamic Routing**: Introduced a new `[slug]` catch-all route for seamless documentation generation.
+- **Breadcrumbs Navigation**: Added a breadcrumbs component to help users track their location within the docs.
+- **Sequential Pager**: Introduced Next/Previous links at the bottom of all doc pages for uninterrupted reading.
+
+#### Improvements
+- Optimized the global `DocsLayout` to load faster on mobile devices.
+- Improved sidebar active-state detection using `usePathname()`.
+- Centralized the navigation structure into a single `docsConfig.ts` file.
+
+#### Bug Fixes
+- Fixed an issue where the dark mode toggle occasionally flashed on initial page load.
+- Resolved a hydration mismatch error on the `all-roadmaps` page caused by `localStorage`.
+
+#### Breaking Changes
+- Removed the old `/app/docs/[hardcoded-routes]` directories. Custom links targeting the raw `.tsx` files will now 404.
+
+#### Upcoming Work
+- **User Authentication**: We are currently building a secure backend integration to allow users to sign up and save progress to the cloud.
+- **Interactive Quizzes**: Preparing the architecture to support end-of-module knowledge checks.
+
+---
+
+### Version 2.0.0 - The App Router Rewrite
+*Released on August 15, 2023*
+
+A complete rewrite of the frontend moving from the Next.js Pages router to the new App Router.
+
+#### Features Added
+- Fully transitioned to React Server Components.
+- Added 3 new roadmaps: Data Scientist, Mobile Developer, and DevOps.
+
+#### Improvements
+- Drastically reduced initial JavaScript payload.
+- Enhanced SEO metadata generation.
+
+#### Bug Fixes
+- Addressed mobile layout overflow bugs on roadmap node components.
+
+#### Breaking Changes
+- Minimum supported browser versions updated. IE11 is no longer supported.

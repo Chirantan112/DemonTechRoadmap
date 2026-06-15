@@ -1,0 +1,56 @@
+export const metadata = {
+  title: "Project Ideas | DemonTech Documentation",
+  description: "Curated project ideas to apply your skills at various levels."
+};
+
+# Project Ideas
+
+## Introduction
+Tutorials teach you syntax; building projects teaches you software engineering. This document provides curated, progressively difficult project ideas designed to test your knowledge at various stages of the DemonTech roadmaps.
+
+## Why It Matters
+Without projects, your knowledge remains abstract. Projects matter because they force you to encounter edge cases, read documentation, debug complex errors, and make architectural decisions. Furthermore, original projects (not tutorial clones) are exactly what hiring managers look for in a junior developer's portfolio.
+
+## Core Concepts
+- **Scope**: The boundaries of what your project will and will not do.
+- **MVP (Minimum Viable Product)**: The absolute bare-minimum version of your project that works.
+- **Refactoring**: Improving the structure of your working code without changing its behavior.
+
+## Step-by-Step Guide
+
+1. **Select a Level**: Choose a project that matches your current roadmap progress (Beginner, Intermediate, Advanced).
+2. **Define the MVP**: Write down 3-4 core features. Ignore "nice-to-have" features like dark mode or animations for now.
+3. **Plan the Architecture**: Roughly sketch out your database schema or component tree on a piece of paper.
+4. **Build the MVP**: Write the code to make the core features work. It doesn't have to be pretty.
+5. **Iterate and Polish**: Once the MVP works, refactor the code, improve the UI, and add the "nice-to-have" features.
+
+## Examples
+
+### Beginner (HTML/CSS/Basic JS)
+**Personal Portfolio**
+- **MVP**: A single-page static site with an "About Me" section, a list of skills, and a contact form (using a service like Formspree).
+- **Challenge**: Make it fully responsive without using a CSS framework like Bootstrap.
+
+### Intermediate (React/Frontend Framework)
+**Movie Database Explorer**
+- **MVP**: Connect to the public TMDB API. Allow users to search for movies, view a grid of posters, and click a movie to see its description and cast.
+- **Challenge**: Implement pagination or infinite scrolling, and add a "Favorites" list stored in `localStorage`.
+
+### Advanced (Full Stack - Next.js, Database, Auth)
+**Issue Tracker (Jira Clone)**
+- **MVP**: Secure user authentication. Users can create projects, create tasks (tickets) within those projects, assign them to users, and move them across a Kanban board.
+- **Challenge**: Implement real-time updates using WebSockets so when one user moves a ticket, all other users see it move instantly.
+
+## Common Mistakes
+- **Feature Creep**: Adding so many features to your plan that the project becomes overwhelming and you abandon it. Always build the MVP first.
+- **Tutorial Clones**: Following a 10-hour YouTube tutorial to build a "Netflix Clone" and putting it on your resume. Hiring managers can spot these immediately. Build original things.
+- **Ignoring Design**: A great backend doesn't matter if the frontend looks broken. Use a component library if you struggle with CSS.
+
+## Best Practices
+- **Version Control**: Use Git. Commit early and often. Push your code to GitHub.
+- **Documentation**: Write a high-quality `README.md` for your project explaining what it does, the tech stack used, and how to run it locally.
+- **Deployment**: Actually deploy your project to the internet using services like Vercel, Netlify, or Render. A project doesn't count if it only lives on `localhost:3000`.
+
+## Related Topics
+- **[Learning Paths](/docs/learning-paths)**: Find out which roadmap path leads to which types of projects.
+- **[Study Guide](/docs/study-guide)**: Learn how to effectively study while building.

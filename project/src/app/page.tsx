@@ -5,6 +5,7 @@ import HomeHeader, { Logo } from "@/src/components/HomeHeader";
 import ContributorLeaderboard from "@/src/components/ContributorLeaderboard";
 import SocialProof from "@/src/components/SocialProof";
 import RoadmapQuiz from "@/src/components/RoadmapQuiz";
+import HomeFAQ from "@/src/components/HomeFAQ";
 
 const audiences = [
   {
@@ -185,6 +186,9 @@ export default function Home() {
           </form>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <HomeFAQ />
 
       {/* Community Leaderboard */}
       <ContributorLeaderboard />
