@@ -52,3 +52,32 @@ button {
 *:focus:not(:focus-visible) {
   outline: none;
 }
+
+/* Custom Scrollbar Styles */
+@layer base {
+  html {
+    /* Format: scrollbar-color: [Thumb Color] [Track Color] */
+    scrollbar-color: #334155 #0f172a; /* Custom slate-700 thumb on a slate-900 track */
+    scrollbar-width: thin;
+  }
+
+  /* Target WebKit browsers (Chrome, Safari, Edge) for precise styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0f172a; /* Sleek dark background matching standard Tailwind dark themes */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #334155; /* Slate-700 midtone for the thumb */
+    border-radius: 9999px; /* Fully rounded pill shape */
+    border: 2px solid #0f172a; /* Creates a nice padding effect around the thumb */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #475569; /* Lighter slate-600 color when hovering */
+  }
+}
