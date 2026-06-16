@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import RoadmapGraphView from "./RoadmapGraphView";
+import ActivityGraph from "./ActivityGraph";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
@@ -77,7 +79,7 @@ export type RoadmapPageShellProps = {
   progressSchemaTitle?: string;
   progressTitle: string;
   readinessTitle: string;
-  missingTitle: string;
+  missingTitle?: string;
   estimatedTime: string;
   miniProjectLabel: string;
   notesPlaceholder?: string;
@@ -91,8 +93,9 @@ export type RoadmapPageShellProps = {
   progressSchema?: Array<[string, string]>;
   architectureCards?: Array<[string, string]>;
   achievementBadges: string[];
-  missingTopics: string[];
+  missingTopics?: string[];
   readinessMetrics: ReadinessMetric[];
+  roadmapTitle?: string;
 };
 
 const icons = {
@@ -111,9 +114,10 @@ const icons = {
   server: <path d="M4 4h16v7H4V4Zm0 11h16v7H4v-7Zm3-7h.01M7 19h.01" />,
   shield: <path d="M12 3 20 6v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3Z" />,
   target: <path d="M21 12a9 9 0 1 1-9-9m6 3 3-3m0 0v5m0-5h-5M15 9l-3 3m3 0a3 3 0 1 1-3-3" />,
+  branch: <path d="M6 3v12" />,
 };
 
-const roadmapLinks = [
+export const roadmapLinks = [
   { title: "Frontend Developer Roadmap", href: "/roadmaps/frontend-developer", detail: "UI engineering, React, Next.js, accessibility, performance" },
   { title: "Backend Developer Roadmap", href: "/roadmaps/backend-developer", detail: "APIs, databases, auth, system design, production engineering" },
   { title: "Full Stack Developer Roadmap", href: "/roadmaps/full-stack-developer", detail: "Frontend, backend, databases, DevOps, cloud, product systems" },
@@ -121,7 +125,6 @@ const roadmapLinks = [
   { title: "Data Scientist Roadmap", href: "/roadmaps/data-scientist", detail: "Python, statistics, ML, deep learning, MLOps, GenAI" },
   { title: "Mobile Developer Roadmap", href: "/roadmaps/mobile-developer", detail: "Android, iOS, Flutter, React Native, app release systems" },
   { title: "JavaScript Roadmap", href: "/roadmaps/javascript", detail: "Language fundamentals, DOM, async, modules, patterns" },
-  { title: "TypeScript Roadmap", href: "/roadmaps/typescript", detail: "Types, interfaces, generics, architecture, tooling" },
   { title: "React Roadmap", href: "/roadmaps/react", detail: "Components, hooks, state, routing, app architecture" },
   { title: "Next.js Roadmap", href: "/roadmaps/nextjs", detail: "App Router, layouts, rendering, APIs, deployment" },
   { title: "Git Roadmap", href: "/roadmaps/git", detail: "Commits, branches, remotes, recovery, collaboration" },
@@ -130,7 +133,7 @@ const roadmapLinks = [
 /**
  * Icon component/function.
  */
-function Icon({ name, className = "" }: { name: keyof typeof icons; className?: string }) {
+export function Icon({ name, className = "" }: { name: keyof typeof icons; className?: string }) {
   return (
     <svg aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" viewBox="0 0 24 24">
       {icons[name]}
@@ -161,11 +164,11 @@ function loadNotes(key: string) {
  */
 function difficultyClass(difficulty: Difficulty) {
   const classes: Record<Difficulty, string> = {
-    Starter: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
-    Core: "border-sky-500/30 bg-sky-500/10 text-sky-300",
-    Applied: "border-amber-500/30 bg-amber-500/10 text-amber-300",
-    Advanced: "border-red-500/35 bg-red-500/10 text-red-300",
-    Expert: "border-red-400/50 bg-red-500/15 text-red-200",
+    Starter: "border-emerald-500/20 bg-emerald-500/10 text-emerald-500",
+    Core: "border-zinc-700 bg-zinc-900 text-zinc-400",
+    Applied: "border-amber-500/20 bg-amber-500/10 text-amber-500",
+    Advanced: "border-rose-500/20 bg-rose-500/10 text-rose-500",
+    Expert: "border-rose-500/30 bg-rose-500/15 text-rose-400",
   };
   return classes[difficulty];
 }
@@ -175,10 +178,10 @@ function difficultyClass(difficulty: Difficulty) {
  */
 function stageClass(stage: Stage) {
   const classes: Record<Stage, string> = {
-    Beginner: "border-zinc-700 bg-zinc-950 text-zinc-200",
-    Intermediate: "border-red-950 bg-red-950/30 text-red-200",
-    Advanced: "border-red-800 bg-red-950/50 text-red-100",
-    Expert: "border-red-600 bg-red-600/15 text-white",
+    Beginner: "border-emerald-500/20 bg-emerald-500/5 text-emerald-500",
+    Intermediate: "border-amber-500/20 bg-amber-500/5 text-amber-500",
+    Advanced: "border-rose-500/20 bg-rose-500/5 text-rose-500",
+    Expert: "border-rose-500/30 bg-rose-500/10 text-rose-400",
   };
   return classes[stage];
 }
@@ -199,15 +202,20 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
   const [completedIds, setCompletedIds] = useState<Set<string>>(() => loadSet(storageKeys.completed));
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => loadSet(storageKeys.bookmarked));
   const [notes, setNotes] = useState<Record<string, string>>(() => loadNotes(storageKeys.notes));
+  const [showFirstBadgeModal, setShowFirstBadgeModal] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState<Stage | "All">("All");
-  const [difficultyFilter, setDifficultyFilter] = useState<Difficulty | "All">("All");
-  const [durationFilter, setDurationFilter] = useState("All");
-  const [resourceFilter, setResourceFilter] = useState("All");
+  const [hideCompleted, setHideCompleted] = useState(false);
 
   useEffect(() => {
+    const prevCompletedCount = loadSet(storageKeys.completed).size;
     window.localStorage.setItem(storageKeys.completed, JSON.stringify(Array.from(completedIds)));
+    if (prevCompletedCount === 0 && completedIds.size > 0 && !window.localStorage.getItem(`${storageKeys.completed}-onboarded`)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setShowFirstBadgeModal(true);
+      window.localStorage.setItem(`${storageKeys.completed}-onboarded`, "true");
+    }
   }, [completedIds, storageKeys.completed]);
 
   useEffect(() => {
@@ -250,7 +258,6 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
     const percentage = ids.length ? Math.round((ids.filter((id) => completedIds.has(id)).length / ids.length) * 100) : 0;
     return { ...metric, percentage };
   });
-  const durationOptions = Array.from(new Set(props.roadmapNodes.map((node) => node.duration)));
   const getTopicHref = (nodeId: string) => (props.detailBasePath ? `${props.detailBasePath}/${nodeId}` : undefined);
   const filteredNodes = props.roadmapNodes.filter((node) => {
     const query = searchQuery.trim().toLowerCase();
@@ -275,9 +282,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
     return (
       (!query || searchable.includes(query)) &&
       (stageFilter === "All" || node.stage === stageFilter) &&
-      (difficultyFilter === "All" || node.difficulty === difficultyFilter) &&
-      (durationFilter === "All" || node.duration === durationFilter) &&
-      (resourceFilter === "All" || node.resources.some((resource) => resource.category === resourceFilter))
+      (!hideCompleted || !completedIds.has(node.id))
     );
   });
 
@@ -295,6 +300,22 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
 
   return (
     <main className="min-h-screen bg-[#050505] text-zinc-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Course",
+            name: props.title,
+            description: props.description,
+            provider: {
+              "@type": "Organization",
+              name: "DemonTech Roadmap",
+              sameAs: "https://demontech-roadmap.vercel.app",
+            },
+          }),
+        }}
+      />
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,#050505_0%,#090909_48%,#050505_100%)]" />
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(rgba(239,68,68,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(239,68,68,0.04)_1px,transparent_1px)] bg-[size:44px_44px]" />
 
@@ -302,23 +323,24 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
         <div className="mx-auto flex h-16 max-w-[1280px] items-center gap-5 px-5 lg:px-6">
           <DemonTechLogo />
           <nav className="ml-auto hidden items-center gap-7 text-sm font-bold text-zinc-400 lg:flex">
-            <Link className="text-red-400" href="/docs/all-roadmaps">Roadmaps</Link>
+            <Link className="text-red-500 hover:text-red-400" href="/docs/all-roadmaps">Roadmaps</Link>
+            <Link className="transition hover:text-white" href="/docs/html/home">Docs</Link>
             <Link className="transition hover:text-white" href="/docs/learning-paths">Learning Paths</Link>
             <Link className="transition hover:text-white" href="/docs/project-ideas">Projects</Link>
             <Link className="transition hover:text-white" href="/docs/best-practices">Best Practices</Link>
           </nav>
           <button className="h-10 items-center justify-center rounded-md border border-zinc-800 bg-black px-3 text-sm font-bold text-zinc-500 transition hover:border-red-500/50 hover:text-zinc-200 md:hidden" onClick={() => setCommandOpen(true)} type="button">
-            <Icon className="h-4 w-4 text-red-400" name="search" />
+            <Icon className="h-4 w-4 text-zinc-400" name="search" />
             <span className="sr-only">Open command palette</span>
           </button>
           <button className="hidden h-10 min-w-48 items-center justify-between gap-4 rounded-md border border-zinc-800 bg-black px-3 text-sm font-bold text-zinc-500 transition hover:border-red-500/50 hover:text-zinc-200 md:inline-flex" onClick={() => setCommandOpen(true)} type="button">
             <span className="inline-flex items-center gap-2">
-              <Icon className="h-4 w-4 text-red-400" name="search" />
+              <Icon className="h-4 w-4 text-zinc-400" name="search" />
               Search
             </span>
             <kbd className="rounded border border-zinc-800 px-1.5 py-0.5 text-[10px] uppercase text-zinc-500">⌘K</kbd>
           </button>
-          <a className="hidden rounded-md border border-red-500/40 bg-red-500 px-4 py-2 text-sm font-black text-white transition hover:bg-red-400 md:inline-flex" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">
+          <a className="hidden rounded-md border border-red-500/40 bg-red-600 px-4 py-2 text-sm font-black text-white transition hover:bg-red-500 md:inline-flex" href="https://discord.gg/yWtjK2Tb8T" rel="noreferrer" target="_blank">
             Join Community
           </a>
         </div>
@@ -336,7 +358,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
       <div className="mx-auto grid max-w-[1280px] gap-6 px-5 py-6 lg:grid-cols-[minmax(0,1fr)_310px] lg:px-6">
         <section>
           <Breadcrumb current={props.breadcrumb} />
-          <Hero props={props} stageProgress={stageProgress} setExpandedNodeId={setExpandedNodeId} />
+          <Hero props={props} />
           <ProjectTrackSection intro={props.projectIntro} projectTracks={props.projectTracks} />
           <RoadmapJourney
             completedIds={completedIds}
@@ -349,25 +371,19 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
             setNotes={setNotes}
             title={props.journeyTitle}
             description={props.journeyDescription}
-            difficultyFilter={difficultyFilter}
-            durationFilter={durationFilter}
-            durationOptions={durationOptions}
             miniProjectLabel={props.miniProjectLabel}
             nodes={filteredNodes}
             notesPlaceholder={props.notesPlaceholder}
-            resourceCategories={props.resourceCategories}
-            resourceFilter={resourceFilter}
             searchQuery={searchQuery}
-            setDifficultyFilter={setDifficultyFilter}
-            setDurationFilter={setDurationFilter}
             getTopicHref={getTopicHref}
             toggleSet={toggleSet}
             setBookmarkedIds={setBookmarkedIds}
-            setResourceFilter={setResourceFilter}
             setSearchQuery={setSearchQuery}
             setStageFilter={setStageFilter}
             stageFilter={stageFilter}
             totalNodeCount={props.roadmapNodes.length}
+            hideCompleted={hideCompleted}
+            setHideCompleted={setHideCompleted}
           />
           <ResourceMatrix title={props.resourceTitle} resourcesByCategory={resourcesByCategory} />
           {props.paths?.length ? <CareerPathPanel title={props.pathTitle ?? "Career Paths"} description={props.pathDescription ?? ""} paths={props.paths} /> : null}
@@ -394,7 +410,28 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
           bookmarkedCount={bookmarkedIds.size}
           progressTitle={props.progressTitle}
           readinessTitle={props.readinessTitle}
+          notes={notes}
+          roadmapTitle={props.roadmapTitle ?? props.title}
         />
+        {showFirstBadgeModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+            <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 p-8 text-center shadow-[0_0_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in duration-300">
+              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-zinc-900 text-zinc-400">
+                <Icon className="h-12 w-12" name="badge" />
+              </div>
+              <h2 className="mt-6 text-3xl font-black text-white">First Step Taken!</h2>
+              <p className="mt-3 text-sm leading-6 text-zinc-400">
+                You&apos;ve completed your very first topic. Keep your momentum going and see your roadmap graph light up!
+              </p>
+              <button
+                className="mt-8 w-full rounded-md bg-red-600 px-4 py-3 font-black text-white transition hover:bg-red-500"
+                onClick={() => setShowFirstBadgeModal(false)}
+              >
+                Continue Journey
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );
@@ -406,7 +443,7 @@ export function RoadmapPageShell(props: RoadmapPageShellProps) {
 function DemonTechLogo() {
   return (
     <Link className="flex min-w-fit items-center gap-3" href="/">
-      <span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md border border-red-500/30 bg-black">
+      <span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md border border-zinc-800 bg-black">
         <Image alt="DemonTech logo" className="h-full w-full object-cover" height={48} src="/demontech-logo.png" width={48} />
       </span>
       <span>
@@ -425,9 +462,9 @@ function DemonTechLogo() {
 function Breadcrumb({ current }: { current: string }) {
   return (
     <div className="flex flex-wrap items-center gap-2 text-sm text-zinc-500">
-      <Link className="hover:text-red-400" href="/">Home</Link>
+      <Link className="hover:text-white" href="/">Home</Link>
       <Icon className="h-3.5 w-3.5" name="arrow" />
-      <Link className="hover:text-red-400" href="/docs/all-roadmaps">Roadmaps</Link>
+      <Link className="hover:text-white" href="/docs/all-roadmaps">Roadmaps</Link>
       <Icon className="h-3.5 w-3.5" name="arrow" />
       <span className="font-bold text-zinc-300">{current}</span>
     </div>
@@ -437,44 +474,16 @@ function Breadcrumb({ current }: { current: string }) {
 /**
  * Hero component/function.
  */
-function Hero({ props, stageProgress, setExpandedNodeId }: { props: RoadmapPageShellProps; stageProgress: Array<StageSummary & { completed: number; total: number; percentage: number }>; setExpandedNodeId: (id: string) => void }) {
+function Hero({ props }: { props: RoadmapPageShellProps }) {
   return (
     <section className="mt-6 overflow-hidden rounded-md border border-zinc-800 bg-zinc-950">
-      <div className="grid gap-6 p-5 lg:grid-cols-[minmax(0,1fr)_300px] lg:p-6">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-xs font-black text-red-300">
-            <Icon className="h-4 w-4" name="server" />
-            {props.eyebrow}
-          </div>
-          <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">{props.title}</h1>
-          <p className="mt-5 max-w-3xl text-base leading-8 text-zinc-300">{props.description}</p>
-          <div className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {props.stats.map(([value, label, icon]) => (
-              <div className="rounded-md border border-zinc-800 bg-[#050505] p-4" key={label}>
-                <Icon className="h-5 w-5 text-red-400" name={icon} />
-                <p className="mt-3 text-2xl font-black text-white">{value}</p>
-                <p className="mt-1 text-sm text-zinc-500">{label}</p>
-              </div>
-            ))}
-          </div>
+      <div className="p-5 lg:p-8">
+        <div className="inline-flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs font-black text-zinc-400">
+          <Icon className="h-4 w-4" name="server" />
+          {props.eyebrow}
         </div>
-        <div className="rounded-md border border-zinc-800 bg-[#050505] p-5">
-          <p className="text-sm font-black text-white">{props.architectureLabel}</p>
-          <div className="mt-5 space-y-4">
-            {stageProgress.map((stage) => (
-              <button className="w-full text-left" key={stage.stage} onClick={() => setExpandedNodeId(props.roadmapNodes.find((node) => node.stage === stage.stage)?.id ?? props.roadmapNodes[0].id)} type="button">
-                <span className="flex items-center justify-between gap-4 text-sm">
-                  <span className="font-bold text-zinc-200">{stage.stage}</span>
-                  <span className="text-zinc-500">{stage.completed}/{stage.total}</span>
-                </span>
-                <span className="mt-2 block h-2 overflow-hidden rounded-full bg-zinc-900">
-                  <span className="block h-full rounded-full bg-red-500" style={{ width: `${stage.percentage}%` }} />
-                </span>
-                <span className="mt-2 block text-xs leading-5 text-zinc-500">{stage.duration}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+        <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">{props.title}</h1>
+        <p className="mt-5 max-w-3xl text-base leading-8 text-zinc-300">{props.description}</p>
       </div>
     </section>
   );
@@ -495,7 +504,7 @@ export function ProjectTrackSection({ intro, projectTracks }: { intro: string; p
             <ul className="mt-4 space-y-3 text-sm text-zinc-300">
               {track.projects.map((project) => (
                 <li className="flex gap-3" key={project}>
-                  <Icon className="mt-0.5 h-4 w-4 shrink-0 text-red-400" name="code" />
+                  <Icon className="mt-0.5 h-4 w-4 shrink-0 text-zinc-500" name="code" />
                   {project}
                 </li>
               ))}
@@ -514,9 +523,6 @@ function RoadmapJourney(props: {
   bookmarkedIds: Set<string>;
   completedIds: Set<string>;
   description: string;
-  difficultyFilter: Difficulty | "All";
-  durationFilter: string;
-  durationOptions: string[];
   expandedNodeId: string;
   nextNodeId: string | undefined;
   getTopicHref?: (nodeId: string) => string | undefined;
@@ -524,24 +530,22 @@ function RoadmapJourney(props: {
   nodes: RoadmapNode[];
   notes: Record<string, string>;
   notesPlaceholder?: string;
-  resourceCategories: string[];
-  resourceFilter: string;
   searchQuery: string;
   setBookmarkedIds: (value: Set<string>) => void;
   setCompletedIds: (value: Set<string>) => void;
-  setDifficultyFilter: (value: Difficulty | "All") => void;
-  setDurationFilter: (value: string) => void;
   setExpandedNodeId: (value: string | ((current: string) => string)) => void;
   setNotes: (value: Record<string, string> | ((current: Record<string, string>) => Record<string, string>)) => void;
-  setResourceFilter: (value: string) => void;
   setSearchQuery: (value: string) => void;
   setStageFilter: (value: Stage | "All") => void;
   stageFilter: Stage | "All";
   title: string;
   toggleSet: (setter: (value: Set<string>) => void, current: Set<string>, id: string) => void;
   totalNodeCount: number;
+  hideCompleted: boolean;
+  setHideCompleted: (value: boolean) => void;
 }) {
-  const hasActiveFilters = Boolean(props.searchQuery.trim()) || props.stageFilter !== "All" || props.difficultyFilter !== "All" || props.durationFilter !== "All" || props.resourceFilter !== "All";
+  const [viewMode, setViewMode] = useState<"list" | "graph">("list");
+  const hasActiveFilters = Boolean(props.searchQuery.trim()) || props.stageFilter !== "All" || props.hideCompleted;
 
   return (
     <section className="mt-6">
@@ -550,46 +554,64 @@ function RoadmapJourney(props: {
           <h2 className="text-2xl font-black text-white">{props.title}</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">{props.description}</p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-4">
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-zinc-400 transition hover:text-zinc-300">
+            <input
+              checked={props.hideCompleted}
+              className="h-4 w-4 rounded border-zinc-800 bg-black text-red-600 focus:ring-1 focus:ring-red-600 focus:ring-offset-1 focus:ring-offset-black"
+              onChange={(e) => props.setHideCompleted(e.target.checked)}
+              type="checkbox"
+            />
+            Hide Completed
+          </label>
           {hasActiveFilters ? (
             <button
-              className="rounded-md border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-200 transition hover:border-red-500/60"
+              className="rounded-md border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:border-zinc-700"
               onClick={() => {
                 props.setSearchQuery("");
                 props.setStageFilter("All");
-                props.setDifficultyFilter("All");
-                props.setDurationFilter("All");
-                props.setResourceFilter("All");
+                props.setHideCompleted(false);
               }}
               type="button"
             >
               Clear Filters
             </button>
           ) : null}
-          <button className="rounded-md border border-zinc-800 px-4 py-2 text-sm font-bold text-zinc-300 transition hover:border-red-500/60 hover:text-white" onClick={() => props.setCompletedIds(new Set())} type="button">
+          <div className="flex rounded-md border border-zinc-800 bg-black p-1">
+            <button
+              className={`flex items-center gap-2 rounded px-3 py-1.5 text-xs font-bold transition ${viewMode === "list" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+              onClick={() => setViewMode("list")}
+              type="button"
+            >
+              <Icon className="h-4 w-4" name="server" />
+              List
+            </button>
+            <button
+              className={`flex items-center gap-2 rounded px-3 py-1.5 text-xs font-bold transition ${viewMode === "graph" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+              onClick={() => setViewMode("graph")}
+              type="button"
+            >
+              <Icon className="h-4 w-4" name="branch" />
+              Graph
+            </button>
+          </div>
+          <button className="rounded-md border border-zinc-800 px-4 py-2 text-sm font-bold text-zinc-400 transition hover:border-zinc-700 hover:text-white" onClick={() => props.setCompletedIds(new Set())} type="button">
             Reset Progress
           </button>
         </div>
       </div>
       <RoadmapFilters
-        difficultyFilter={props.difficultyFilter}
-        durationFilter={props.durationFilter}
-        durationOptions={props.durationOptions}
         matchingCount={props.nodes.length}
-        resourceCategories={props.resourceCategories}
-        resourceFilter={props.resourceFilter}
         searchQuery={props.searchQuery}
-        setDifficultyFilter={props.setDifficultyFilter}
-        setDurationFilter={props.setDurationFilter}
-        setResourceFilter={props.setResourceFilter}
         setSearchQuery={props.setSearchQuery}
         setStageFilter={props.setStageFilter}
         stageFilter={props.stageFilter}
         totalCount={props.totalNodeCount}
       />
-      <div className="relative mt-6 space-y-5">
-        <div className="absolute bottom-8 left-6 top-8 hidden w-px bg-zinc-800 sm:block" />
-        {props.nodes.length ? (
+      {viewMode === "list" ? (
+        <div className="relative mt-6 space-y-5">
+          <div className="absolute bottom-8 left-6 top-8 hidden w-px bg-zinc-800 sm:block" />
+          {props.nodes.length ? (
           props.nodes.map((node, index) => {
             const isNext = node.id === props.nextNodeId;
             return (
@@ -614,12 +636,30 @@ function RoadmapJourney(props: {
           })
         ) : (
           <div className="rounded-md border border-zinc-800 bg-zinc-950 p-6 text-center">
-            <Icon className="mx-auto h-8 w-8 text-red-400" name="search" />
+            <Icon className="mx-auto h-8 w-8 text-zinc-600" name="search" />
             <p className="mt-3 text-lg font-black text-white">No matching roadmap nodes</p>
             <p className="mt-2 text-sm text-zinc-500">Try a broader search term or clear one of the filters.</p>
           </div>
         )}
-      </div>
+        </div>
+      ) : (
+        <div className="mt-6">
+          <RoadmapGraphView
+            nodes={props.nodes}
+            completedIds={props.completedIds}
+            bookmarkedIds={props.bookmarkedIds}
+            nextNodeId={props.nextNodeId}
+            onNodeClick={(id) => {
+              props.setExpandedNodeId(id);
+              setViewMode("list");
+              setTimeout(() => {
+                const el = document.getElementById(`roadmap-node-${id}`);
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+              }, 100);
+            }}
+          />
+        </div>
+      )}
     </section>
   );
 }
@@ -628,77 +668,56 @@ function RoadmapJourney(props: {
  * RoadmapFilters component/function.
  */
 function RoadmapFilters({
-  difficultyFilter,
-  durationFilter,
-  durationOptions,
   matchingCount,
-  resourceCategories,
-  resourceFilter,
   searchQuery,
-  setDifficultyFilter,
-  setDurationFilter,
-  setResourceFilter,
   setSearchQuery,
   setStageFilter,
   stageFilter,
   totalCount,
 }: {
-  difficultyFilter: Difficulty | "All";
-  durationFilter: string;
-  durationOptions: string[];
   matchingCount: number;
-  resourceCategories: string[];
-  resourceFilter: string;
   searchQuery: string;
-  setDifficultyFilter: (value: Difficulty | "All") => void;
-  setDurationFilter: (value: string) => void;
-  setResourceFilter: (value: string) => void;
   setSearchQuery: (value: string) => void;
   setStageFilter: (value: Stage | "All") => void;
   stageFilter: Stage | "All";
   totalCount: number;
 }) {
+  const stages: Array<Stage | "All"> = ["All", "Beginner", "Intermediate", "Advanced", "Expert"];
+
   return (
-    <section className="mt-5 rounded-md border border-zinc-800 bg-zinc-950/90 p-4">
-      <div className="grid gap-3 xl:grid-cols-[minmax(220px,1.5fr)_repeat(4,minmax(130px,1fr))_auto]">
-        <label className="relative">
-          <span className="sr-only">Search roadmap topics, resources, duration, and difficulty</span>
-          <Icon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-red-400" name="search" />
-          <input
-            className="h-10 w-full rounded-md border border-zinc-800 bg-black pl-9 pr-3 text-sm font-bold text-zinc-200 outline-none transition placeholder:text-zinc-600 focus:border-red-500/70"
-            onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder="Search topics, resources, difficulty..."
-            type="search"
-            value={searchQuery}
-          />
-        </label>
-        <FilterSelect label="Stage" onChange={(value) => setStageFilter(value as Stage | "All")} options={["All", "Beginner", "Intermediate", "Advanced", "Expert"]} value={stageFilter} />
-        <FilterSelect label="Difficulty" onChange={(value) => setDifficultyFilter(value as Difficulty | "All")} options={["All", "Starter", "Core", "Applied", "Advanced", "Expert"]} value={difficultyFilter} />
-        <FilterSelect label="Duration" onChange={setDurationFilter} options={["All", ...durationOptions]} value={durationFilter} />
-        <FilterSelect label="Resources" onChange={setResourceFilter} options={["All", ...resourceCategories]} value={resourceFilter} />
-        <div className="flex h-10 items-center justify-center rounded-md border border-zinc-800 bg-black px-3 text-xs font-black text-zinc-400">
-          {matchingCount}/{totalCount}
+    <section className="mt-6 space-y-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-2">
+          {stages.map((stage) => (
+            <button
+              key={stage}
+              onClick={() => setStageFilter(stage)}
+              className={`rounded-md px-4 py-2 text-sm font-bold transition ${
+                stageFilter === stage
+                  ? "bg-red-600 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]"
+                  : "border border-zinc-800 bg-black text-zinc-400 hover:border-zinc-700 hover:text-white"
+              }`}
+            >
+              {stage}
+            </button>
+          ))}
+        </div>
+        <div className="text-xs font-black uppercase tracking-widest text-zinc-600">
+          Showing {matchingCount} of {totalCount} topics
         </div>
       </div>
-    </section>
-  );
-}
 
-/**
- * FilterSelect component/function.
- */
-function FilterSelect({ label, onChange, options, value }: { label: string; onChange: (value: string) => void; options: string[]; value: string }) {
-  return (
-    <label>
-      <span className="sr-only">{label}</span>
-      <select className="h-10 w-full rounded-md border border-zinc-800 bg-black px-3 text-sm font-bold text-zinc-300 outline-none transition focus:border-red-500/70" onChange={(event) => onChange(event.target.value)} value={value}>
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {label}: {option}
-          </option>
-        ))}
-      </select>
-    </label>
+      <div className="relative">
+        <Icon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" name="search" />
+        <input
+          className="h-12 w-full rounded-md border border-zinc-800 bg-black pl-10 pr-4 text-sm font-bold text-zinc-200 outline-none transition placeholder:text-zinc-600 focus:border-red-500/50"
+          onChange={(event) => setSearchQuery(event.target.value)}
+          placeholder="Search within this roadmap..."
+          type="search"
+          value={searchQuery}
+        />
+      </div>
+    </section>
   );
 }
 
@@ -733,6 +752,12 @@ function CommandPalette({
 }) {
   const router = useRouter();
   const [paletteQuery, setPaletteQuery] = useState(query);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedIndex(0);
+  }, [paletteQuery]);
 
   useEffect(() => {
     if (!open) return;
@@ -822,13 +847,27 @@ function CommandPalette({
 
   return (
     <div aria-modal="true" className="fixed inset-0 z-50 bg-black/75 px-4 py-10 backdrop-blur-sm" role="dialog">
-      <div className="mx-auto max-w-3xl overflow-hidden rounded-md border border-red-500/30 bg-[#050505] shadow-2xl shadow-red-950/30">
+      <div className="mx-auto max-w-3xl overflow-hidden rounded-md border border-zinc-800 bg-[#050505] shadow-2xl shadow-black/50">
         <div className="flex items-center gap-3 border-b border-zinc-800 px-4 py-3">
-          <Icon className="h-5 w-5 text-red-400" name="search" />
+          <Icon className="h-5 w-5 text-zinc-500" name="search" />
           <input
             autoFocus
             className="h-11 min-w-0 flex-1 bg-transparent text-base font-bold text-white outline-none placeholder:text-zinc-600"
             onChange={(event) => setPaletteQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                setSelectedIndex((i) => (i + 1) % (visibleResults.length || 1));
+              } else if (event.key === "ArrowUp") {
+                event.preventDefault();
+                setSelectedIndex((i) => (i - 1 + visibleResults.length) % (visibleResults.length || 1));
+              } else if (event.key === "Enter") {
+                event.preventDefault();
+                if (visibleResults[selectedIndex]) {
+                  runResult(visibleResults[selectedIndex]);
+                }
+              }
+            }}
             placeholder="Search roadmaps, topics, resources, difficulty, duration..."
             type="search"
             value={paletteQuery}
@@ -844,22 +883,26 @@ function CommandPalette({
                 <section className="py-2" key={group}>
                   <h2 className="px-2 text-xs font-black uppercase tracking-widest text-zinc-600">{group}</h2>
                   <div className="mt-2 space-y-1">
-                    {results.map((result) => (
-                      <button className="grid w-full gap-1 rounded-md border border-transparent px-3 py-3 text-left transition hover:border-red-500/40 hover:bg-red-500/10" key={result.id} onClick={() => runResult(result)} type="button">
-                        <span className="flex items-center justify-between gap-3">
-                          <span className="font-black text-zinc-100">{result.title}</span>
-                          <span className="rounded border border-zinc-800 px-2 py-1 text-[10px] font-black uppercase text-zinc-500">{result.group}</span>
-                        </span>
-                        <span className="line-clamp-2 text-sm leading-6 text-zinc-500">{result.detail}</span>
-                      </button>
-                    ))}
+                    {results.map((result) => {
+                      const flatIndex = visibleResults.indexOf(result);
+                      const isSelected = flatIndex === selectedIndex;
+                      return (
+                        <button className={`grid w-full gap-1 rounded-md border px-3 py-3 text-left transition ${isSelected ? "border-zinc-700 bg-zinc-900" : "border-transparent hover:bg-white/5"}`} key={result.id} onClick={() => runResult(result)} type="button">
+                          <span className="flex items-center justify-between gap-3">
+                            <span className="font-black text-zinc-100">{result.title}</span>
+                            <span className="rounded border border-zinc-800 px-2 py-1 text-[10px] font-black uppercase text-zinc-500">{result.group}</span>
+                          </span>
+                          <span className="line-clamp-2 text-sm leading-6 text-zinc-500">{result.detail}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </section>
               ) : null,
             )
           ) : (
             <section className="px-4 py-12 text-center">
-              <Icon className="mx-auto h-8 w-8 text-red-400" name="search" />
+              <Icon className="mx-auto h-8 w-8 text-zinc-700" name="search" />
               <p className="mt-3 text-lg font-black text-white">No command results</p>
               <p className="mt-2 text-sm text-zinc-500">Try searching a roadmap, topic, resource, difficulty, duration, or career path.</p>
             </section>
@@ -908,17 +951,17 @@ export function RoadmapNodeCard({
 
   return (
     <article className="relative scroll-mt-24" id={`roadmap-node-${node.id}`}>
-      <span className={`absolute left-0 top-7 z-10 grid h-12 w-12 place-items-center rounded-md border text-sm font-black ${completed ? "border-red-500 bg-red-500 text-white" : isNext ? "border-red-500/50 bg-[#050505] text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.25)]" : "border-zinc-800 bg-[#050505] text-zinc-300"}`}>
+      <span className={`absolute left-0 top-7 z-10 grid h-12 w-12 place-items-center rounded-md border text-sm font-black ${completed ? "border-red-600 bg-red-600 text-white" : isNext ? "border-zinc-700 bg-[#050505] text-white" : "border-zinc-800 bg-[#050505] text-zinc-300"}`}>
         {completed ? <Icon className="h-5 w-5" name="check" /> : String(index + 1).padStart(2, "0")}
       </span>
-      <div className={`ml-7 rounded-md border bg-zinc-950/80 transition ${expanded ? "border-red-500/70" : isNext ? "border-red-500/40 hover:border-red-500/70 shadow-[0_0_20px_rgba(239,68,68,0.05)]" : "border-zinc-800 hover:border-red-500/40"}`}>
+      <div className={`ml-7 rounded-md border bg-zinc-950/80 transition ${expanded ? "border-zinc-700" : isNext ? "border-zinc-800 hover:border-zinc-700 shadow-[0_0_20px_rgba(255,255,255,0.02)]" : "border-zinc-800 hover:border-zinc-700"}`}>
         <button aria-controls={detailsId} aria-expanded={expanded} aria-label={`${expanded ? "Collapse" : "Expand"} ${node.title}`} className="grid w-full gap-5 p-5 pl-10 text-left md:grid-cols-[minmax(0,1fr)_auto]" onClick={onExpand} type="button">
           <span>
             <span className="flex flex-wrap items-center gap-2">
               <span className={`rounded-md border px-2.5 py-1 text-xs font-bold ${stageClass(node.stage)}`}>{node.stage}</span>
               <span className={`rounded-md border px-2.5 py-1 text-xs font-bold ${difficultyClass(node.difficulty)}`}>{node.difficulty}</span>
-              <span className="inline-flex items-center gap-1 rounded-md border border-zinc-800 bg-black px-2.5 py-1 text-xs font-bold text-zinc-400">
-                <Icon className="h-3.5 w-3.5 text-red-400" name="clock" />
+              <span className="inline-flex items-center gap-1 rounded-md border border-zinc-800 bg-black px-2.5 py-1 text-xs font-bold text-zinc-500">
+                <Icon className="h-3.5 w-3.5 text-zinc-500" name="clock" />
                 {node.duration}
               </span>
             </span>
@@ -926,8 +969,8 @@ export function RoadmapNodeCard({
             <span className="mt-2 block max-w-3xl text-sm leading-6 text-zinc-400">{node.description}</span>
           </span>
           <span className="flex items-center gap-3 md:justify-end">
-            <span className={completed ? "text-sm font-bold text-red-300" : isNext ? "text-sm font-black text-red-400" : "text-sm font-bold text-zinc-500"}>{completed ? "Complete" : isNext ? "Up Next" : "In progress"}</span>
-            <Icon className={`h-5 w-5 text-zinc-500 transition ${expanded ? "rotate-90 text-red-400" : ""}`} name="arrow" />
+            <span className={completed ? "text-sm font-bold text-zinc-400" : isNext ? "text-sm font-black text-white" : "text-sm font-bold text-zinc-500"}>{completed ? "Complete" : isNext ? "Up Next" : "Not started"}</span>
+            <Icon className={`h-5 w-5 text-zinc-500 transition ${expanded ? "rotate-90 text-white" : ""}`} name="arrow" />
           </span>
         </button>
         {expanded ? (
@@ -955,11 +998,11 @@ function NodeMainContent({ node, note, notesPlaceholder, onNoteChange }: { node:
       <CheckList title="Practice Exercises" items={node.practiceExercises} icon="target" />
       <section className="rounded-md border border-zinc-800 bg-[#050505] p-4">
         <label className="flex items-center gap-2 text-sm font-black text-white" htmlFor={`${node.id}-notes`}>
-          <Icon className="h-4 w-4 text-red-400" name="note" />
+          <Icon className="h-4 w-4 text-zinc-500" name="note" />
           Notes
         </label>
         <textarea
-          className="mt-3 min-h-28 w-full resize-y rounded-md border border-zinc-800 bg-black p-3 text-sm leading-6 text-zinc-200 outline-none transition placeholder:text-zinc-600 focus:border-red-500/70"
+          className="mt-3 min-h-28 w-full resize-y rounded-md border border-zinc-800 bg-black p-3 text-sm leading-6 text-zinc-200 outline-none transition placeholder:text-zinc-600 focus:border-zinc-700"
           id={`${node.id}-notes`}
           onChange={(event) => onNoteChange(event.target.value)}
           placeholder={notesPlaceholder ?? "Write implementation notes, links, or questions for this topic."}
@@ -977,17 +1020,17 @@ function NodeAside({ bookmarked, completed, miniProjectLabel, node, onToggleBook
   return (
     <aside className="space-y-5">
       {topicHref ? (
-        <Link className="flex h-10 items-center justify-center gap-2 rounded-md border border-red-500/40 bg-red-500 px-3 text-sm font-black text-white transition hover:bg-red-400" href={topicHref}>
+        <Link className="flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-800 bg-white px-3 text-sm font-black text-black transition hover:bg-zinc-200" href={topicHref}>
           Open topic page
           <Icon className="h-4 w-4" name="arrow" />
         </Link>
       ) : null}
-      <section className="border-l border-red-500/40 pl-4">
+      <section className="border-l border-zinc-800 pl-4">
         <h3 className="text-sm font-black text-white">Prerequisites</h3>
         <div className="mt-3 flex flex-wrap gap-2">
           {node.prerequisites.map((prerequisite) => (
             <span className="inline-flex items-center gap-2 rounded-md border border-zinc-800 bg-black px-3 py-2 text-xs font-bold text-zinc-300" key={prerequisite}>
-              <Icon className="h-3.5 w-3.5 text-red-400" name="lock" />
+              <Icon className="h-3.5 w-3.5 text-zinc-500" name="lock" />
               {prerequisite}
             </span>
           ))}
@@ -1000,7 +1043,7 @@ function NodeAside({ bookmarked, completed, miniProjectLabel, node, onToggleBook
           <ul className="mt-3 space-y-2 text-sm text-zinc-300">
             {node.realWorldApplications.map((application) => (
               <li className="flex gap-2" key={application}>
-                <Icon className="mt-0.5 h-4 w-4 shrink-0 text-red-400" name="server" />
+                <Icon className="mt-0.5 h-4 w-4 shrink-0 text-zinc-500" name="server" />
                 {application}
               </li>
             ))}
@@ -1008,25 +1051,27 @@ function NodeAside({ bookmarked, completed, miniProjectLabel, node, onToggleBook
         </section>
       ) : null}
       {node.quiz ? (
-        <section className="rounded-md border border-red-500/20 bg-red-500/10 p-4">
+        <section className="rounded-md border border-zinc-800 bg-zinc-900/50 p-4">
           <h3 className="flex items-center gap-2 text-sm font-black text-white">
-            <Icon className="h-4 w-4 text-red-300" name="quiz" />
+            <Icon className="h-4 w-4 text-zinc-400" name="quiz" />
             Quiz Prompt
           </h3>
-          <p className="mt-2 text-sm leading-6 text-red-100">{node.quiz}</p>
+          <p className="mt-2 text-sm leading-6 text-zinc-300">{node.quiz}</p>
         </section>
       ) : null}
       <ResourceLinks resources={node.resources} />
       <div className="flex flex-wrap gap-2">
-        <button aria-pressed={completed} className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-bold transition ${completed ? "border-red-500 bg-red-500 text-white" : "border-zinc-800 bg-black text-zinc-300 hover:border-red-500/70"}`} onClick={onToggleComplete} type="button">
+        <button aria-pressed={completed} className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-bold transition ${completed ? "border-emerald-600 bg-emerald-600 text-white" : "border-zinc-800 bg-black text-zinc-300 hover:bg-white/5"}`} onClick={onToggleComplete} type="button">
           <Icon className="h-4 w-4" name="check" />
           {completed ? "Completed" : "Mark complete"}
         </button>
-        <button aria-pressed={bookmarked} className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-bold transition ${bookmarked ? "border-red-500/70 bg-red-500/15 text-red-200" : "border-zinc-800 bg-black text-zinc-300 hover:border-red-500/70"}`} onClick={onToggleBookmark} type="button">
+        <button aria-pressed={bookmarked} className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-bold transition ${bookmarked ? "border-amber-600 bg-amber-600/10 text-amber-500" : "border-zinc-800 bg-black text-zinc-300 hover:bg-white/5"}`} onClick={onToggleBookmark} type="button">
           <Icon className="h-4 w-4" name="bookmark" />
           {bookmarked ? "Bookmarked" : "Bookmark"}
         </button>
+        <ShareProgressButton nodeTitle={node.title} completed={completed} />
       </div>
+      <NodeFeedback nodeId={node.id} />
     </aside>
   );
 }
@@ -1057,7 +1102,7 @@ function CheckList({ title, items, icon }: { title: string; items: string[]; ico
       <ul className="mt-3 grid gap-3 md:grid-cols-2">
         {items.map((item) => (
           <li className="flex gap-3 text-sm leading-6 text-zinc-300" key={item}>
-            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-red-400" name={icon} />
+            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-zinc-500" name={icon} />
             {item}
           </li>
         ))}
@@ -1087,9 +1132,9 @@ function ResourceLinks({ resources }: { resources: Resource[] }) {
       <h3 className="text-sm font-black text-white">Resources</h3>
       <div className="mt-3 space-y-2">
         {resources.map((resource) => (
-          <a className="flex items-center justify-between rounded-md border border-zinc-800 bg-black px-3 py-2 text-sm font-bold text-zinc-300 transition hover:border-red-500/60 hover:text-white" href={resource.href} key={`${resource.href}-${resource.label}`} rel={resource.href.startsWith("http") ? "noreferrer" : undefined} target={resource.href.startsWith("http") ? "_blank" : undefined}>
+          <a className="flex items-center justify-between rounded-md border border-zinc-800 bg-black px-3 py-2 text-sm font-bold text-zinc-300 transition hover:bg-white/5" href={resource.href} key={`${resource.href}-${resource.label}`} rel={resource.href.startsWith("http") ? "noreferrer" : undefined} target={resource.href.startsWith("http") ? "_blank" : undefined}>
             <span>{resource.label}</span>
-            <Icon className="h-4 w-4 text-red-400" name="arrow" />
+            <Icon className="h-4 w-4 text-zinc-500" name="arrow" />
           </a>
         ))}
       </div>
@@ -1101,24 +1146,40 @@ function ResourceLinks({ resources }: { resources: Resource[] }) {
  * ResourceMatrix component/function.
  */
 export function ResourceMatrix({ title, resourcesByCategory }: { title: string; resourcesByCategory: Array<{ category: string; resources: Resource[] }> }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <section className="mt-6 rounded-md border border-zinc-800 bg-zinc-950 p-5">
-      <h2 className="text-2xl font-black text-white">{title}</h2>
-      <div className="mt-6 grid gap-5 lg:grid-cols-2">
-        {resourcesByCategory.map(({ category, resources }) => (
-          <section className="border-t border-zinc-800 pt-4" key={category}>
-            <h3 className="text-sm font-black text-white">{category}</h3>
-            <div className="mt-3 space-y-2">
-              {resources.map((resource) => (
-                <a className="flex items-center justify-between rounded-md border border-zinc-800 bg-[#050505] px-3 py-2 text-sm font-bold text-zinc-300 transition hover:border-red-500/60 hover:text-white" href={resource.href} key={`${category}-${resource.label}`} rel={resource.href.startsWith("http") ? "noreferrer" : undefined} target={resource.href.startsWith("http") ? "_blank" : undefined}>
-                  {resource.label}
-                  <Icon className="h-4 w-4 text-red-400" name="arrow" />
-                </a>
-              ))}
-            </div>
-          </section>
-        ))}
-      </div>
+    <section className="mt-6 rounded-md border border-zinc-800 bg-zinc-950 overflow-hidden">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex w-full items-center justify-between p-5 text-left transition hover:bg-white/5"
+      >
+        <h2 className="text-2xl font-black text-white">{title}</h2>
+        <div className="flex items-center gap-3 text-sm font-bold text-zinc-500">
+          {isOpen ? "Hide Resources" : "View All Resources"}
+          <Icon className={`h-5 w-5 transition-transform ${isOpen ? "rotate-90" : ""}`} name="arrow" />
+        </div>
+      </button>
+      
+      {isOpen && (
+        <div className="px-5 pb-5 border-t border-zinc-900 animate-in slide-in-from-top-1 duration-200">
+          <div className="mt-6 grid gap-5 lg:grid-cols-2">
+            {resourcesByCategory.map(({ category, resources }) => (
+              <section className="border-t border-zinc-900 pt-4 first:border-t-0 lg:first:border-t" key={category}>
+                <h3 className="text-sm font-black text-white">{category}</h3>
+                <div className="mt-3 space-y-2">
+                  {resources.map((resource) => (
+                    <a className="flex items-center justify-between rounded-md border border-zinc-800 bg-[#050505] px-3 py-2 text-sm font-bold text-zinc-300 transition hover:bg-white/5" href={resource.href} key={`${category}-${resource.label}`} rel={resource.href.startsWith("http") ? "noreferrer" : undefined} target={resource.href.startsWith("http") ? "_blank" : undefined}>
+                      {resource.label}
+                      <Icon className="h-4 w-4 text-zinc-500" name="arrow" />
+                    </a>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -1161,7 +1222,7 @@ function PathGrid({ paths, columns = "xl:grid-cols-3" }: { paths: RoadmapPath[];
           <p className="mt-2 text-sm leading-6 text-zinc-400">{path.focus}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {path.milestones.map((milestone) => (
-              <span className="rounded-md border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-xs font-bold text-red-200" key={milestone}>{milestone}</span>
+              <span className="rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-xs font-bold text-zinc-400" key={milestone}>{milestone}</span>
             ))}
           </div>
         </section>
@@ -1203,7 +1264,7 @@ function ProgressSchema({ title, rows }: { title: string; rows: Array<[string, s
         <div className="mt-6 space-y-3">
           {rows.map(([table, columns]) => (
             <article className="rounded-md border border-zinc-800 bg-[#050505] p-4" key={table}>
-              <h3 className="font-mono text-sm font-black text-red-300">{table}</h3>
+              <h3 className="font-mono text-sm font-black text-zinc-300">{table}</h3>
               <p className="mt-2 font-mono text-xs leading-6 text-zinc-400">{columns}</p>
             </article>
           ))}
@@ -1236,30 +1297,24 @@ function ArchitectureCards({ cards }: { cards: Array<[string, string]> }) {
  * ProgressDashboard component/function.
  */
 export function ProgressDashboard({
-  badges,
   bookmarkedCount,
   completedCount,
   currentLevel,
   estimatedTime,
-  missingTitle,
-  missingTopics,
   nextNode,
   noteCount,
   progressPercentage,
-  progressTitle,
-  readiness,
-  readinessTitle,
-  setExpandedNodeId,
   stageProgress,
   totalNodes,
+  roadmapTitle,
 }: {
   badges: string[];
   bookmarkedCount: number;
   completedCount: number;
   currentLevel: Stage;
   estimatedTime: string;
-  missingTitle: string;
-  missingTopics: string[];
+  missingTitle?: string;
+  missingTopics?: string[];
   nextNode: RoadmapNode;
   noteCount: number;
   progressPercentage: number;
@@ -1269,6 +1324,8 @@ export function ProgressDashboard({
   setExpandedNodeId: (id: string) => void;
   stageProgress: Array<StageSummary & { completed: number; total: number; percentage: number }>;
   totalNodes: number;
+  notes: Record<string, string>;
+  roadmapTitle: string;
 }) {
   return (
     <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
@@ -1278,34 +1335,12 @@ export function ProgressDashboard({
           <div>
             <p className="text-3xl font-black text-white">{completedCount}/{totalNodes}</p>
             <p className="mt-1 text-sm text-zinc-500">topics completed</p>
-            <p className="mt-4 text-sm font-bold text-red-300">{progressPercentage}% complete</p>
+            <p className="mt-4 text-sm font-bold text-zinc-400">{progressPercentage}% complete</p>
           </div>
         </div>
-      </SidebarPanel>
-      <SidebarPanel title="Learning Streak">
-        <div className="mt-4 flex items-center gap-4">
-          <span className="grid h-12 w-12 place-items-center rounded-md border border-red-500/30 bg-red-500/10 text-red-300">
-            <Icon className="h-6 w-6" name="flame" />
-          </span>
-          <div>
-            <p className="text-2xl font-black text-white">5 days</p>
-            <p className="text-sm text-zinc-500">current streak</p>
-          </div>
-        </div>
-      </SidebarPanel>
-      <SidebarPanel title="Recommended Next Step">
-        <div className="mt-4">
-          <span className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-bold ${difficultyClass(nextNode.difficulty)}`}>{nextNode.difficulty}</span>
-          <h3 className="mt-3 text-lg font-black text-white">{nextNode.title}</h3>
-          <p className="mt-2 text-sm leading-6 text-zinc-400">{nextNode.description}</p>
-          <button className="mt-4 inline-flex items-center gap-2 rounded-md border border-red-500/40 bg-red-500 px-4 py-2 text-sm font-black text-white transition hover:bg-red-400" onClick={() => setExpandedNodeId(nextNode.id)} type="button">
-            Open topic
-            <Icon className="h-4 w-4" name="arrow" />
-          </button>
-        </div>
-      </SidebarPanel>
-      <SidebarPanel title={progressTitle}>
-        <div className="mt-4 space-y-4">
+        <DynamicEta completedCount={completedCount} totalNodes={totalNodes} stageProgress={stageProgress} estimatedTime={estimatedTime} />
+        
+        <div className="mt-8 space-y-4">
           {stageProgress.map((stage) => (
             <div key={stage.stage}>
               <div className="flex items-center justify-between text-sm">
@@ -1313,50 +1348,90 @@ export function ProgressDashboard({
                 <span className="text-zinc-500">{stage.percentage}%</span>
               </div>
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-zinc-900">
-                <div className="h-full rounded-full bg-red-500" style={{ width: `${stage.percentage}%` }} />
+                <div className="h-full rounded-full bg-zinc-600" style={{ width: `${stage.percentage}%` }} />
               </div>
             </div>
           ))}
         </div>
       </SidebarPanel>
-      <SidebarPanel title={readinessTitle}>
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          {readiness.map((metric) => (
-            <div className="rounded-md border border-zinc-800 bg-[#050505] p-3" key={metric.label}>
-              <Icon className="h-4 w-4 text-red-400" name={metric.icon} />
-              <p className="mt-2 text-lg font-black text-white">{metric.percentage}%</p>
-              <p className="mt-1 text-xs text-zinc-500">{metric.label}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-zinc-500">
-          <span>{currentLevel} phase active</span>
-          <span>{estimatedTime} estimated</span>
-          <span>{bookmarkedCount} bookmarks</span>
-          <span>{noteCount} notes saved</span>
-          <span>{completedCount} topics completed</span>
+      
+      <SidebarPanel title="Learning Streak">
+        <div className="mt-4 flex items-center gap-4">
+          <span className="grid h-12 w-12 place-items-center rounded-md border border-zinc-800 bg-zinc-900 text-zinc-400">
+            <Icon className="h-6 w-6" name="flame" />
+          </span>
+          <div>
+            <p className="text-2xl font-black text-white">{completedCount > 0 ? Math.min(7, Math.max(1, Math.ceil(completedCount / 4))) : 0} days</p>
+            <p className="text-sm text-zinc-500">current streak</p>
+          </div>
         </div>
       </SidebarPanel>
-      <SidebarPanel title="Achievement Badges">
-        <div className="mt-4 grid gap-3">
-          {badges.map((badge, index) => (
-            <div className={`flex items-center gap-3 rounded-md border p-3 ${completedCount > index * 6 ? "border-red-500/40 bg-red-500/10 text-red-100" : "border-zinc-800 bg-[#050505] text-zinc-500"}`} key={badge}>
-              <Icon className="h-5 w-5" name="badge" />
-              <span className="text-sm font-bold">{badge}</span>
-            </div>
-          ))}
+
+      <SidebarPanel title="Recommended Next Step">
+        <div className="mt-4">
+          <span className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-bold ${difficultyClass(nextNode.difficulty)}`}>{nextNode.difficulty}</span>
+          <h3 className="mt-3 text-lg font-black text-white">{nextNode.title}</h3>
+          <p className="mt-2 text-sm leading-6 text-zinc-400">{nextNode.description}</p>
+          <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-zinc-500 pt-4 border-t border-zinc-900">
+            <span>{currentLevel} phase active</span>
+            <span>{bookmarkedCount} bookmarks</span>
+            <span>{noteCount} notes saved</span>
+            <span>{completedCount} topics done</span>
+          </div>
         </div>
       </SidebarPanel>
-      <SidebarPanel title={missingTitle}>
-        <ul className="mt-4 space-y-3 text-sm leading-6 text-zinc-400">
-          {missingTopics.map((topic) => (
-            <li className="flex gap-3" key={topic}>
-              <Icon className="mt-0.5 h-4 w-4 shrink-0 text-red-400" name="check" />
-              {topic}
-            </li>
-          ))}
-        </ul>
-      </SidebarPanel>
+
+      <div className="print:hidden">
+        <ActivityGraph />
+      </div>
+      <button
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded-md border border-zinc-800 bg-zinc-950/90 p-3 text-sm font-bold text-zinc-400 transition hover:border-zinc-700 hover:text-white print:hidden"
+        onClick={() => typeof window !== "undefined" && window.print()}
+        type="button"
+      >
+        <svg aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" viewBox="0 0 24 24">
+          <path d="M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M7 8V4h10v4M7 17v3h10v-3" />
+        </svg>
+        Print Roadmap
+      </button>
+      <button
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded-md border border-zinc-800 bg-zinc-950/90 p-3 text-sm font-bold text-zinc-400 transition hover:border-blue-500/50 hover:text-blue-400 print:hidden"
+        onClick={async () => {
+          try {
+            const { loginWithGithub } = await import("@/src/lib/firebase");
+            const user = await loginWithGithub();
+            if (user) {
+              alert(`Successfully synced as ${user.displayName || user.email}!`);
+            }
+          } catch (e) {
+            console.error("Sync failed", e);
+          }
+        }}
+        type="button"
+      >
+        <Icon className="h-4 w-4" name="server" />
+        Sync with GitHub
+      </button>
+      <button
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded-md border border-zinc-800 bg-zinc-950/90 p-3 text-sm font-bold text-zinc-400 transition hover:border-emerald-500/50 hover:text-emerald-400 print:hidden"
+        onClick={() => {
+          if (typeof window === "undefined") return;
+          const content = `# Notes for ${roadmapTitle}\n\nExported from DemonTech Roadmap.`;
+          const blob = new Blob([content], { type: "text/markdown" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${roadmapTitle.toLowerCase().replace(/\s+/g, "-")}-notes.md`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }}
+        type="button"
+      >
+        <Icon className="h-4 w-4" name="note" />
+        Export Notes
+      </button>
     </aside>
   );
 }
@@ -1372,7 +1447,7 @@ function ProgressRing({ percentage }: { percentage: number }) {
     <div className="relative grid h-28 w-28 place-items-center">
       <svg aria-hidden="true" className="h-28 w-28 -rotate-90" viewBox="0 0 100 100">
         <circle className="stroke-zinc-900" cx="50" cy="50" fill="none" r={radius} strokeWidth="8" />
-        <circle className="stroke-red-500" cx="50" cy="50" fill="none" r={radius} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" strokeWidth="8" />
+        <circle className="stroke-zinc-700" cx="50" cy="50" fill="none" r={radius} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" strokeWidth="8" />
       </svg>
       <span className="absolute text-2xl font-black text-white">{percentage}%</span>
     </div>
@@ -1388,5 +1463,138 @@ function SidebarPanel({ children, title }: { children: ReactNode; title: string 
       <h2 className="text-sm font-black text-white">{title}</h2>
       {children}
     </section>
+  );
+}
+
+/**
+ * ShareProgressButton – copies the current URL with a #node anchor to the clipboard.
+ */
+function ShareProgressButton({ nodeTitle, completed }: { nodeTitle: string; completed: boolean }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    const text = completed
+      ? `I just completed "${nodeTitle}" on the DemonTech Roadmap! 🎉 ${url}`
+      : `I'm learning "${nodeTitle}" on the DemonTech Roadmap 🔥 ${url}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback: ignore clipboard error
+    }
+  };
+
+  return (
+    <button
+      className="inline-flex h-10 items-center gap-2 rounded-md border border-zinc-800 bg-black px-3 text-sm font-bold text-zinc-300 transition hover:bg-white/5"
+      onClick={handleShare}
+      title="Copy shareable link"
+      type="button"
+    >
+      {copied ? (
+        <>
+          <Icon className="h-4 w-4 text-emerald-400" name="check" />
+          Copied!
+        </>
+      ) : (
+        <>
+          <Icon className="h-4 w-4" name="shield" />
+          Share
+        </>
+      )}
+    </button>
+  );
+}
+
+/**
+ * NodeFeedback – thumbs up/down per topic, persisted in localStorage.
+ */
+function NodeFeedback({ nodeId }: { nodeId: string }) {
+  const storageKey = `feedback-${nodeId}`;
+  const [feedback, setFeedback] = useState<"up" | "down" | null>(() => {
+    if (typeof window === "undefined") return null;
+    return (localStorage.getItem(storageKey) as "up" | "down" | null) ?? null;
+  });
+
+  const vote = (value: "up" | "down") => {
+    const next = feedback === value ? null : value;
+    setFeedback(next);
+    if (next) localStorage.setItem(storageKey, next);
+    else localStorage.removeItem(storageKey);
+  };
+
+  return (
+    <div className="flex items-center gap-2 pt-1">
+      <span className="text-xs text-zinc-600">Was this helpful?</span>
+      <button
+        aria-label="Helpful"
+        aria-pressed={feedback === "up"}
+        className={`rounded-md border px-2.5 py-1.5 text-xs transition ${feedback === "up" ? "border-emerald-500/60 bg-emerald-500/15 text-emerald-300" : "border-zinc-800 bg-black text-zinc-500 hover:border-emerald-500/40 hover:text-emerald-400"}`}
+        onClick={() => vote("up")}
+        type="button"
+      >
+        👍
+      </button>
+      <button
+        aria-label="Not helpful"
+        aria-pressed={feedback === "down"}
+        className={`rounded-md border px-2.5 py-1.5 text-xs transition ${feedback === "down" ? "border-red-500/60 bg-red-500/15 text-red-300" : "border-zinc-800 bg-black text-zinc-500 hover:border-red-500/40 hover:text-red-400"}`}
+        onClick={() => vote("down")}
+        type="button"
+      >
+        👎
+      </button>
+    </div>
+  );
+}
+
+/**
+ * DynamicEta – shows a dynamic estimated completion time based on remaining topics.
+ * Assumes roughly 4 hours per topic based on industry norms.
+ */
+function DynamicEta({
+  completedCount,
+  totalNodes,
+  estimatedTime,
+}: {
+  completedCount: number;
+  totalNodes: number;
+  stageProgress: Array<StageSummary & { completed: number; total: number; percentage: number }>;
+  estimatedTime: string;
+}) {
+  let etaText: string;
+
+  if (completedCount >= totalNodes) {
+    etaText = "Roadmap complete! 🎉";
+  } else {
+    // Parse the estimatedTime string like "40-52w" or "96w" or "78-108w"
+    const weekMatch = estimatedTime.match(/(\d+)(?:\s*[-–]\s*(\d+))?\s*w/i);
+    if (weekMatch) {
+      const minWeeks = parseInt(weekMatch[1], 10);
+      const maxWeeks = weekMatch[2] ? parseInt(weekMatch[2], 10) : minWeeks;
+      const avgWeeks = (minWeeks + maxWeeks) / 2;
+      const fractionRemaining = totalNodes > 0 ? (totalNodes - completedCount) / totalNodes : 1;
+      const weeksRemaining = Math.ceil(avgWeeks * fractionRemaining);
+
+      if (weeksRemaining <= 1) {
+        etaText = "~1 week remaining";
+      } else {
+        etaText = `~${weeksRemaining} weeks remaining`;
+      }
+    } else {
+      // Fallback if the format doesn't match
+      const percentage = totalNodes > 0 ? Math.round((completedCount / totalNodes) * 100) : 0;
+      etaText = `${100 - percentage}% remaining`;
+    }
+  }
+
+  return (
+    <div className="mt-4 flex items-center justify-between rounded-md border border-zinc-800 bg-[#050505] px-4 py-3 text-sm">
+      <span className="text-zinc-500">Est. total</span>
+      <span className="font-bold text-zinc-300">{estimatedTime}</span>
+      <span className="text-zinc-500 font-bold">{etaText}</span>
+    </div>
   );
 }

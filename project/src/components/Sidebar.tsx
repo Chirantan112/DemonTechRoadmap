@@ -32,17 +32,17 @@ export default function Sidebar({
 
   return (
     <aside className={`w-full lg:w-80 ${className}`}>
-      <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/80 lg:sticky lg:top-6">
+      <div className="rounded-xl border border-zinc-200 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/80 lg:sticky lg:top-6">
         <div className="flex items-center justify-between gap-4 lg:block">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-400">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-500">
               Navigation
             </p>
-            <h3 className="mt-2 text-lg font-bold text-slate-950 dark:text-white">
+            <h3 className="mt-2 text-lg font-black text-zinc-950 dark:text-white">
               {title}
             </h3>
             {description ? (
-              <p className="mt-2 max-w-xs text-sm leading-6 text-slate-600 dark:text-slate-400">
+              <p className="mt-2 max-w-xs text-sm leading-6 text-zinc-600 dark:text-zinc-400">
                 {description}
               </p>
             ) : null}
@@ -53,7 +53,7 @@ export default function Sidebar({
             variant="secondary"
             size="sm"
             tone="light"
-            className="font-semibold dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900 lg:hidden"
+            className="font-bold dark:border-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900 lg:hidden"
             aria-expanded={isOpen}
             aria-controls={panelId}
             onClick={() => setIsOpen((current) => !current)}
@@ -63,7 +63,7 @@ export default function Sidebar({
         </div>
 
         <div id={panelId} className={`${isOpen ? "mt-4" : "mt-4 hidden lg:block"}`}>
-          <nav aria-label={title} className="space-y-2">
+          <nav aria-label={title} className="space-y-1.5">
             {items.map((item) => {
               const isActive = item.id === activeId;
 
@@ -76,16 +76,16 @@ export default function Sidebar({
                     onSelect(item.id);
                     setIsOpen(false);
                   }}
-                  className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition focus:outline-none focus:ring-4 ${
+                  className={`flex w-full items-center justify-between rounded-lg border px-4 py-2.5 text-left transition focus:outline-none focus:ring-4 ${
                     isActive
-                      ? "border-cyan-400 bg-cyan-50 text-slate-950 shadow-sm focus:ring-cyan-200 dark:border-cyan-500 dark:bg-cyan-500/10 dark:text-white dark:focus:ring-cyan-500/20"
-                      : "border-transparent bg-slate-50 text-slate-700 hover:border-slate-200 hover:bg-slate-100 focus:ring-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:bg-slate-800 dark:focus:ring-slate-700"
+                      ? "border-red-500/40 bg-red-500/5 text-zinc-950 shadow-sm focus:ring-red-500/20 dark:text-white"
+                      : "border-transparent text-zinc-700 hover:border-zinc-200 hover:bg-zinc-50 focus:ring-zinc-200 dark:text-zinc-400 dark:hover:border-zinc-800 dark:hover:bg-zinc-900 dark:focus:ring-zinc-800"
                   }`}
                 >
-                  <span className="font-semibold">{item.label}</span>
+                  <span className="text-sm font-bold">{item.label}</span>
                   {typeof item.count === "number" ? (
                     <Badge
-                      variant={isActive ? "solid" : "count"}
+                      variant={isActive ? "red" : "default"}
                       className="ml-3"
                     >
                       {item.count}

@@ -10,7 +10,7 @@ const navItems = [
   { label: "Roadmaps", href: "/docs/all-roadmaps" },
   { label: "Resources", href: "/docs/resources" },
   { label: "Guides", href: "/docs/study-guide" },
-  { label: "Docs", href: "/docs/quick-start" },
+  { label: "Docs", href: "/docs/html/home" },
   { label: "Community", href: "https://discord.gg/yWtjK2Tb8T" },
 ];
 
@@ -38,14 +38,14 @@ function Icon({ className = "", name }: { className?: string; name: keyof typeof
 export function Logo() {
   return (
     <Link className="flex min-w-fit items-center gap-3" href="/">
-      <span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md border border-red-500/30 bg-black">
-        <Image alt="DemonTech logo" className="h-full w-full object-cover" height={48} src="/demontech-logo.png" width={48} />
+      <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-md border border-red-500/35 bg-black">
+        <Image alt="DemonTech logo" className="h-full w-full object-cover" height={40} src="/demontech-logo.png" width={40} />
       </span>
       <span>
-        <span className="block text-lg font-black leading-6 text-white">
+        <span className="block text-lg font-black leading-5 text-white">
           Demon<span className="text-red-500">Tech</span>
         </span>
-        <span className="mt-1 block text-[11px] font-bold uppercase text-zinc-500">Roadmap</span>
+        <span className="mt-1 block text-[11px] font-bold uppercase tracking-normal text-zinc-400">Roadmap</span>
       </span>
     </Link>
   );
@@ -55,19 +55,20 @@ export default function HomeHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-900 bg-[#050505]/95 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-[1280px] items-center gap-5 px-5 lg:px-8">
+    <header className="sticky top-0 z-50 border-b border-zinc-900 bg-[#030409]/95 backdrop-blur-xl">
+      <div className="mx-auto flex h-[62px] max-w-[1540px] items-center gap-5 px-5 lg:px-8">
         <Logo />
-        <nav className="ml-auto hidden items-center gap-7 text-sm font-bold text-zinc-400 lg:flex">
+        <nav className="ml-auto hidden items-center gap-9 text-sm font-black text-zinc-200 lg:flex">
           {navItems.map((item) => (
-            <Link className="transition hover:text-white" href={item.href} key={item.label}>
+            <Link className="transition hover:text-red-300" href={item.href} key={item.label}>
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="hidden md:flex items-center gap-4">
-          <Link className="rounded-md border border-red-500/40 bg-red-500 px-4 py-2 text-sm font-black text-white transition hover:bg-red-400" href="/docs/all-roadmaps">
+        <div className="hidden items-center gap-4 md:flex">
+          <Link className="inline-flex h-10 items-center gap-2 rounded-md border border-red-500/40 bg-red-500 px-5 text-sm font-black text-white shadow-[0_0_24px_rgba(239,68,68,0.22)] transition hover:bg-red-400" href="/docs/all-roadmaps">
             Start Learning Free
+            <span aria-hidden="true">→</span>
           </Link>
           <AuthButton />
         </div>

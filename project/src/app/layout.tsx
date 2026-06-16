@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import KeyboardShortcuts from "@/src/components/KeyboardShortcuts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://demon-tech-roadmap.vercel.app"),
+  metadataBase: new URL("https://demontech-roadmap.vercel.app"),
   title: {
     default: "Demon Tech Roadmap",
     template: "%s | Demon Tech Roadmap",
@@ -16,10 +17,6 @@ export const metadata: Metadata = {
     "developer roadmap",
     "learning roadmap",
     "web development roadmap",
-    "python roadmap",
-    "AI roadmap",
-    "machine learning roadmap",
-    "open source roadmap",
     "programming roadmap",
     "technology learning path",
     "beginner developers",
@@ -68,7 +65,7 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Demon Tech Roadmap",
-    url: "https://demon-tech-roadmap.vercel.app",
+    url: "https://demontech-roadmap.vercel.app",
     description:
       "Community-driven roadmaps that help beginners learn technology through clear learning paths, curated resources, and project-focused growth.",
   };
@@ -81,7 +78,13 @@ export default function RootLayout({
           type="application/ld+json"
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <KeyboardShortcuts />
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[999] focus:p-4 focus:bg-black focus:text-white">
+          Skip to main content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

@@ -4,10 +4,12 @@ import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
 
+import path from "path";
+
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: __dirname,
+  outputFileTracingRoot: path.join(__dirname, ".."),
   turbopack: {
-    root: __dirname,
+    root: path.join(__dirname, ".."),
   },
   images: {
     remotePatterns: [
