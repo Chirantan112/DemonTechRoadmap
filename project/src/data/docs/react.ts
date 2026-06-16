@@ -3,211 +3,335 @@ import { TopicContent } from './contentMap';
 export const reactData: Record<string, TopicContent> = {
   introduction: {
     title: "React Introduction",
-    description: "React is a JavaScript library for building user interfaces.",
-    intro: "React is used to build single-page applications. React allows us to create reusable UI components.",
+    description: "React is a JavaScript library for building fast user interfaces.",
+    intro: "React lets developers build dynamic single-page applications. Instead of building one giant HTML file, developers use React to create small, reusable chunks of code called components. Facebook created and maintains React.",
     keyPoints: [
-      "React was created by Facebook.",
-      "React is a tool for building UI components."
+      "React builds interactive user interfaces.",
+      "It uses reusable UI components.",
+      "It is maintained by Facebook.",
+      "It updates the screen incredibly fast."
     ]
   },
   setup: {
     title: "React Setup",
-    description: "How to set up React in a project.",
-    intro: "The easiest way to start learning React is to use Create React App or a framework like Next.js or Vite.",
+    description: "React requires a quick project setup to get started.",
+    intro: "Developers do not usually write React directly in a standard HTML file. Instead, they use a tool like Vite or Next.js to generate a complete React project folder automatically. This sets up all the necessary files instantly.",
     syntax: {
       language: "bash",
-      code: `npx create-next-app@latest my-app\n# OR\nnpm create vite@latest my-react-app -- --template react`
-    }
+      code: `/* terminal commands */\nnpm create vite@latest my-app -- --template react\ncd my-app\nnpm install\nnpm run dev`
+    },
+    keyPoints: [
+      "Vite is the modern, fast way to build React apps.",
+      "Next.js is the popular choice for full-stack React.",
+      "Create React App is no longer recommended.",
+      "The \`npm run dev\` command starts a local server."
+    ]
   },
   jsx: {
     title: "React JSX",
-    description: "JSX allows us to write HTML in React.",
-    intro: "JSX makes it easier to write and add HTML in React. JSX converts HTML tags into react elements.",
+    description: "JSX allows developers to write HTML directly inside JavaScript.",
+    intro: "JSX stands for JavaScript XML. It looks exactly like HTML, but it lives completely inside a JavaScript file. React takes this JSX code and converts it into real HTML elements that the browser can understand.",
     example: {
       language: "jsx",
-      code: `const myElement = <h1>I Love JSX!</h1>;`
-    }
+      code: `/* this creates JSX */\nconst title = <h1>Hello React!</h1>;\nconst page = (\n  <div>\n    {title}\n    <p>This is JSX.</p>\n  </div>\n);`
+    },
+    keyPoints: [
+      "JSX blends HTML and JavaScript together.",
+      "It requires wrapping multiple elements in a single parent.",
+      "You can inject JavaScript variables using curly braces \`{}\`.",
+      "Browsers cannot read JSX without a compiler like Babel."
+    ]
   },
   components: {
     title: "React Components",
-    description: "Components are independent and reusable bits of code.",
-    intro: "They serve the same purpose as JavaScript functions, but work in isolation and return HTML. Components come in two types, Class components and Function components. We will focus on Function components.",
+    description: "Components act like custom HTML tags in React.",
+    intro: "Components are independent, reusable pieces of a website, like a navigation bar or a button. Developers write a component once and use it everywhere. Modern React relies heavily on functional components.",
     example: {
       language: "jsx",
-      code: `function Car() {\n  return <h2>Hi, I am a Car!</h2>;\n}`
-    }
+      code: `/* this creates a component */\nfunction Greeting() {\n  return <h2>Welcome to the website!</h2>;\n}\n\n// Usage: <Greeting />`
+    },
+    keyPoints: [
+      "Components always start with a capital letter.",
+      "They return JSX code to render on the screen.",
+      "Functional components are the standard approach.",
+      "Class components are the older, outdated method."
+    ]
   },
   props: {
     title: "React Props",
-    description: "Props are arguments passed into React components.",
-    intro: "Props are passed to components via HTML attributes. React Props are read-only! You will get an error if you try to change their value.",
+    description: "Props pass data from a parent component to a child component.",
+    intro: "Props are custom HTML attributes for React components. If you build a Profile component, you can use props to pass different names to it. Props are strictly read-only; the child component cannot change them.",
     example: {
       language: "jsx",
-      code: `function Car(props) {\n  return <h2>I am a {props.brand}!</h2>;\n}\n\nconst myElement = <Car brand="Ford" />;`
-    }
+      code: `/* this uses props */\nfunction User(props) {\n  return <h2>Hello, {props.name}!</h2>;\n}\n\n// Usage: <User name="Alice" />`
+    },
+    keyPoints: [
+      "\"Props\" stands for properties.",
+      "They pass data downwards through the component tree.",
+      "They act just like function arguments.",
+      "A component must never modify its own props."
+    ]
   },
   state: {
     title: "React State",
-    description: "React components has a built-in state object.",
-    intro: "The state object is where you store property values that belongs to the component. When the state object changes, the component re-renders. In functional components, we use the `useState` Hook.",
+    description: "React state stores data that changes over time.",
+    intro: "State acts as the memory of a React component. While props are passed in from the outside, state is managed entirely on the inside. When state data changes, React automatically refreshes the component to show the new data.",
     keyPoints: [
-      "State is mutable (can be changed).",
-      "Props are immutable (cannot be changed)."
+      "State tracks data like user input or score.",
+      "Updating state forces the component to re-render.",
+      "State is completely private to the component.",
+      "Functional components manage state using Hooks."
     ]
   },
   "use-state": {
     title: "React useState Hook",
-    description: "The React useState Hook allows us to track state in a function component.",
-    intro: "State generally refers to data or properties that need to be tracking in an application.",
+    description: "The useState Hook creates state variables in functional components.",
+    intro: "Developers use the `useState` Hook to add memory to a component. It returns two things: the current value of the state, and a function specifically designed to update that value safely.",
     example: {
       language: "jsx",
-      code: `import { useState } from "react";\n\nfunction FavoriteColor() {\n  const [color, setColor] = useState("red");\n\n  return (\n    <>\n      <h1>My favorite color is {color}!</h1>\n      <button onClick={() => setColor("blue")}>Blue</button>\n    </>\n  );\n}`
-    }
+      code: `/* this uses state */\nimport { useState } from "react";\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(count + 1)}>Count is {count}</button>;\n}`
+    },
+    keyPoints: [
+      "Import \`useState\` from the \`react\` library.",
+      "The Hook returns an array with a variable and a setter function.",
+      "Never modify the state variable directly.",
+      "Always use the setter function (like \`setCount\`) to update it."
+    ]
   },
   "use-effect": {
     title: "React useEffect Hook",
-    description: "The useEffect Hook allows you to perform side effects in your components.",
-    intro: "Some examples of side effects are: fetching data, directly updating the DOM, and timers. useEffect accepts two arguments. The second argument is optional.",
+    description: "The useEffect Hook handles side effects like fetching data.",
+    intro: "React components should ideally just take data and render UI. The `useEffect` Hook handles everything else, known as \"side effects.\" Developers use it to fetch API data, set up timers, or manipulate the DOM directly.",
     example: {
       language: "jsx",
-      code: `import { useState, useEffect } from "react";\n\nfunction Timer() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    setTimeout(() => {\n      setCount((count) => count + 1);\n    }, 1000);\n  }, []); // <- add empty brackets here\n\n  return <h1>I've rendered {count} times!</h1>;\n}`
-    }
+      code: `/* this fetches data */\nimport { useEffect, useState } from "react";\n\nfunction DataLoader() {\n  useEffect(() => {\n    console.log("Component loaded on the screen!");\n  }, []); // Empty array runs once\n}`
+    },
+    keyPoints: [
+      "The first argument is a function that runs the effect.",
+      "The second argument is a dependency array.",
+      "An empty array \`[]\` makes the effect run only once.",
+      "Missing dependencies can cause infinite rendering loops."
+    ]
   },
   "use-context": {
     title: "React useContext Hook",
-    description: "React Context is a way to manage state globally.",
-    intro: "It can be used together with the `useState` Hook to share state between deeply nested components more easily than with `useState` alone.",
-    syntax: {
+    description: "The useContext Hook reads global data without passing props.",
+    intro: "Passing props down through ten levels of components is annoying, known as \"prop drilling.\" The `useContext` Hook creates a global data portal. Any component, no matter how deep, can tap into this portal to read the data instantly.",
+    example: {
       language: "jsx",
-      code: `import { useState, createContext, useContext } from "react";\n\nconst UserContext = createContext();`
-    }
+      code: `/* this reads context */\nimport { useContext } from "react";\nimport { ThemeContext } from "./ThemeContext";\n\nfunction Button() {\n  const theme = useContext(ThemeContext);\n  return <button className={theme}>Click Me</button>;\n}`
+    },
+    keyPoints: [
+      "It solves the problem of \"prop drilling.\"",
+      "The \`createContext()\` function builds the portal.",
+      "The \`Provider\` wraps the parent component to supply the data.",
+      "The \`useContext\` Hook reads the data inside the child component."
+    ]
   },
   "use-ref": {
     title: "React useRef Hook",
-    description: "The useRef Hook allows you to persist values between renders.",
-    intro: "It can be used to store a mutable value that does not cause a re-render when updated. It can be used to access a DOM element directly.",
+    description: "The useRef Hook holds data that doesn't trigger re-renders.",
+    intro: "The `useRef` Hook is like a secret pocket. It stores data that persists between renders, but unlike `useState`, updating it does not force the component to redraw. Developers also use it to grab direct references to HTML elements.",
     example: {
       language: "jsx",
-      code: `import { useRef } from "react";\n\nfunction App() {\n  const inputElement = useRef();\n\n  const focusInput = () => {\n    inputElement.current.focus();\n  };\n\n  return (\n    <>\n      <input type="text" ref={inputElement} />\n      <button onClick={focusInput}>Focus Input</button>\n    </>\n  );\n}`
-    }
+      code: `/* this references an input */\nimport { useRef } from "react";\n\nfunction FocusApp() {\n  const inputRef = useRef();\n  return (\n    <>\n      <input ref={inputRef} />\n      <button onClick={() => inputRef.current.focus()}>Focus!</button>\n    </>\n  );\n}`
+    },
+    keyPoints: [
+      "It returns an object with a \`.current\` property.",
+      "Changing \`.current\` does not re-render the component.",
+      "It provides direct access to HTML DOM nodes.",
+      "It is perfect for managing timers or focusing inputs."
+    ]
   },
   "use-memo": {
     title: "React useMemo Hook",
-    description: "The React useMemo Hook returns a memoized value.",
-    intro: "Think of memoization as caching a value so that it does not need to be recalculated. The useMemo Hook only runs when one of its dependencies update.",
+    description: "The useMemo Hook caches expensive calculations to improve performance.",
+    intro: "Sometimes a component runs a slow, heavy math calculation every time it renders. The `useMemo` Hook fixes this by remembering the answer from the last render. It only recalculates the math if the input data actually changes.",
     example: {
       language: "jsx",
-      code: `const calculation = useMemo(() => expensiveCalculation(count), [count]);`
-    }
+      code: `/* this caches a calculation */\nimport { useMemo } from "react";\n\nfunction MathApp({ number }) {\n  const doubled = useMemo(() => {\n    return slowMathCalculation(number);\n  }, [number]); // Only re-runs if 'number' changes\n}`
+    },
+    keyPoints: [
+      "\"Memoization\" means caching a result.",
+      "It stops slow functions from running needlessly.",
+      "The first argument is the calculation function.",
+      "The second argument is the dependency array."
+    ]
   },
   "use-callback": {
     title: "React useCallback Hook",
-    description: "The React useCallback Hook returns a memoized callback function.",
-    intro: "Think of memoization as caching a value so that it does not need to be recalculated. The useCallback Hook only runs when one of its dependencies update. It's useful to prevent child components from re-rendering needlessly.",
+    description: "The useCallback Hook caches function definitions to improve performance.",
+    intro: "React recreates every function inside a component every time the component renders. If you pass these functions to child components, it causes unnecessary re-renders. The `useCallback` Hook caches the actual function itself so it doesn't get recreated.",
     example: {
       language: "jsx",
-      code: `const addTodo = useCallback(() => {\n  setTodos((t) => [...t, "New Todo"]);\n}, [todos]);`
-    }
+      code: `/* this caches a function */\nimport { useCallback } from "react";\n\nfunction Parent({ data }) {\n  const handleClick = useCallback(() => {\n    console.log("Clicked!");\n  }, []); // Caches the function forever\n}`
+    },
+    keyPoints: [
+      "It is almost identical to \`useMemo\`.",
+      "\`useMemo\` caches the *result* of a function.",
+      "\`useCallback\` caches the *function itself*.",
+      "It prevents unnecessary child component renders."
+    ]
   },
   "custom-hooks": {
     title: "React Custom Hooks",
-    description: "Hooks are reusable functions.",
-    intro: "When you have component logic that needs to be used by multiple components, we can extract that logic to a custom Hook. Custom Hooks start with \"use\". Example: `useFetch`.",
+    description: "Custom Hooks bundle complex logic into reusable functions.",
+    intro: "If you find yourself writing the exact same `useState` and `useEffect` logic in three different components, you can combine them into a Custom Hook. This cleans up your code and makes your logic completely reusable.",
     example: {
       language: "jsx",
-      code: `import { useState, useEffect } from "react";\n\nconst useFetch = (url) => {\n  const [data, setData] = useState(null);\n\n  useEffect(() => {\n    fetch(url)\n      .then((res) => res.json())\n      .then((data) => setData(data));\n  }, [url]);\n\n  return [data];\n};\nexport default useFetch;`
-    }
+      code: `/* this creates a custom hook */\nimport { useState } from "react";\n\nfunction useToggle(initial) {\n  const [value, setValue] = useState(initial);\n  const toggle = () => setValue(!value);\n  return [value, toggle];\n}`
+    },
+    keyPoints: [
+      "Custom Hooks must always start with the word \"use\".",
+      "They can call other React Hooks inside them.",
+      "They are just regular JavaScript functions.",
+      "They help keep components clean and strictly focused on UI."
+    ]
   },
   "event-handling": {
-    title: "React Events",
-    description: "Just like HTML DOM events, React can perform actions based on user events.",
-    intro: "React events are written in camelCase syntax: `onClick` instead of `onclick`. React event handlers are written inside curly braces: `onClick={shoot}` instead of `onclick=\"shoot()\"`.",
+    title: "React Event Handling",
+    description: "React handles user clicks, typing, and hovering securely.",
+    intro: "React handles events very similarly to standard HTML, but with a few syntax changes. Event names are written in camelCase, and developers pass actual JavaScript functions inside curly braces instead of passing string names.",
     example: {
       language: "jsx",
-      code: `function Football() {\n  const shoot = () => {\n    alert("Great Shot!");\n  }\n\n  return (\n    <button onClick={shoot}>Take the shot!</button>\n  );\n}`
-    }
+      code: `/* this handles a click event */\nfunction SubmitButton() {\n  function handleClick(event) {\n    event.preventDefault();\n    console.log("Form submitted!");\n  }\n  return <button onClick={handleClick}>Submit</button>;\n}`
+    },
+    keyPoints: [
+      "Use camelCase for events (e.g., \`onClick\`, \`onChange\`).",
+      "Pass the function directly: \`onClick={handleClick}\`.",
+      "Do not add parentheses \`()\` when passing the function.",
+      "React automatically passes the \`event\` object to the function."
+    ]
   },
   "conditional-rendering": {
     title: "React Conditional Rendering",
-    description: "In React, you can conditionally render components.",
-    intro: "There are several ways to do this: `if` statements, logical `&&` operator, or ternary operators.",
+    description: "React conditional rendering shows different components based on state.",
+    intro: "React lets developers show completely different UI elements depending on a specific condition. For example, if a user is logged in, show the dashboard. If they are not logged in, show the login screen.",
     example: {
       language: "jsx",
-      code: `function Goal(props) {\n  const isGoal = props.isGoal;\n  return (\n    <>\n      { isGoal ? <MadeGoal/> : <MissedGoal/> }\n    </>\n  );\n}`
-    }
+      code: `/* this renders conditionally */\nfunction Greeting({ isLoggedIn }) {\n  if (isLoggedIn) {\n    return <h2>Welcome back!</h2>;\n  }\n  return <h2>Please log in.</h2>;\n}`
+    },
+    keyPoints: [
+      "You can use standard JavaScript \`if\` statements.",
+      "The \`&&\` operator renders an element if true.",
+      "The ternary operator \`? :\` acts as an inline if-else statement.",
+      "Returning \`null\` hides the component completely."
+    ]
   },
   "lists-keys": {
     title: "React Lists and Keys",
-    description: "In React, you will render lists with some type of loop.",
-    intro: "The JavaScript `map()` array method is generally the preferred method. Keys allow React to keep track of elements. This way, if an item is updated or removed, only that item will be re-rendered instead of the entire list.",
+    description: "React renders lists of data dynamically using arrays.",
+    intro: "When developers have an array of data, like ten different blog posts, they don't write the HTML ten times. Instead, they use the JavaScript `map()` method to loop through the array and render a component for every single item automatically.",
     example: {
       language: "jsx",
-      code: `function CarList(props) {\n  const cars = props.cars;\n  return (\n    <ul>\n      {cars.map((car) => <li key={car.id}>{car.brand}</li>)}\n    </ul>\n  );\n}`
-    }
+      code: `/* this renders a list */\nfunction CarList({ cars }) {\n  return (\n    <ul>\n      {cars.map((car) => (\n        <li key={car.id}>{car.name}</li>\n      ))}\n    </ul>\n  );\n}`
+    },
+    keyPoints: [
+      "The \`map()\` method loops over an array of data.",
+      "Every item in a list must have a unique \`key\` prop.",
+      "The \`key\` helps React update the list efficiently.",
+      "Do not use the array index as a key if the list can change."
+    ]
   },
   forms: {
     title: "React Forms",
-    description: "Just like in HTML, React uses forms to allow users to interact with the web page.",
-    intro: "Handling forms is about how you handle the data when it changes value or gets submitted. In React, form data is usually handled by the components with state.",
+    description: "React handles form inputs by syncing them with state.",
+    intro: "In standard HTML, input boxes store their own data. In React, developers use state to store the input data securely. This concept is called a \"Controlled Component,\" where React completely controls what the user types.",
     example: {
       language: "jsx",
-      code: `function MyForm() {\n  const [name, setName] = useState("");\n\n  return (\n    <form>\n      <label>Enter your name:\n        <input\n          type="text" \n          value={name}\n          onChange={(e) => setName(e.target.value)}\n        />\n      </label>\n    </form>\n  )\n}`
-    }
+      code: `/* this handles a form input */\nfunction MyForm() {\n  const [name, setName] = useState("");\n  return (\n    <input \n      value={name} \n      onChange={(e) => setName(e.target.value)} \n    />\n  );\n}`
+    },
+    keyPoints: [
+      "The \`value\` prop links the input directly to a state variable.",
+      "The \`onChange\` event updates the state whenever the user types.",
+      "A controlled component prevents invalid data submission.",
+      "The \`onSubmit\` event handles the final form submission."
+    ]
   },
   "context-api": {
     title: "React Context API",
-    description: "React Context is a way to manage state globally.",
-    intro: "See the useContext hook for details. It allows passing data down without having to manually pass props at every level (Prop Drilling).",
+    description: "The React Context API manages global application state.",
+    intro: "While the `useContext` Hook reads global data, the Context API provides the actual structure to build it. Developers use it to store themes, user login information, or language preferences that the entire application needs to access.",
+    example: {
+      language: "jsx",
+      code: `/* this sets up Context */\nimport { createContext } from "react";\n\nexport const ThemeContext = createContext("light");\n\nfunction App() {\n  return (\n    <ThemeContext.Provider value="dark">\n      <MainPage />\n    </ThemeContext.Provider>\n  );\n}`
+    },
     keyPoints: [
-      "Use `createContext()` to create a context.",
-      "Wrap components in `<Context.Provider value={...}>` to provide value.",
-      "Use `useContext(Context)` to consume the value."
+      "\`createContext()\` initializes the empty portal.",
+      "The \`Provider\` component wraps around child components.",
+      "The \`value\` prop passes the actual data into the portal.",
+      "All children inside the Provider can read the global data."
     ]
   },
   router: {
     title: "React Router",
-    description: "React Router is the standard routing library for React.",
-    intro: "It allows navigation among views of various components in a React Application, allows changing the browser URL, and keeps the UI in sync with the URL.",
+    description: "React Router handles navigation across different pages.",
+    intro: "React naturally builds \"single-page\" applications that do not load new HTML files. To create the illusion of multiple pages, developers use React Router. It swaps out different components depending on the URL the user clicks.",
     example: {
       language: "jsx",
-      code: `import { BrowserRouter, Routes, Route } from "react-router-dom";\n\nfunction App() {\n  return (\n    <BrowserRouter>\n      <Routes>\n        <Route path="/" element={<Home />} />\n        <Route path="/about" element={<About />} />\n      </Routes>\n    </BrowserRouter>\n  );\n}`
-    }
+      code: `/* this sets up routing */\nimport { BrowserRouter, Routes, Route } from "react-router-dom";\n\nfunction App() {\n  return (\n    <BrowserRouter>\n      <Routes>\n        <Route path="/" element={<Home />} />\n        <Route path="/about" element={<About />} />\n      </Routes>\n    </BrowserRouter>\n  );\n}`
+    },
+    keyPoints: [
+      "It requires installing the \`react-router-dom\` package.",
+      "\`BrowserRouter\` wraps the entire application.",
+      "\`Routes\` groups all the individual paths together.",
+      "\`Route\` links a specific URL path to a specific component."
+    ]
   },
   "code-splitting": {
     title: "React Code Splitting",
-    description: "Code-Splitting allows you to split your code into various bundles.",
-    intro: "This can greatly improve the performance of your app. You can use `React.lazy` and `Suspense`.",
+    description: "Code splitting breaks large React apps into smaller, faster chunks.",
+    intro: "When developers build a massive application, downloading the entire website at once makes it load very slowly. Code splitting tells React to only download the code for the specific page the user is currently viewing, speeding up load times significantly.",
     syntax: {
       language: "jsx",
-      code: `import React, { Suspense } from 'react';\n\nconst OtherComponent = React.lazy(() => import('./OtherComponent'));\n\nfunction MyComponent() {\n  return (\n    <div>\n      <Suspense fallback={<div>Loading...</div>}>\n        <OtherComponent />\n      </Suspense>\n    </div>\n  );\n}`
-    }
+      code: `/* this delays loading a component */\nimport { lazy, Suspense } from 'react';\nconst HeavyChart = lazy(() => import('./HeavyChart'));\n\n<Suspense fallback={<div>Loading chart...</div>}>\n  <HeavyChart />\n</Suspense>`
+    },
+    keyPoints: [
+      "It uses the \`lazy()\` function to delay loading.",
+      "The \`Suspense\` component wraps the delayed code.",
+      "The \`fallback\` prop shows a loading spinner while it downloads.",
+      "It drastically improves website performance."
+    ]
   },
   "error-boundaries": {
     title: "React Error Boundaries",
-    description: "Error boundaries are React components that catch JavaScript errors anywhere in their child component tree.",
-    intro: "They log those errors, and display a fallback UI instead of the component tree that crashed.",
+    description: "Error Boundaries stop the entire application from crashing.",
+    intro: "If a single React component crashes due to a JavaScript error, it usually takes down the whole website, leaving a blank white screen. Error Boundaries catch these crashes locally and show a friendly error message instead of breaking everything.",
+    example: {
+      language: "jsx",
+      code: `/* this uses an error boundary */\n<ErrorBoundary fallback={<p>Something went wrong!</p>}>\n  <ChatWidget />\n</ErrorBoundary>`
+    },
     keyPoints: [
-      "Error boundaries catch errors during rendering, in lifecycle methods, and in constructors of the whole tree below them.",
-      "Currently, you must use a class component to create an error boundary."
+      "They act like a safety net for your components.",
+      "They catch errors anywhere in their child components.",
+      "Currently, developers must use Class Components to build them from scratch.",
+      "Libraries like \`react-error-boundary\` provide easier functional alternatives."
     ]
   },
   performance: {
     title: "React Performance",
-    description: "Optimizing Performance in React applications.",
-    intro: "Internally, React uses several clever techniques to minimize the number of costly DOM operations required to update the UI.",
+    description: "React performance optimization keeps the website running smoothly.",
+    intro: "While React is naturally fast, a poorly written application will still feel slow and laggy. Developers use specific techniques and Hooks to prevent React from redrawing the screen when it doesn't need to.",
     keyPoints: [
-      "Use React.memo to prevent unnecessary re-renders of components.",
-      "Use useMemo to cache expensive calculations.",
-      "Use useCallback to cache function references."
+      "Use \`React.memo\` to skip re-rendering unchanged components.",
+      "Use \`useMemo\` to cache heavy math calculations.",
+      "Use \`useCallback\` to cache functions passed to children.",
+      "Always add unique \`key\` props to lists to help React update them."
     ]
   },
   "testing-basics": {
     title: "React Testing Basics",
-    description: "Testing React components.",
-    intro: "React Testing Library is a set of helpers that let you test React components without relying on their implementation details.",
+    description: "React testing ensures your components work before users see them.",
+    intro: "Developers write automated tests that click buttons and read text on the screen to make sure the app isn't broken. The React Testing Library is the industry standard tool because it tests the app exactly the way a real human would use it.",
     example: {
       language: "jsx",
-      code: `import { render, screen } from '@testing-library/react';\nimport App from './App';\n\ntest('renders learn react link', () => {\n  render(<App />);\n  const linkElement = screen.getByText(/learn react/i);\n  expect(linkElement).toBeInTheDocument();\n});`
-    }
+      code: `/* this tests a button */\nimport { render, screen } from '@testing-library/react';\nimport App from './App';\n\ntest('renders the submit button', () => {\n  render(<App />);\n  const button = screen.getByText('Submit');\n  expect(button).toBeInTheDocument();\n});`
+    },
+    keyPoints: [
+      "React Testing Library is built into Create React App and Vite templates.",
+      "It tests what the user sees, not how the code works internally.",
+      "Use \`screen.getByText()\` to find elements.",
+      "Testing prevents bugs from reaching production servers."
+    ]
   }
 };

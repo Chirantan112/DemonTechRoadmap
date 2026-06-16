@@ -3,166 +3,264 @@ import { TopicContent } from './contentMap';
 export const nodejsData: Record<string, TopicContent> = {
   introduction: {
     title: "Node.js Introduction",
-    description: "Node.js is an open source server environment.",
-    intro: "Node.js is free, runs on various platforms (Windows, Linux, Unix, Mac OS X, etc.), and uses JavaScript on the server.",
+    description: "Node.js runs JavaScript code outside of the web browser.",
+    intro: "Node.js allows developers to run JavaScript directly on a computer or server instead of just inside a web browser. It is completely free, open-source, and runs on Windows, Mac, and Linux. This means you can build full websites using only JavaScript.",
     keyPoints: [
-      "Node.js uses asynchronous programming.",
-      "Node.js eliminates the waiting, and simply continues with the next request.",
-      "Node.js runs single-threaded, non-blocking, asynchronous programming."
+      "Node.js runs on the server, not the browser.",
+      "It handles tasks asynchronously without waiting.",
+      "It uses a fast, single-threaded architecture.",
+      "Developers use it to build fast, scalable applications."
     ]
   },
   setup: {
     title: "Node.js Setup",
-    description: "How to get started with Node.js.",
-    intro: "Download Node.js from the official website and run the installer. After installation, you can run Node.js from the command line.",
+    description: "Node.js requires a quick installation to get started.",
+    intro: "To start using Node.js, developers download the installer from the official Node.js website. Once installed, you can open your computer's terminal and run JavaScript files instantly using simple text commands.",
     syntax: {
       language: "bash",
-      code: `node -v\nnpm -v`
-    }
+      code: `/* terminal commands */\nnode -v\nnpm -v`
+    },
+    keyPoints: [
+      "Download the installer from nodejs.org.",
+      "Run \`node -v\` to check the installed version.",
+      "Run \`node filename.js\` to execute a script.",
+      "The installation includes NPM automatically."
+    ]
   },
   modules: {
     title: "Node.js Modules",
-    description: "Consider modules to be the same as JavaScript libraries.",
-    intro: "A set of functions you want to include in your application. Node.js has a set of built-in modules which you can use without any further installation.",
+    description: "Node.js modules act like pre-built JavaScript libraries.",
+    intro: "Node.js uses modules to organize code into smaller, reusable pieces. Modules work exactly like JavaScript libraries. Node.js comes with several built-in modules that let you create servers or read files without downloading anything extra.",
     example: {
       language: "javascript",
-      code: `var http = require('http');\n\nhttp.createServer(function (req, res) {\n  res.writeHead(200, {'Content-Type': 'text/html'});\n  res.end('Hello World!');\n}).listen(8080);`
-    }
+      code: `/* this includes a module */\nvar http = require('http');\n\nhttp.createServer(function (req, res) {\n  res.writeHead(200, {'Content-Type': 'text/plain'});\n  res.end('Hello!');\n}).listen(8080);`
+    },
+    keyPoints: [
+      "Modules are sets of reusable functions.",
+      "The \`require()\` function imports a module.",
+      "Built-in modules require zero installation.",
+      "You can create and export your own modules."
+    ]
   },
   "file-system": {
     title: "Node.js File System Module",
-    description: "The Node.js file system module allows you to work with the file system on your computer.",
-    intro: "To include the File System module, use the `require()` method: `var fs = require('fs');`. Common uses: Read files, Create files, Update files, Delete files, Rename files.",
+    description: "Node.js interacts directly with your computer's files.",
+    intro: "The Node.js File System module lets your JavaScript code read, create, update, and delete files on your actual computer. The browser cannot do this for security reasons, making Node.js incredibly powerful.",
     example: {
       language: "javascript",
-      code: `var fs = require('fs');\n\nfs.readFile('demofile1.html', function(err, data) {\n  if (err) throw err;\n  console.log(data);\n});`
-    }
+      code: `/* this reads a file */\nvar fs = require('fs');\n\nfs.readFile('demofile.txt', 'utf8', function(err, data) {\n  if (err) throw err;\n  console.log(data);\n});`
+    },
+    keyPoints: [
+      "Import the module using \`require('fs')\`.",
+      "The \`readFile()\` method reads file contents.",
+      "The \`writeFile()\` method creates new files.",
+      "The \`unlink()\` method deletes existing files."
+    ]
   },
   "http-module": {
     title: "Node.js HTTP Module",
-    description: "Node.js has a built-in module called HTTP, which allows Node.js to transfer data over the Hyper Text Transfer Protocol (HTTP).",
-    intro: "To include the HTTP module, use the `require()` method: `var http = require('http');`. The HTTP module can create an HTTP server that listens to server ports and gives a response back to the client.",
+    description: "Node.js creates web servers that listen for requests.",
+    intro: "Node.js has a built-in HTTP module that transforms your computer into a live web server. The server listens on a specific port and sends text or HTML data back whenever a user tries to load the web page.",
     example: {
       language: "javascript",
-      code: `var http = require('http');\n\nhttp.createServer(function (req, res) {\n  res.write('Hello World!'); // write a response to the client\n  res.end(); // end the response\n}).listen(8080); // the server object listens on port 8080`
-    }
+      code: `/* this creates a server */\nvar http = require('http');\n\nhttp.createServer(function (req, res) {\n  res.write('Welcome to my server!');\n  res.end();\n}).listen(8080);`
+    },
+    keyPoints: [
+      "Import the module using \`require('http')\`.",
+      "The \`createServer()\` method builds the server.",
+      "The \`listen()\` method chooses the network port.",
+      "The server responds to incoming client requests."
+    ]
   },
   "url-module": {
     title: "Node.js URL Module",
-    description: "The URL module splits up a web address into readable parts.",
-    intro: "To include the URL module, use the `require()` method. You can parse an address with the `url.parse()` method, and it will return a URL object with each part of the address as properties.",
+    description: "Node.js splits web addresses into readable parts.",
+    intro: "The Node.js URL module takes a long, messy web address and breaks it down into pieces. Developers use this to read specific search terms or understand exactly which page the user is trying to visit.",
     example: {
       language: "javascript",
-      code: `var url = require('url');\nvar adr = 'http://localhost:8080/default.htm?year=2017&month=february';\nvar q = url.parse(adr, true);\n\nconsole.log(q.host); // returns 'localhost:8080'\nconsole.log(q.pathname); // returns '/default.htm'\nconsole.log(q.search); // returns '?year=2017&month=february'\n\nvar qdata = q.query; // returns an object: { year: 2017, month: 'february' }\nconsole.log(qdata.month); // returns 'february'`
-    }
+      code: `/* this parses a URL */\nvar url = require('url');\nvar adr = 'http://localhost:8080/default.htm?year=2017&month=february';\nvar q = url.parse(adr, true);\n\nconsole.log(q.pathname); // returns '/default.htm'\nconsole.log(q.query.year); // returns 2017`
+    },
+    keyPoints: [
+      "Import the module using \`require('url')\`.",
+      "The \`parse()\` method splits the address.",
+      "It extracts the host, pathname, and query strings.",
+      "It returns an easy-to-read JavaScript object."
+    ]
   },
   npm: {
     title: "Node.js NPM",
-    description: "NPM is a package manager for Node.js packages, or modules.",
-    intro: "NPM is the world's largest Software Registry. The registry contains over 800,000 code packages. Open-source developers use npm to share software.",
+    description: "NPM manages millions of free code packages for Node.js.",
+    intro: "NPM stands for Node Package Manager. It is the largest software registry in the world. When developers need a tool, like a way to connect to a database or create a login system, they download a free package from NPM instead of writing it from scratch.",
     syntax: {
       language: "bash",
-      code: `npm init\nnpm install <package_name>\nnpm install <package_name> --save-dev`
-    }
+      code: `/* terminal commands */\nnpm init -y\nnpm install express\nnpm install nodemon --save-dev`
+    },
+    keyPoints: [
+      "NPM installs automatically with Node.js.",
+      "The registry holds over a million code packages.",
+      "The \`package.json\` file tracks installed packages.",
+      "Packages install into a \`node_modules\` folder."
+    ]
   },
   events: {
     title: "Node.js Events",
-    description: "Node.js is perfect for event-driven applications.",
-    intro: "Every action on a computer is an event. Like when a connection is made or a file is opened. Node.js has a built-in module, called \"Events\", where you can create-, fire-, and listen for- your own events.",
+    description: "Node.js triggers and listens for custom events.",
+    intro: "Node.js operates on an event-driven architecture. This means the server spends most of its time waiting for specific events to happen, like a file opening or a user logging in. Developers can create their own custom events using the built-in Events module.",
     example: {
       language: "javascript",
-      code: `var events = require('events');\nvar eventEmitter = new events.EventEmitter();\n\n// Create an event handler:\nvar myEventHandler = function () {\n  console.log('I hear a scream!');\n}\n\n// Assign the event handler to an event:\neventEmitter.on('scream', myEventHandler);\n\n// Fire the 'scream' event:\neventEmitter.emit('scream');`
-    }
+      code: `/* this handles an event */\nvar events = require('events');\nvar eventEmitter = new events.EventEmitter();\n\neventEmitter.on('login', function () {\n  console.log('User logged in!');\n});\n\neventEmitter.emit('login');`
+    },
+    keyPoints: [
+      "The Events module is built into Node.js.",
+      "The \`on()\` method listens for an event to happen.",
+      "The \`emit()\` method triggers the event manually.",
+      "Events make handling asynchronous data much easier."
+    ]
   },
   streams: {
     title: "Node.js Streams",
-    description: "Streams are objects that let you read data from a source or write data to a destination in continuous fashion.",
-    intro: "In Node.js, there are four types of streams: Readable, Writable, Duplex, and Transform.",
+    description: "Node.js streams process large amounts of data in small chunks.",
+    intro: "Streams allow Node.js to read or write data piece by piece instead of loading an entire massive file into memory all at once. This is exactly how video streaming services like Netflix send movies to your browser without crashing your computer.",
     example: {
       language: "javascript",
-      code: `var fs = require("fs");\nvar data = '';\n\n// Create a readable stream\nvar readerStream = fs.createReadStream('input.txt');\n\n// Set the encoding to be utf8. \nreaderStream.setEncoding('UTF8');\n\n// Handle stream events --> data, end, and error\nreaderStream.on('data', function(chunk) {\n   data += chunk;\n});`
-    }
+      code: `/* this reads a stream */\nvar fs = require('fs');\nvar readerStream = fs.createReadStream('large_video.mp4');\n\nreaderStream.on('data', function(chunk) {\n   console.log("Received a chunk of data");\n});`
+    },
+    keyPoints: [
+      "Readable streams let you read data.",
+      "Writable streams let you write data.",
+      "Duplex streams let you read and write simultaneously.",
+      "Streams prevent memory overloads on the server."
+    ]
   },
   "express-intro": {
     title: "Express.js Introduction",
-    description: "Express is a minimal and flexible Node.js web application framework.",
-    intro: "It provides a robust set of features for web and mobile applications. It is the de facto standard server framework for Node.js.",
+    description: "Express is a fast and simple web framework for Node.js.",
+    intro: "Writing a full web server using pure Node.js takes a lot of complicated code. Express.js is a free package that simplifies the process drastically. It is the most popular framework for building APIs and websites in Node.js.",
     example: {
       language: "javascript",
-      code: `const express = require('express')\nconst app = express()\nconst port = 3000\n\napp.get('/', (req, res) => {\n  res.send('Hello World!')\n})\n\napp.listen(port, () => {\n  console.log(\`Example app listening on port \${port}\`)\n})`
-    }
+      code: `/* this starts an express server */\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.send('Hello from Express!');\n});\n\napp.listen(3000);`
+    },
+    keyPoints: [
+      "Express makes setting up a server extremely easy.",
+      "It handles complex routing automatically.",
+      "It uses middleware to process incoming requests.",
+      "It is the \"E\" in the popular MERN stack."
+    ]
   },
   "express-routing": {
     title: "Express Routing",
-    description: "Routing refers to how an application's endpoints (URIs) respond to client requests.",
-    intro: "You define routing using methods of the Express app object that correspond to HTTP methods; for example, `app.get()` to handle GET requests and `app.post` to handle POST requests.",
+    description: "Express routing handles different URL paths and HTTP methods.",
+    intro: "When a user visits your website, they request a specific URL path, like `/about` or `/contact`. Express routing acts like a traffic cop, directing the user's request to the correct block of code based on the URL they typed.",
     example: {
       language: "javascript",
-      code: `// Respond to POST request on the root route (/), the application's home page:\napp.post('/', (req, res) => {\n  res.send('Got a POST request')\n})\n\n// Respond to a PUT request to the /user route:\napp.put('/user', (req, res) => {\n  res.send('Got a PUT request at /user')\n})`
-    }
+      code: `/* this creates routes */\napp.get('/users', (req, res) => {\n  res.send('Show all users');\n});\n\napp.post('/users', (req, res) => {\n  res.send('Create a new user');\n});`
+    },
+    keyPoints: [
+      "Routes use HTTP methods like GET, POST, PUT, and DELETE.",
+      "\`app.get()\` retrieves data from the server.",
+      "\`app.post()\` sends new data to the server.",
+      "The \`req\` object holds the user's data."
+    ]
   },
   "express-middleware": {
     title: "Express Middleware",
-    description: "Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function.",
-    intro: "Middleware functions can execute any code, make changes to the request and the response objects, end the request-response cycle, call the next middleware function in the stack.",
+    description: "Express middleware modifies requests before they reach the route.",
+    intro: "Middleware functions sit in the middle, between the user's incoming request and the final route response. Developers use middleware to log visitors, check if a user is logged in, or format data before the main code runs.",
     example: {
       language: "javascript",
-      code: `var myLogger = function (req, res, next) {\n  console.log('LOGGED')\n  next()\n}\n\napp.use(myLogger)`
-    }
+      code: `/* this uses middleware */\nconst myLogger = function (req, res, next) {\n  console.log('User visited the site');\n  next(); // Pass control to the next function\n}\n\napp.use(myLogger);`
+    },
+    keyPoints: [
+      "Middleware functions run in order.",
+      "The \`next()\` function moves to the next middleware.",
+      "\`app.use()\` applies the middleware to all routes.",
+      "If you forget \`next()\`, the server gets stuck loading forever."
+    ]
   },
   "rest-apis": {
     title: "REST APIs with Node.js",
-    description: "Representational State Transfer (REST) is an architectural style for providing standards between computer systems on the web.",
-    intro: "Using Express, you can easily build RESTful APIs that serve JSON data.",
+    description: "Node.js builds fast RESTful APIs to serve data.",
+    intro: "A REST API is a standard way for a server to send raw data to a frontend application like a React website or an iOS app. Instead of sending full HTML pages, the Node.js server sends simple JSON data.",
     example: {
       language: "javascript",
-      code: `app.get('/api/users', (req, res) => {\n  const users = [{id: 1, name: 'John'}, {id: 2, name: 'Jane'}];\n  res.json(users);\n});`
-    }
+      code: `/* this sends a JSON API response */\napp.get('/api/cars', (req, res) => {\n  const cars = [{brand: 'Ford'}, {brand: 'BMW'}];\n  res.json(cars);\n});`
+    },
+    keyPoints: [
+      "REST APIs communicate using JSON.",
+      "Frontend apps fetch this data to build the UI.",
+      "APIs use standard HTTP status codes (like 404 for Not Found).",
+      "CRUD operations (Create, Read, Update, Delete) map to HTTP methods."
+    ]
   },
   mongodb: {
     title: "MongoDB with Node.js",
-    description: "MongoDB is a NoSQL database that works very well with Node.js.",
-    intro: "You can use the official MongoDB driver or an Object Data Modeling (ODM) library like Mongoose to interact with MongoDB.",
+    description: "MongoDB pairs perfectly with Node.js to store database records.",
+    intro: "Node.js applications need a place to save data permanently. MongoDB is a NoSQL database that stores data exactly like JavaScript objects, making it the perfect match for Node.js developers.",
     example: {
       language: "javascript",
-      code: `const mongoose = require('mongoose');\n\nmongoose.connect('mongodb://localhost/my_database');\n\nconst Schema = mongoose.Schema;\nconst SomeModelSchema = new Schema({\n  a_string: String,\n  a_date: Date\n});\n\nconst SomeModel = mongoose.model('SomeModel', SomeModelSchema);`
-    }
+      code: `/* this connects to MongoDB */\nconst mongoose = require('mongoose');\n\nmongoose.connect('mongodb://localhost/my_db');\n\nconst UserSchema = new mongoose.Schema({\n  name: String,\n  age: Number\n});`
+    },
+    keyPoints: [
+      "MongoDB is a NoSQL, document-based database.",
+      "It stores data in flexible JSON-like documents.",
+      "Mongoose is the most popular library to connect Node.js and MongoDB.",
+      "It is the \"M\" in the popular MERN stack."
+    ]
   },
   "env-vars": {
-    title: "Environment Variables in Node.js",
-    description: "Environment variables are used to store sensitive data like API keys and database credentials.",
-    intro: "You can access environment variables using `process.env`. It is common to use the `dotenv` package to load variables from a `.env` file into `process.env`.",
+    title: "Node.js Environment Variables",
+    description: "Node.js environment variables hide sensitive passwords and API keys.",
+    intro: "Hardcoding passwords into your JavaScript files is dangerous because anyone viewing the code can see them. Developers use environment variables to store sensitive data securely on the server. The code reads these variables invisibly behind the scenes.",
     syntax: {
       language: "javascript",
-      code: `require('dotenv').config();\nconst port = process.env.PORT || 3000;\nconst dbUser = process.env.DB_USER;`
-    }
+      code: `/* this uses environment variables */\nrequire('dotenv').config();\nconst dbPassword = process.env.DB_PASSWORD;`
+    },
+    keyPoints: [
+      "The \`process.env\` object holds the variables.",
+      "The \`dotenv\` package loads variables from a \`.env\` file.",
+      "Never commit your \`.env\` file to GitHub.",
+      "They are essential for production server deployments."
+    ]
   },
   "auth-basics": {
-    title: "Authentication Basics in Node.js",
-    description: "Securing routes and authenticating users.",
-    intro: "JSON Web Tokens (JWT) are commonly used for stateless authentication in Node.js APIs.",
+    title: "Node.js Authentication Basics",
+    description: "Node.js authentication ensures only approved users access data.",
+    intro: "Websites need to know exactly who is requesting data to keep accounts secure. Node.js typically uses JSON Web Tokens (JWT) to lock down routes. When a user logs in, they get a secure token that they must show every time they request private data.",
     example: {
       language: "javascript",
-      code: `const jwt = require('jsonwebtoken');\n\n// Create a token\nconst token = jwt.sign({ userId: 123 }, process.env.JWT_SECRET, { expiresIn: '1h' });\n\n// Verify a token\njwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {\n  if (err) throw err;\n  console.log(decoded.userId) // bar\n});`
-    }
+      code: `/* this creates a secure token */\nconst jwt = require('jsonwebtoken');\nconst token = jwt.sign({ userId: 123 }, 'secret_key', { expiresIn: '1h' });`
+    },
+    keyPoints: [
+      "Authentication verifies user identity.",
+      "Authorization checks what data the user is allowed to see.",
+      "JWTs securely pass information between client and server.",
+      "Tokens eventually expire for security reasons."
+    ]
   },
   "error-handling": {
-    title: "Error Handling in Node.js/Express",
-    description: "Handling errors gracefully is critical.",
-    intro: "In Express, you define error-handling middleware functions in the same way as other middleware functions, except error-handling functions have four arguments instead of three: `(err, req, res, next)`.",
+    title: "Node.js Error Handling",
+    description: "Node.js/Express error handling prevents server crashes.",
+    intro: "Express provides a simple way to catch any errors that happen anywhere on the server. Developers write a special middleware function that catches bad requests, missing files, or broken code, and sends a polite error message to the user instead of crashing.",
     example: {
       language: "javascript",
-      code: `app.use((err, req, res, next) => {\n  console.error(err.stack)\n  res.status(500).send('Something broke!')\n})`
-    }
+      code: `/* this catches errors */\napp.use((err, req, res, next) => {\n  console.error(err.message);\n  res.status(500).send('Something broke on the server!');\n});`
+    },
+    keyPoints: [
+      "Error handling middleware takes four arguments instead of three.",
+      "The arguments are \`(err, req, res, next)\`.",
+      "It belongs at the very bottom of the file, after all other routes.",
+      "Sending a 500 status code tells the browser the server failed."
+    ]
   },
   deployment: {
     title: "Node.js Deployment",
-    description: "Getting your Node.js app live on the internet.",
-    intro: "Popular options for deploying Node.js applications include Heroku, Vercel, Render, AWS, and DigitalOcean.",
+    description: "Node.js deployment puts the app live on the internet.",
+    intro: "When development is finished, the Node.js application must move from a personal computer to a live web server. Developers use cloud platforms to host their code so anyone in the world can access the website or API 24/7.",
     keyPoints: [
-      "Always set `NODE_ENV` to `production`.",
-      "Ensure you are using `process.env.PORT` instead of hardcoding the port.",
-      "Consider using a process manager like PM2 if deploying to a VPS."
+      "Always set the environment variable \`NODE_ENV\` to \`production\`.",
+      "Let the hosting service choose the port using \`process.env.PORT\`.",
+      "Popular hosts include Render, Heroku, Vercel, and DigitalOcean.",
+      "Process managers like PM2 keep the server running after crashes."
     ]
   }
 };

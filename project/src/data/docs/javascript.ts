@@ -3,404 +3,624 @@ import { TopicContent } from './contentMap';
 export const javascriptData: Record<string, TopicContent> = {
   introduction: {
     title: "JavaScript Introduction",
-    description: "JavaScript is the world's most popular programming language.",
-    intro: "JavaScript is the programming language of the Web. JavaScript is easy to learn. This tutorial will teach you JavaScript from basic to advanced.",
+    description: "JavaScript makes static HTML pages interactive.",
+    intro: "JavaScript acts as the programming language of the web. It is the third layer of web design, following HTML and CSS. Developers use JavaScript to update content dynamically, control multimedia, and animate images.",
     keyPoints: [
-      "JavaScript can change HTML content.",
-      "JavaScript can change HTML attribute values.",
-      "JavaScript can change HTML styles (CSS).",
-      "JavaScript can hide HTML elements."
+      "JavaScript alters HTML content instantly.",
+      "JavaScript changes CSS styles without reloading.",
+      "JavaScript hides and shows elements.",
+      "JavaScript reacts to user clicks and inputs."
     ]
   },
   "where-to": {
     title: "JavaScript Where To",
-    description: "Where to place JavaScript in an HTML document.",
-    intro: "In HTML, JavaScript code is inserted between `<script>` and `</script>` tags. Scripts can be placed in the `<body>`, or in the `<head>` section of an HTML page, or in both.",
+    description: "JavaScript connects to HTML files using script tags.",
+    intro: "HTML uses the `<script>` tag to run JavaScript directly in the browser. Developers place these tags inside the `<head>` or at the very bottom of the `<body>`. Putting scripts at the bottom ensures the HTML loads fully before the code runs.",
     example: {
       language: "html",
-      code: `<body>\n  <h2>JavaScript in Body</h2>\n  <p id="demo"></p>\n  <script>\n    document.getElementById("demo").innerHTML = "My First JavaScript";\n  </script>\n</body>`
-    }
+      code: `<!-- this runs javascript -->\n<!DOCTYPE html>\n<html lang="en">\n  <body>\n    <p id="demo"></p>\n    <script>\n      document.getElementById("demo").innerHTML = "Hello!";\n    </script>\n  </body>\n</html>`
+    },
+    keyPoints: [
+      "JavaScript lives inside `<script>` tags.",
+      "Scripts can go in the `<head>` or `<body>`.",
+      "External files use the `src` attribute.",
+      "External files end with a `.js` extension."
+    ]
   },
   output: {
     title: "JavaScript Output",
-    description: "JavaScript can display data in different ways.",
-    intro: "JavaScript can \"display\" data in different ways: writing into an HTML element (using `innerHTML`), writing into the HTML output using `document.write()`, writing into an alert box using `window.alert()`, or writing into the browser console using `console.log()`.",
+    description: "JavaScript outputs data in four different ways.",
+    intro: "JavaScript does not have built-in print functions. Instead, developers output data by altering HTML elements, writing directly to the document, popping up alert boxes, or logging messages to the browser console.",
     syntax: {
       language: "javascript",
-      code: `console.log("Hello World");\nalert("Hello World");`
-    }
+      code: `/* output syntax */\nconsole.log("Hello World");\nalert("Hello World");`
+    },
+    keyPoints: [
+      "`innerHTML` writes into HTML elements.",
+      "`document.write()` writes to the HTML document.",
+      "`window.alert()` creates a pop-up box.",
+      "`console.log()` sends data to the developer tools."
+    ]
   },
   statements: {
     title: "JavaScript Statements",
-    description: "A computer program is a list of instructions to be executed by a computer.",
-    intro: "In a programming language, these programming instructions are called statements. A JavaScript program is a list of programming statements.",
+    description: "JavaScript statements give the computer direct instructions.",
+    intro: "A computer program consists of a list of instructions called statements. JavaScript executes these statements one by one in the exact order they are written. Each statement usually performs one specific action.",
     example: {
       language: "javascript",
-      code: `let x, y, z;  // Statement 1\nx = 5;        // Statement 2\ny = 6;        // Statement 3\nz = x + y;    // Statement 4`
-    }
+      code: `/* this runs four statements */\nlet x;\nx = 5;\nlet y = 6;\nlet z = x + y;`
+    },
+    keyPoints: [
+      "Statements form the program instructions.",
+      "Semicolons separate multiple statements.",
+      "JavaScript runs them sequentially.",
+      "Code blocks group multiple statements together."
+    ]
   },
   syntax: {
     title: "JavaScript Syntax",
-    description: "JavaScript syntax is the set of rules, how JavaScript programs are constructed.",
-    intro: "JavaScript syntax defines two types of values: Fixed values (Literals) and Variable values (Variables).",
+    description: "JavaScript syntax defines the rules for writing code.",
+    intro: "JavaScript syntax tells the computer how to read the program. The language defines fixed values known as literals and variable values known as variables. Developers must follow these exact rules, or the browser will throw errors.",
     keyPoints: [
-      "Numbers are written with or without decimals.",
-      "Strings are text, written within double or single quotes.",
-      "Variables are used to store data values.",
-      "JavaScript is case sensitive."
+      "Numbers do not require quotes.",
+      "Strings require single or double quotes.",
+      "Variable names are case-sensitive.",
+      "Hyphens are not allowed in names."
     ]
   },
   comments: {
     title: "JavaScript Comments",
-    description: "JavaScript comments can be used to explain JavaScript code, and to make it more readable.",
-    intro: "Single line comments start with `//`. Multi-line comments start with `/*` and end with `*/`.",
+    description: "JavaScript comments leave hidden notes inside the code.",
+    intro: "JavaScript comments explain code logic to other developers. The browser completely ignores these comments when executing the program. Developers use them to organize complex files or temporarily disable code while testing.",
     syntax: {
       language: "javascript",
-      code: `// Change heading:\ndocument.getElementById("myH").innerHTML = "My First Page";\n\n/*\nThe code below will change\nthe heading with id = "myH"\n*/\ndocument.getElementById("myH").innerHTML = "My First Page";`
-    }
+      code: `/* comment syntax */\n// Single line comment\n/* Multi-line \ncomment */`
+    },
+    keyPoints: [
+      "Two slashes \`//\` create a single-line comment.",
+      "A slash-asterisk \`/*\` starts a multi-line comment.",
+      "An asterisk-slash \`*/\` ends a multi-line comment.",
+      "Comments prevent code execution."
+    ]
   },
   variables: {
     title: "JavaScript Variables",
-    description: "Variables are containers for storing data values.",
-    intro: "In JavaScript, variables can be declared using `var`, `let`, or `const`. It is recommended to use `let` and `const` in modern JavaScript.",
+    description: "JavaScript variables store data values for later use.",
+    intro: "JavaScript uses variables as named containers to hold data. Developers declare these variables using specific keywords before assigning them a value. Modern JavaScript strongly encourages using `let` and `const` instead of the older `var` keyword.",
     example: {
       language: "javascript",
-      code: `let x = 5;\nlet y = 6;\nlet z = x + y;`
-    }
+      code: `/* this creates variables */\nlet score = 100;\nconst playerName = "John";\nlet isWinner = true;`
+    },
+    keyPoints: [
+      "Variables store reusable data.",
+      "The \`let\` keyword creates changeable variables.",
+      "The \`const\` keyword creates unchangeable variables.",
+      "The \`var\` keyword is an older way to declare variables."
+    ]
   },
   let: {
     title: "JavaScript Let",
-    description: "The let keyword was introduced in ES6 (2015).",
-    intro: "Variables defined with `let` cannot be Redeclared. Variables defined with `let` must be Declared before use. Variables defined with `let` have Block Scope.",
+    description: "The let keyword declares block-scoped variables that can change.",
+    intro: "JavaScript introduced `let` in 2015 to solve problems with older variable types. Variables declared with `let` only exist inside the specific block of code where they were created. Developers can update their values later.",
     example: {
       language: "javascript",
-      code: `{
-  let x = 2;
-}
-// x can NOT be used here`
-    }
+      code: `/* this uses let */\nlet points = 50;\npoints = 100; // Value changed successfully`
+    },
+    keyPoints: [
+      "\`let\` variables cannot be redeclared.",
+      "\`let\` variables can be reassigned.",
+      "\`let\` variables have block scope.",
+      "\`let\` prevents accidental global variables."
+    ]
   },
   const: {
     title: "JavaScript Const",
-    description: "The const keyword was introduced in ES6 (2015).",
-    intro: "Variables defined with `const` cannot be Redeclared. Variables defined with `const` cannot be Reassigned. Variables defined with `const` have Block Scope.",
+    description: "The const keyword declares variables that never change.",
+    intro: "JavaScript uses `const` for values that must remain exactly the same throughout the entire program. Developers use this for configuration values, arrays, and objects. You must assign a value immediately when declaring a `const`.",
     keyPoints: [
-      "Always declare a variable with const when you know that the value should not be changed.",
-      "Use const when you declare a new Array, Object, Function, or RegExp."
+      "\`const\` variables cannot be redeclared.",
+      "\`const\` variables cannot be reassigned.",
+      "\`const\` requires a starting value.",
+      "Changing properties inside a \`const\` object is allowed."
     ]
   },
   operators: {
     title: "JavaScript Operators",
-    description: "JavaScript operators are used to perform different types of mathematical and logical computations.",
-    intro: "JavaScript operators include Arithmetic Operators, Assignment Operators, Comparison Operators, String Operators, Logical Operators, Bitwise Operators, Ternary Operators, and Type Operators.",
+    description: "JavaScript operators perform mathematical and logical tasks.",
+    intro: "JavaScript uses different operators to assign values, compare data, and perform math. Developers combine variables and operators to create complex logic and calculations. The language supports many different operator types.",
     example: {
       language: "javascript",
-      code: `let x = 5;\nlet y = 2;\nlet z = x * y; // z will be 10`
-    }
+      code: `/* this uses operators */\nlet x = 5;\nlet y = 2;\nlet total = (x * y) + 10;`
+    },
+    keyPoints: [
+      "Arithmetic operators perform math.",
+      "Assignment operators update variable values.",
+      "Comparison operators check if values match.",
+      "Logical operators combine multiple conditions."
+    ]
   },
   arithmetic: {
     title: "JavaScript Arithmetic",
-    description: "Arithmetic operators perform arithmetic on numbers (literals or variables).",
-    intro: "Common arithmetic operators are `+` (addition), `-` (subtraction), `*` (multiplication), `/` (division), `%` (modulus/remainder), `**` (exponentiation), `++` (increment), and `--` (decrement).",
+    description: "JavaScript arithmetic operators perform math on numbers.",
+    intro: "JavaScript acts as a calculator directly in the browser. Developers use arithmetic operators to add scores, calculate discounts, or determine screen coordinates. These operators work exactly like standard algebra.",
     example: {
       language: "javascript",
-      code: `let x = 100 + 50;\nlet y = x * 2;`
-    }
+      code: `/* this calculates a value */\nlet price = 100;\nlet tax = 5;\nlet total = price + tax;`
+    },
+    keyPoints: [
+      "The \`+\` operator adds numbers together.",
+      "The \`-\` operator subtracts one number from another.",
+      "The \`*\` operator multiplies numbers.",
+      "The \`/\` operator divides numbers."
+    ]
   },
   assignment: {
     title: "JavaScript Assignment",
-    description: "Assignment operators assign values to JavaScript variables.",
-    intro: "The simple assignment operator (`=`) assigns a value to a variable. The addition assignment operator (`+=`) adds a value to a variable.",
-    referenceTable: {
-      headers: ["Operator", "Example", "Same As"],
-      rows: [
-        ["=", "x = y", "x = y"],
-        ["+=", "x += y", "x = x + y"],
-        ["-=", "x -= y", "x = x - y"],
-        ["*=", "x *= y", "x = x * y"]
-      ]
-    }
+    description: "JavaScript assignment operators save values into variables.",
+    intro: "JavaScript uses assignment operators to store data inside a variable. The most common assignment operator is the equals sign, but JavaScript provides shortcuts to perform math and assignment simultaneously.",
+    example: {
+      language: "javascript",
+      code: `/* this assigns and updates values */\nlet score = 10;\nscore += 5; // score is now 15\nscore -= 2; // score is now 13`
+    },
+    keyPoints: [
+      "The \`=\` operator assigns the exact right-side value.",
+      "The \`+=\` operator adds a value to the current variable.",
+      "The \`-=\` operator subtracts a value from the current variable.",
+      "Assignment always reads from right to left."
+    ]
   },
   "data-types": {
     title: "JavaScript Data Types",
-    description: "JavaScript variables can hold many data types.",
-    intro: "JavaScript has 8 Datatypes: String, Number, Bigint, Boolean, Undefined, Null, Symbol, Object.",
-    keyPoints: [
-      "The Object Datatype can contain: An object, An array, A date."
-    ],
+    description: "JavaScript variables hold different types of data formats.",
+    intro: "JavaScript categorizes data into different types so the computer knows how to handle it. You can do math with Number types, but you cannot do math with String types. JavaScript figures out the data type automatically based on the value.",
     example: {
       language: "javascript",
-      code: `let length = 16;                               // Number\nlet lastName = "Johnson";                      // String\nlet x = {firstName:"John", lastName:"Doe"};    // Object`
-    }
+      code: `/* this shows different data types */\nlet age = 25; // Number\nlet name = "Alice"; // String\nlet isReady = true; // Boolean`
+    },
+    keyPoints: [
+      "String types hold text inside quotes.",
+      "Number types hold integers or decimals.",
+      "Boolean types hold true or false values.",
+      "Object types hold complex data structures."
+    ]
   },
   functions: {
     title: "JavaScript Functions",
-    description: "A JavaScript function is a block of code designed to perform a particular task.",
-    intro: "A JavaScript function is executed when \"something\" invokes it (calls it).",
+    description: "JavaScript functions bundle reusable blocks of code.",
+    intro: "JavaScript functions store instructions that you want to use multiple times. Instead of copying and pasting the same ten lines of code, developers wrap them inside a function and call its name whenever needed.",
     syntax: {
       language: "javascript",
-      code: `function name(parameter1, parameter2, parameter3) {\n  // code to be executed\n}`
+      code: `/* function syntax */\nfunction myFunc(param) {\n  // Code runs here\n}`
     },
     example: {
       language: "javascript",
-      code: `function myFunction(p1, p2) {\n  return p1 * p2;   // The function returns the product of p1 and p2\n}\n\nlet result = myFunction(4, 3); // result will be 12`
-    }
+      code: `/* this creates a function */\nfunction multiply(a, b) {\n  return a * b;\n}\n\nlet result = multiply(4, 3);`
+    },
+    keyPoints: [
+      "The \`function\` keyword creates the block.",
+      "Parentheses hold incoming variables called parameters.",
+      "Curly braces contain the actual code to execute.",
+      "The \`return\` keyword sends data back."
+    ]
   },
   objects: {
     title: "JavaScript Objects",
-    description: "Objects are variables too. But objects can contain many values.",
-    intro: "You define (and create) a JavaScript object with an object literal.",
+    description: "JavaScript objects group related data into a single structure.",
+    intro: "JavaScript objects store multiple values together like a digital filing cabinet. Instead of making separate variables for a car's color, weight, and model, developers create one car object that holds all those details.",
     example: {
       language: "javascript",
-      code: `const car = {type:"Fiat", model:"500", color:"white"};\n\n// Accessing object properties\nconsole.log(car.type);\nconsole.log(car["model"]);`
-    }
+      code: `/* this creates an object */\nconst car = {\n  type: "Fiat",\n  model: "500",\n  color: "white"\n};\n\nlet carColor = car.color;`
+    },
+    keyPoints: [
+      "Objects use curly braces to hold data.",
+      "Data lives in name-value pairs called properties.",
+      "A colon separates the name from the value.",
+      "A dot or brackets access the object properties."
+    ]
   },
   events: {
     title: "JavaScript Events",
-    description: "HTML events are \"things\" that happen to HTML elements.",
-    intro: "When JavaScript is used in HTML pages, JavaScript can \"react\" on these events. Here are some examples of HTML events: an HTML web page has finished loading, an HTML input field was changed, an HTML button was clicked.",
+    description: "JavaScript events trigger code when users interact with the page.",
+    intro: "JavaScript listens for specific actions happening on the HTML page. Developers write code that waits for a user to click a button, type in an input field, or scroll down the page, and then reacts instantly.",
     example: {
       language: "html",
-      code: `<button onclick="document.getElementById('demo').innerHTML = Date()">The time is?</button>\n<p id="demo"></p>`
-    }
+      code: `/* this triggers an event */\n<button onclick="alert('Clicked!')">Click Me</button>`
+    },
+    keyPoints: [
+      "Events detect user interaction.",
+      "The \`onclick\` event triggers when the user clicks an element.",
+      "The \`onmouseover\` event triggers when the mouse hovers over.",
+      "The \`onkeydown\` event triggers when typing."
+    ]
   },
   strings: {
     title: "JavaScript Strings",
-    description: "JavaScript strings are for storing and manipulating text.",
-    intro: "A JavaScript string is zero or more characters written inside quotes. You can use single or double quotes.",
+    description: "JavaScript strings store and manipulate text data.",
+    intro: "JavaScript uses strings to hold text like names, paragraphs, or passwords. Strings always sit inside quotes so the computer doesn't confuse them with code commands. You can measure, cut, or combine strings easily.",
     syntax: {
       language: "javascript",
-      code: `let text = "John Doe";\nlet carName1 = "Volvo XC60";  // Double quotes\nlet carName2 = 'Volvo XC60';  // Single quotes`
-    }
+      code: `/* string syntax */\nlet name = "John";\nlet greeting = 'Hello';`
+    },
+    keyPoints: [
+      "Strings require single or double quotes.",
+      "The \`length\` property counts the characters.",
+      "Backslashes escape special characters inside strings.",
+      "Template literals use backticks to inject variables."
+    ]
   },
   "string-methods": {
     title: "JavaScript String Methods",
-    description: "String methods help you to work with strings.",
-    intro: "Common string methods include `length`, `slice()`, `substring()`, `substr()`, `replace()`, `replaceAll()`, `toUpperCase()`, `toLowerCase()`, `concat()`, `trim()`, `trimStart()`, `trimEnd()`, `padStart()`, `padEnd()`, `charAt()`, `charCodeAt()`, `split()`.",
+    description: "JavaScript string methods alter text automatically.",
+    intro: "JavaScript provides built-in tools called methods to manipulate strings. Developers use these methods to change text to uppercase, replace specific words, or extract a small section of a larger paragraph.",
     example: {
       language: "javascript",
-      code: `let text = "Apple, Banana, Kiwi";\nlet part = text.slice(7, 13); // part will be "Banana"`
-    }
+      code: `/* this uses string methods */\nlet text = "Apple, Banana";\nlet part = text.slice(7, 13); // part is "Banana"\nlet loud = text.toUpperCase();`
+    },
+    keyPoints: [
+      "The \`toUpperCase()\` method capitalizes every letter.",
+      "The \`slice()\` method extracts a section of text.",
+      "The \`replace()\` method swaps one word for another.",
+      "The \`trim()\` method removes extra spaces at the ends."
+    ]
   },
   arrays: {
     title: "JavaScript Arrays",
-    description: "JavaScript arrays are used to store multiple values in a single variable.",
-    intro: "It is a common practice to declare arrays with the `const` keyword.",
+    description: "JavaScript arrays store multiple values inside a single variable.",
+    intro: "JavaScript uses arrays to hold lists of data, like a shopping list or a catalog of products. Instead of creating ten different variables for ten cars, developers put all ten cars inside one array.",
     example: {
       language: "javascript",
-      code: `const cars = ["Saab", "Volvo", "BMW"];\nlet car = cars[0]; // Accessing the first element`
-    }
+      code: `/* this creates an array */\nconst cars = ["Saab", "Volvo", "BMW"];\nlet firstCar = cars[0];`
+    },
+    keyPoints: [
+      "Arrays use square brackets to hold data.",
+      "Commas separate each item in the array.",
+      "The first item sits at index 0.",
+      "Developers typically declare arrays with \`const\`."
+    ]
   },
   "array-methods": {
     title: "JavaScript Array Methods",
-    description: "Array methods help you to work with arrays.",
-    intro: "Common array methods include `length`, `toString()`, `pop()`, `push()`, `shift()`, `unshift()`, `join()`, `delete`, `concat()`, `flat()`, `splice()`, and `slice()`.",
+    description: "JavaScript array methods manipulate items inside an array.",
+    intro: "JavaScript provides built-in tools called methods to manage array data. Developers use these methods to add new items to the end of a list, remove the first item, or sort everything alphabetically.",
     example: {
       language: "javascript",
-      code: `const fruits = ["Banana", "Orange", "Apple", "Mango"];\nfruits.push("Kiwi"); // Adds a new element ("Kiwi") to fruits`
-    }
+      code: `/* this uses array methods */\nconst fruits = ["Banana", "Orange"];\nfruits.push("Apple"); // Adds Apple to the end\nfruits.pop(); // Removes Apple`
+    },
+    keyPoints: [
+      "The \`push()\` method adds items to the end.",
+      "The \`pop()\` method removes the last item.",
+      "The \`length\` property counts the total items.",
+      "The \`join()\` method converts the array into a string."
+    ]
   },
   conditions: {
-    title: "JavaScript if...else",
-    description: "Conditional statements are used to perform different actions based on different conditions.",
-    intro: "In JavaScript we have the following conditional statements: `if` to specify a block of code to be executed, if a specified condition is true, `else` to specify a block of code to be executed, if the same condition is false, `else if` to specify a new condition to test, if the first condition is false, `switch` to specify many alternative blocks of code to be executed.",
+    title: "JavaScript If...Else",
+    description: "JavaScript if statements run code only when conditions are true.",
+    intro: "JavaScript uses conditional statements to make decisions. Developers tell the computer to check a condition, like if a user is logged in. If true, the code shows the dashboard; if false, it shows the login screen.",
     example: {
       language: "javascript",
-      code: `if (time < 10) {\n  greeting = "Good morning";\n} else if (time < 20) {\n  greeting = "Good day";\n} else {\n  greeting = "Good evening";\n}`
-    }
+      code: `/* this checks a condition */\nif (score > 50) {\n  result = "You pass!";\n} else {\n  result = "You fail.";\n}`
+    },
+    keyPoints: [
+      "The \`if\` block runs when the condition is true.",
+      "The \`else\` block runs when the condition is false.",
+      "The \`else if\` block tests a new condition.",
+      "Conditions go inside parentheses."
+    ]
   },
   switch: {
     title: "JavaScript Switch",
-    description: "The switch statement is used to perform different actions based on different conditions.",
-    intro: "Use the `switch` statement to select one of many code blocks to be executed.",
+    description: "JavaScript switch statements check a value against many cases.",
+    intro: "JavaScript uses the switch statement as a cleaner alternative to writing many `if...else` statements. Developers pass a single value into the switch, and the computer jumps directly to the matching case.",
     example: {
       language: "javascript",
-      code: `switch(new Date().getDay()) {\n  case 6:\n    text = "Today is Saturday";\n    break;\n  case 0:\n    text = "Today is Sunday";\n    break;\n  default:\n    text = "Looking forward to the Weekend";\n}`
-    }
+      code: `/* this uses a switch */\nswitch(day) {\n  case 1:\n    text = "Monday";\n    break;\n  case 2:\n    text = "Tuesday";\n    break;\n}`
+    },
+    keyPoints: [
+      "The \`switch\` statement evaluates one expression.",
+      "The \`case\` keyword defines a possible match.",
+      "The \`break\` keyword stops the switch from running further.",
+      "The \`default\` keyword runs if no cases match."
+    ]
   },
   "for-loop": {
     title: "JavaScript For Loop",
-    description: "Loops can execute a block of code a number of times.",
-    intro: "The `for` statement creates a loop with 3 optional expressions: Statement 1 is executed (one time) before the execution of the code block. Statement 2 defines the condition for executing the code block. Statement 3 is executed (every time) after the code block has been executed.",
+    description: "JavaScript for loops repeat a block of code a specific number of times.",
+    intro: "JavaScript uses loops to run the same code over and over again without copying and pasting. The `for` loop is perfect when developers know exactly how many times the code needs to run.",
     example: {
       language: "javascript",
-      code: `for (let i = 0; i < 5; i++) {\n  text += "The number is " + i + "<br>";\n}`
-    }
+      code: `/* this loops 5 times */\nfor (let i = 0; i < 5; i++) {\n  console.log("Number: " + i);\n}`
+    },
+    keyPoints: [
+      "Statement 1 runs once before the loop starts.",
+      "Statement 2 defines the condition to keep looping.",
+      "Statement 3 runs at the end of every loop.",
+      "Loops are commonly used to read through arrays."
+    ]
   },
   "while-loop": {
     title: "JavaScript While Loop",
-    description: "The while loop loops through a block of code as long as a specified condition is true.",
-    intro: "The `while` loop loops through a block of code as long as a specified condition is true.",
+    description: "JavaScript while loops repeat code as long as a condition remains true.",
+    intro: "JavaScript uses the `while` loop when developers don't know exactly how many times the loop should run. It simply checks a condition, runs the code, and checks the condition again.",
     example: {
       language: "javascript",
-      code: `let i = 0;\nwhile (i < 10) {\n  text += "The number is " + i;\n  i++;\n}`
-    }
+      code: `/* this loops until i is 10 */\nlet i = 0;\nwhile (i < 10) {\n  console.log(i);\n  i++;\n}`
+    },
+    keyPoints: [
+      "The loop runs continuously while the condition is true.",
+      "The loop stops instantly when the condition becomes false.",
+      "You must update the condition inside the loop.",
+      "Forgetting to update the condition causes an infinite loop."
+    ]
   },
   break: {
-    title: "JavaScript Break and Continue",
-    description: "The break statement \"jumps out\" of a loop.",
-    intro: "The `break` statement jumps out of a loop. The `continue` statement jumps over one iteration in the loop.",
+    title: "JavaScript Break",
+    description: "JavaScript break statements jump out of a loop early.",
+    intro: "JavaScript uses the `break` statement to stop a loop immediately, even if the condition is still true. Developers use this when searching for a specific item; once they find it, there is no need to keep searching.",
     example: {
       language: "javascript",
-      code: `for (let i = 0; i < 10; i++) {\n  if (i === 3) { break; }\n  text += "The number is " + i + "<br>";\n}`
-    }
+      code: `/* this stops the loop at 3 */\nfor (let i = 0; i < 10; i++) {\n  if (i === 3) { break; }\n  console.log(i);\n}`
+    },
+    keyPoints: [
+      "The \`break\` statement kills the loop entirely.",
+      "The \`continue\` statement skips only the current iteration.",
+      "Switch statements also rely on \`break\`.",
+      "Using \`break\` makes code run faster by stopping unnecessary work."
+    ]
   },
   "type-conversion": {
     title: "JavaScript Type Conversion",
-    description: "JavaScript variables can be converted to a new variable and another data type.",
-    intro: "JavaScript variables can be converted to a new variable and another data type by the use of a JavaScript function or automatically by JavaScript itself.",
+    description: "JavaScript type conversion changes data from one format to another.",
+    intro: "JavaScript often needs to convert data types to perform calculations. If a user types the number \"5\" into a text box, JavaScript sees it as a string. Developers must convert it to a real number before doing math.",
     example: {
       language: "javascript",
-      code: `Number("3.14")    // Returns 3.14\nString(123)       // Returns "123"\nString(100 + 23)  // Returns "123"`
-    }
+      code: `/* this converts data types */\nlet str = "3.14";\nlet num = Number(str);\nlet backToStr = String(num);`
+    },
+    keyPoints: [
+      "The \`Number()\` function converts strings to numbers.",
+      "The \`String()\` function converts numbers to strings.",
+      "JavaScript sometimes converts types automatically.",
+      "Automatic conversion can lead to unexpected bugs."
+    ]
   },
   typeof: {
     title: "JavaScript typeof",
-    description: "You can use the typeof operator to find the data type of a JavaScript variable.",
-    intro: "In JavaScript there are 5 different data types that can contain values: string, number, boolean, object, function. There are 6 types of objects: Object, Date, Array, String, Number, Boolean. And 2 data types that cannot contain values: null, undefined.",
+    description: "JavaScript typeof identifies the data type of a variable.",
+    intro: "JavaScript uses the `typeof` operator to figure out what kind of data a variable holds. Because JavaScript variables can hold anything, developers use this tool to check the data type before running specific functions.",
     example: {
       language: "javascript",
-      code: `typeof "John"         // Returns "string"\ntypeof 3.14           // Returns "number"\ntypeof false          // Returns "boolean"\ntypeof {name:'John'}  // Returns "object"`
-    }
+      code: `/* this checks data types */\ntypeof "John"; // Returns "string"\ntypeof 3.14; // Returns "number"\ntypeof true; // Returns "boolean"`
+    },
+    keyPoints: [
+      "\`typeof\` returns the data type as a lowercase string.",
+      "It identifies strings, numbers, booleans, and objects.",
+      "Arrays return as \"object\" because they are a special object type.",
+      "Undefined variables return as \"undefined\"."
+    ]
   },
   scope: {
     title: "JavaScript Scope",
-    description: "Scope determines the accessibility (visibility) of variables.",
-    intro: "JavaScript has 3 types of scope: Block scope, Function scope, and Global scope.",
+    description: "JavaScript scope controls where variables can be accessed.",
+    intro: "JavaScript uses scope to secure variables and prevent naming conflicts. If you create a variable inside a function, nothing outside that function can see or use it. This allows developers to use the same variable names in different places safely.",
+    example: {
+      language: "javascript",
+      code: `/* this demonstrates scope */\nfunction myScope() {\n  let localScore = 50;\n  console.log(localScore); // Works\n}\n// console.log(localScore); // Error!`
+    },
     keyPoints: [
-      "Variables declared inside a { } block cannot be accessed from outside the block.",
-      "Variables defined inside a function are not accessible (visible) from outside the function."
+      "Global scope variables are visible everywhere.",
+      "Function scope variables are hidden outside the function.",
+      "Block scope (\`let\` and \`const\`) hides variables outside curly braces.",
+      "Variables declared without keywords become global automatically."
     ]
   },
   hoisting: {
     title: "JavaScript Hoisting",
-    description: "Hoisting is JavaScript's default behavior of moving declarations to the top.",
-    intro: "In JavaScript, a variable can be declared after it has been used. In other words; a variable can be used before it has been declared.",
+    description: "JavaScript hoisting moves variable and function declarations to the top.",
+    intro: "JavaScript secretly moves all variable and function declarations to the very top of the script before running the code. Because of this strange behavior, developers can call a function on line 1 even if the function isn't written until line 50.",
+    example: {
+      language: "javascript",
+      code: `/* this shows hoisting */\nx = 5;\nconsole.log(x);\nvar x; // Declaration is hoisted`
+    },
     keyPoints: [
-      "JavaScript only hoists declarations, not initializations.",
-      "Variables defined with `let` and `const` are hoisted to the top of the block, but not initialized. Meaning: The block of code is aware of the variable, but it cannot be used until it has been declared."
+      "Hoisting moves declarations, not assignments.",
+      "\`var\` declarations hoist and initialize as undefined.",
+      "\`let\` and \`const\` declarations hoist but do not initialize.",
+      "Calling functions before they are written works perfectly."
     ]
   },
   closures: {
     title: "JavaScript Closures",
-    description: "JavaScript variables can belong to the local or global scope. Global variables can be made local (private) with closures.",
-    intro: "A closure is a function having access to the parent scope, even after the parent function has closed.",
+    description: "JavaScript closures allow functions to remember their outer variables.",
+    intro: "JavaScript closures happen when a function inside another function remembers the variables from its parent. Even after the parent function finishes running, the inner function still has access to those original variables. Developers use this to create private data.",
     example: {
       language: "javascript",
-      code: `const add = (function () {\n  let counter = 0;\n  return function () {counter += 1; return counter}\n})();\n\nadd();\nadd();\nadd();\n// the counter is now 3`
-    }
+      code: `/* this creates a closure */\nfunction makeCounter() {\n  let count = 0;\n  return function() {\n    count++;\n    return count;\n  }\n}\nlet counter = makeCounter();`
+    },
+    keyPoints: [
+      "Closures remember variables from parent functions.",
+      "They allow for data privacy and encapsulation.",
+      "They are created automatically when functions are nested.",
+      "Memory leaks can occur if closures are misused."
+    ]
   },
   callbacks: {
     title: "JavaScript Callbacks",
-    description: "A callback is a function passed as an argument to another function.",
-    intro: "This technique allows a function to call another function. A callback function can run after another function has finished.",
+    description: "JavaScript callbacks pass functions into other functions as arguments.",
+    intro: "JavaScript functions act like regular data, meaning you can pass one function into another. The receiving function will run the callback function later. Developers use this for actions that take time, like waiting for a file to load.",
     example: {
       language: "javascript",
-      code: `setTimeout(myFunction, 3000);\n\nfunction myFunction() {\n  document.getElementById("demo").innerHTML = "I love You !!";\n}`
-    }
+      code: `/* this uses a callback */\nfunction sayHello() {\n  console.log("Hello!");\n}\n\nsetTimeout(sayHello, 3000); // Runs after 3 seconds`
+    },
+    keyPoints: [
+      "A callback is a function passed as an argument.",
+      "Callbacks control the execution order of asynchronous code.",
+      "Using too many nested callbacks creates \"callback hell\".",
+      "Modern JavaScript prefers Promises over callbacks."
+    ]
   },
   promises: {
     title: "JavaScript Promises",
-    description: "A Promise is a JavaScript object that links producing code and consuming code.",
-    intro: "A JavaScript Promise object contains both the producing code and calls to the consuming code.",
+    description: "JavaScript promises handle asynchronous operations gracefully.",
+    intro: "JavaScript promises act like real-life promises. The code says \"I promise to get this data,\" and while it fetches the data in the background, the rest of the program keeps running. The promise eventually finishes and returns either the data or an error.",
     example: {
       language: "javascript",
-      code: `let myPromise = new Promise(function(myResolve, myReject) {\n// "Producing Code" (May take some time)\n\n  myResolve(); // when successful\n  myReject();  // when error\n});\n\n// "Consuming Code" (Must wait for a fulfilled Promise)\nmyPromise.then(\n  function(value) { /* code if successful */ },\n  function(error) { /* code if some error */ }\n);`
-    }
+      code: `/* this creates a promise */\nlet myPromise = new Promise(function(resolve, reject) {\n  resolve("Data fetched!");\n});\n\nmyPromise.then(result => console.log(result));`
+    },
+    keyPoints: [
+      "A promise has three states: pending, fulfilled, or rejected.",
+      "The \`then()\` method handles successful results.",
+      "The \`catch()\` method handles errors and failures.",
+      "Promises solve the callback hell problem."
+    ]
   },
   "async-await": {
     title: "JavaScript Async/Await",
-    description: "Async and Await make promises easier to write.",
-    intro: "The keyword `async` before a function makes the function return a promise. The keyword `await` before a function makes the function wait for a promise.",
+    description: "JavaScript async/await makes promises easier to read and write.",
+    intro: "JavaScript added `async` and `await` to make asynchronous code look exactly like normal, synchronous code. Instead of chaining multiple `.then()` methods together, developers simply tell the code to pause and wait for the promise to finish.",
     example: {
       language: "javascript",
-      code: `async function myDisplay() {\n  let myPromise = new Promise(function(resolve, reject) {\n    resolve("I love You !!");\n  });\n  document.getElementById("demo").innerHTML = await myPromise;\n}`
-    }
+      code: `/* this uses async/await */\nasync function getData() {\n  let response = await fetch("data.json");\n  let data = await response.json();\n  console.log(data);\n}`
+    },
+    keyPoints: [
+      "The \`async\` keyword turns a function into a promise.",
+      "The \`await\` keyword pauses execution until the promise finishes.",
+      "You can only use \`await\` inside an \`async\` function.",
+      "It provides much cleaner error handling using \`try/catch\`."
+    ]
   },
   dom: {
     title: "JavaScript HTML DOM",
-    description: "With the HTML DOM, JavaScript can access and change all the elements of an HTML document.",
-    intro: "When a web page is loaded, the browser creates a Document Object Model of the page. The HTML DOM model is constructed as a tree of Objects.",
+    description: "JavaScript HTML DOM represents the page as a structured tree.",
+    intro: "The Document Object Model (DOM) is an exact structural copy of the HTML page that the browser builds when the page loads. JavaScript uses this map to find elements, change text, and update CSS styles dynamically.",
     keyPoints: [
-      "JavaScript can change all the HTML elements in the page.",
-      "JavaScript can change all the HTML attributes in the page.",
-      "JavaScript can change all the CSS styles in the page."
+      "The DOM represents HTML as a tree of objects.",
+      "JavaScript uses the DOM to manipulate the live page.",
+      "The \`document\` object represents the entire HTML page.",
+      "Changing the DOM updates the user's screen instantly."
     ]
   },
   "dom-methods": {
     title: "JavaScript HTML DOM Methods",
-    description: "HTML DOM methods are actions you can perform (on HTML Elements).",
-    intro: "HTML DOM properties are values (of HTML Elements) that you can set or change. The most common way to access an HTML element is to use the id of the element.",
+    description: "JavaScript DOM methods target and manipulate HTML elements.",
+    intro: "JavaScript provides built-in methods to interact with the DOM tree. Developers use these methods to grab specific HTML tags by their ID or class name, and then change their content or styling without needing to reload the page.",
     example: {
       language: "javascript",
-      code: `document.getElementById("demo").innerHTML = "Hello World!";`
-    }
+      code: `/* this uses DOM methods */\nlet title = document.getElementById("header");\ntitle.innerHTML = "New Welcome Message";\ntitle.style.color = "blue";`
+    },
+    keyPoints: [
+      "\`getElementById()\` finds a single unique element.",
+      "\`querySelector()\` finds elements using CSS selectors.",
+      "The \`innerHTML\` property changes the HTML content inside.",
+      "The \`style\` property applies inline CSS changes."
+    ]
   },
   "dom-events": {
     title: "JavaScript HTML DOM Events",
-    description: "HTML DOM events allow JavaScript to register different event handlers on elements in an HTML document.",
-    intro: "Events are normally used in combination with functions, and the function will not be executed before the event occurs (such as when a user clicks a button).",
+    description: "JavaScript DOM events trigger code when users interact with the DOM.",
+    intro: "JavaScript attaches event listeners directly to the DOM elements. Instead of using `onclick` in the HTML file, developers use JavaScript to listen for clicks behind the scenes. This keeps the HTML file clean and strictly focused on structure.",
     example: {
       language: "javascript",
-      code: `document.getElementById("myBtn").onclick = displayDate;`
-    }
+      code: `/* this attaches an event listener */\nlet btn = document.getElementById("myBtn");\nbtn.addEventListener("click", function() {\n  alert("Button was clicked!");\n});`
+    },
+    keyPoints: [
+      "\`addEventListener()\` attaches an event to an element.",
+      "You can attach multiple events to the same element.",
+      "It keeps JavaScript completely separate from HTML.",
+      "\`removeEventListener()\` removes the event listener later."
+    ]
   },
   "fetch-api": {
     title: "JavaScript Fetch API",
-    description: "The Fetch API interface allows web browser to make HTTP requests to web servers.",
-    intro: "No need for XMLHttpRequest anymore. The Fetch API is Promise-based.",
+    description: "JavaScript Fetch API requests data from a web server.",
+    intro: "JavaScript uses the Fetch API to ask a server for data behind the scenes. Without reloading the page, developers can pull in fresh weather data, stock prices, or new social media posts. The Fetch API relies entirely on Promises.",
     example: {
       language: "javascript",
-      code: `let file = "fetch_info.txt";\nfetch (file)\n.then(x => x.text())\n.then(y => document.getElementById("demo").innerHTML = y);`
-    }
+      code: `/* this fetches data */\nfetch("https://api.example.com/data")\n  .then(response => response.json())\n  .then(data => console.log(data));`
+    },
+    keyPoints: [
+      "The \`fetch()\` function starts the network request.",
+      "It returns a Promise that resolves to a Response object.",
+      "You must convert the response to JSON or text.",
+      "Fetch replaces the older \`XMLHttpRequest\` method."
+    ]
   },
   json: {
     title: "JavaScript JSON",
-    description: "JSON is a format for storing and transporting data.",
-    intro: "JSON stands for JavaScript Object Notation. It is often used when data is sent from a server to a web page.",
+    description: "JSON securely transports text data across the internet.",
+    intro: "JSON stands for JavaScript Object Notation. It looks exactly like a JavaScript object, but it is just plain text. Because it is plain text, any programming language can read it, making it the perfect format for sending data between a server and a web page.",
     example: {
       language: "javascript",
-      code: `let text = '{ "employees" : [' +\n'{ "firstName":"John" , "lastName":"Doe" },' +\n'{ "firstName":"Anna" , "lastName":"Smith" },' +\n'{ "firstName":"Peter" , "lastName":"Jones" } ]}';\n\nconst obj = JSON.parse(text);`
-    }
+      code: `/* this parses JSON */\nlet jsonText = '{"name":"John", "age":30}';\nlet userObj = JSON.parse(jsonText);\nconsole.log(userObj.name);`
+    },
+    keyPoints: [
+      "\`JSON.parse()\` converts a JSON string into a JavaScript object.",
+      "\`JSON.stringify()\` converts a JavaScript object into a JSON string.",
+      "JSON data requires double quotes around names and values.",
+      "It cannot store functions or date objects directly."
+    ]
   },
   "error-handling": {
-    title: "JavaScript Errors",
-    description: "Throw, and Try...Catch...Finally",
-    intro: "The `try` statement defines a code block to run (to try). The `catch` statement defines a code block to handle any error. The `finally` statement defines a code block to run regardless of the result. The `throw` statement defines a custom error.",
+    title: "JavaScript Error Handling",
+    description: "JavaScript error handling prevents broken code from crashing the app.",
+    intro: "JavaScript programs stop working completely if they hit an error. Developers use `try/catch` blocks to gracefully handle these errors. Instead of crashing, the code catches the mistake and runs a backup plan.",
     example: {
       language: "javascript",
-      code: `try {\n  Block of code to try\n}\ncatch(err) {\n  Block of code to handle errors\n}`
-    }
+      code: `/* this handles errors */\ntry {\n  fakeFunction();\n} catch (err) {\n  console.log("An error happened: " + err.message);\n} finally {\n  console.log("This runs no matter what.");\n}`
+    },
+    keyPoints: [
+      "The \`try\` block holds code that might fail.",
+      "The \`catch\` block runs only if an error occurs.",
+      "The \`finally\` block runs regardless of success or failure.",
+      "The \`throw\` statement creates custom errors."
+    ]
   },
   classes: {
     title: "JavaScript Classes",
-    description: "JavaScript Classes are templates for JavaScript Objects.",
-    intro: "Use the keyword `class` to create a class. Always add a method named `constructor()`.",
+    description: "JavaScript classes provide blueprints for creating multiple objects.",
+    intro: "JavaScript uses classes as templates to create objects that share the same structure. If a developer needs to build 50 different enemies for a game, they build one Enemy class and reuse it 50 times to save effort.",
     syntax: {
       language: "javascript",
-      code: `class ClassName {\n  constructor() { ... }\n}`
+      code: `/* class syntax */\nclass ClassName {\n  constructor() { ... }\n}`
     },
     example: {
       language: "javascript",
-      code: `class Car {\n  constructor(name, year) {\n    this.name = name;\n    this.year = year;\n  }\n}\n\nconst myCar1 = new Car("Ford", 2014);`
-    }
+      code: `/* this creates a class */\nclass Car {\n  constructor(brand) {\n    this.carname = brand;\n  }\n}\nlet myCar = new Car("Ford");`
+    },
+    keyPoints: [
+      "The \`class\` keyword defines the template.",
+      "The \`constructor()\` method runs automatically when creating a new object.",
+      "The \`new\` keyword creates an object from the class.",
+      "Classes act as a cleaner syntax for older prototype patterns."
+    ]
   },
   modules: {
     title: "JavaScript Modules",
-    description: "JavaScript modules allow you to break up your code into separate files.",
-    intro: "This makes it easier to maintain the code-base. Modules are imported from external files with the `import` statement. Modules also rely on `type=\"module\"` in the `<script>` tag.",
+    description: "JavaScript modules split large codebases into smaller files.",
+    intro: "JavaScript files can quickly become too large to read or manage. Developers split the code into smaller, separate files called modules. They then export specific variables or functions from one file and import them into another.",
     example: {
       language: "javascript",
-      code: `// person.js\nexport const name = "Jesse";\nexport const age = 40;\n\n// message.js\nimport { name, age } from "./person.js";`
-    }
+      code: `/* this exports and imports code */\n// inside person.js\nexport const name = "Jesse";\n\n// inside main.js\nimport { name } from "./person.js";`
+    },
+    keyPoints: [
+      "The \`export\` keyword makes code available to other files.",
+      "The \`import\` keyword pulls code in from other files.",
+      "Modules strict mode automatically.",
+      "HTML script tags require \`type=\"module\"\` to use them."
+    ]
   },
   "es6-features": {
     title: "JavaScript ES6+ Features",
-    description: "ECMAScript 2015, also known as ES6, introduced several new features.",
-    intro: "Features like `let`, `const`, Arrow Functions, For/of loop, Map Objects, Set Objects, Classes, Promises, Symbol, and Default Parameters were introduced.",
+    description: "JavaScript ES6 introduced modern features to the language.",
+    intro: "In 2015, JavaScript received a massive update known as ES6 (ECMAScript 2015). This update completely modernized the language by introducing new tools that made writing code faster, cleaner, and less prone to errors.",
     example: {
       language: "javascript",
-      code: `// Arrow Functions\nconst x = (x, y) => x * y;\n\n// Template Literals\nlet name = "John";\nlet text = \`Welcome \${name}\`;`
-    }
+      code: `/* this shows ES6 features */\n// Arrow Function\nconst multiply = (x, y) => x * y;\n\n// Template Literals\nlet name = "John";\nlet greeting = \`Welcome \${name}\`;`
+    },
+    keyPoints: [
+      "ES6 added \`let\` and \`const\` for variable declarations.",
+      "Arrow functions provided a shorter way to write functions.",
+      "Template literals allowed easy variable injection into strings.",
+      "Destructuring allowed quick extraction of array and object data."
+    ]
   }
 };
