@@ -103,7 +103,7 @@ export default function RoadmapQuiz() {
     setResult(null);
   };
 
-  const progress = Math.round(((currentStep + 1) / questions.length) * 100);
+  const progress = Math.round((currentStep / questions.length) * 100);
 
   return (
     <section className="rounded-lg border border-zinc-800 bg-[#08090f]/90 p-6">

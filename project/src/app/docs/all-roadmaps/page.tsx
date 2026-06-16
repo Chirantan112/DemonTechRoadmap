@@ -33,7 +33,7 @@ type RoadmapCard = {
 const navItems = [
   { label: "Roadmaps", href: "/docs/all-roadmaps" },
   { label: "Resources", href: "/docs/resources" },
-  { label: "Docs", href: "/docs/html/home" },
+  { label: "Docs", href: "/docs/html/introduction" },
   { label: "Guides", href: "/docs/study-guide" },
   { label: "Community", href: "https://discord.gg/yWtjK2Tb8T" },
 ];

@@ -43,7 +43,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           {DOC_LANGUAGES.map((lang) => (
             <Link
               key={lang.id}
-              href={`/docs/${lang.id}/home`}
+              href={`/docs/${lang.id}/introduction`}
               className={`px-5 py-3 text-xs font-black uppercase tracking-[0.2em] transition-all relative ${
                 langId === lang.id
                   ? 'text-[#ffffff]'
