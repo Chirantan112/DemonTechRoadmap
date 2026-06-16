@@ -1,0 +1,59 @@
+export const metadata = {
+  title: "Best Practices | DemonTech Documentation",
+  description: "Industry-standard coding practices and architectural guidelines."
+};
+
+# Best Practices
+
+## Introduction
+Writing code that works is only the first step. Writing code that is maintainable, readable, and scalable is what separates a junior developer from a senior engineer. This guide covers the foundational best practices endorsed by DemonTech to ensure your code quality remains high.
+
+## Why It Matters
+Code is read far more often than it is written. If you write "clever" but unreadable code today, you (and your teammates) will struggle to understand it six months from now. Adhering to best practices matters because it reduces technical debt, minimizes bugs, and speeds up collaborative development.
+
+## Core Concepts
+- **DRY (Don't Repeat Yourself)**: Avoid duplicating code logic. Extract reusable logic into functions or components.
+- **KISS (Keep It Simple, Stupid)**: Favor simple, readable solutions over complex, over-engineered ones.
+- **YAGNI (You Aren't Gonna Need It)**: Do not add functionality until it is actually required by the business logic.
+- **Separation of Concerns**: Divide your application into distinct sections, each handling a specific piece of logic (e.g., separating UI from data fetching).
+
+## Step-by-Step Guide
+
+1. **Setup Linting**: Always use a linter (like ESLint for JavaScript/TypeScript) to automatically catch syntax errors and enforce style rules.
+2. **Setup Formatting**: Use a formatter (like Prettier) and configure your code editor to format on save. This eliminates arguments about spacing and indentation.
+3. **Use Meaningful Names**: Variable and function names should describe *what* they do or *what* they hold. (e.g., use `userList` instead of `ul`).
+4. **Write Tests**: Write unit tests for your critical business logic. Ensure that edge cases are handled.
+5. **Review Before Committing**: Never commit code blindly. Read your own `git diff` to ensure you haven't left `console.log` statements or commented-out code blocks.
+
+## Examples
+
+**Bad Naming (Avoid this):**
+```javascript
+const d = new Date();
+function calc(a, b) {
+  // What are a and b?
+  return a * b;
+}
+```
+
+**Good Naming (Do this):**
+```javascript
+const currentTimestamp = new Date();
+function calculateTotalArea(width, height) {
+  return width * height;
+}
+```
+
+## Common Mistakes
+- **Premature Optimization**: Spending hours optimizing a function to run 0.1ms faster when it is only called once a day. Focus on readability first; optimize only when you have proven a bottleneck exists.
+- **Magic Numbers**: Using unexplained numbers directly in code (e.g., `if (status === 4)`). Instead, extract them into named constants (e.g., `const STATUS_SHIPPED = 4;`).
+- **Ignoring Errors**: Using empty `catch` blocks (`try { ... } catch (e) {}`). Always log the error or handle it gracefully to prevent silent failures.
+
+## Best Practices
+- **Type Safety**: Whenever possible, use strongly typed languages or supersets (like TypeScript) to catch type errors at compile time rather than runtime.
+- **Small Functions**: A function should do one thing, and do it well. If a function is 200 lines long, it likely needs to be broken down.
+- **Documentation**: Write clear documentation (`README.md`) and meaningful JSDoc/docstrings for complex logic. Explain *why* you did something, not just *what* you did.
+
+## Related Topics
+- **[Study Guide](/docs/study-guide)**: Learn how to study these best practices effectively.
+- **[Contributing](/docs/contributing)**: Ensure your pull requests follow these best practices.

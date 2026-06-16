@@ -1,0 +1,53 @@
+export const metadata = {
+  title: "Contributing | DemonTech Documentation",
+  description: "Learn how to contribute to the open-source DemonTech Roadmap project."
+};
+
+# Contributing
+
+## Introduction
+The DemonTech Roadmap is fully open-source. This means the community—you—can actively participate in its development. Whether it is fixing a typo in documentation, adding a new roadmap node, or writing a major new feature for the platform, all contributions are welcome.
+
+## Why It Matters
+Open-source software is the backbone of the tech industry. Contributing matters because it ensures our roadmaps stay relevant as technology evolves. For you personally, contributing is an incredible way to build your portfolio, gain experience with collaborative Git workflows, and give back to the community that helped you learn.
+
+## Core Concepts
+- **Fork**: Creating your own copy of the repository.
+- **Branch**: A parallel version of the code where you make your changes safely.
+- **Commit**: Saving a specific change with a descriptive message.
+- **Pull Request (PR)**: Asking the maintainers to merge your branch into the main project.
+
+## Step-by-Step Guide
+
+1. **Find an Issue**: Go to our GitHub repository and look at the "Issues" tab. Find an issue labeled `good first issue` or `help wanted`.
+2. **Fork and Clone**: Fork the repository to your GitHub account, then clone it to your local machine using your terminal.
+3. **Create a Branch**: Create a new branch named after your feature (e.g., `git checkout -b fix-typo-in-docs`).
+4. **Make Changes**: Edit the code or markdown files locally. Test your changes using `npm run dev`.
+5. **Commit and Push**: Stage your changes, write a clear commit message, and push the branch to your fork.
+6. **Open a PR**: Go to the original DemonTech repository on GitHub and click "Compare & pull request". Fill out the PR template completely.
+
+## Examples
+
+**A Good Commit Message:**
+```text
+fix(docs): correct spelling error in quick-start guide
+```
+
+**A Bad Commit Message:**
+```text
+updated stuff
+```
+
+## Common Mistakes
+- **Working on `main`**: Never make changes directly to your `main` branch. Always create a feature branch.
+- **Huge PRs**: Trying to fix 10 different issues in a single Pull Request makes it impossible to review. One issue = One PR.
+- **Not Running Tests**: Failing to run `npm run build` locally before opening a PR to see if your changes broke the build.
+
+## Best Practices
+- **Communicate First**: If you want to build a massive new feature, open an Issue first to discuss it with maintainers before spending 20 hours coding it.
+- **Follow Formatting**: Run our code formatter (`npm run lint` / prettier) before committing to avoid stylistic arguments in reviews.
+- **Be Patient**: Maintainers are volunteers. It might take a few days to get a review on your Pull Request.
+
+## Related Topics
+- **[Best Practices](/docs/best-practices)**: Ensure your code adheres to our quality standards.
+- **[Changelog](/docs/changelog)**: See what other contributors have recently merged.

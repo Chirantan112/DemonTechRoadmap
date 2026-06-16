@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import HomeHeader, { Logo } from "@/src/components/HomeHeader";
 import RoadmapQuiz from "@/src/components/RoadmapQuiz";
+import HomeFAQ from "@/src/components/HomeFAQ";
 import NewsletterForm from "@/src/components/NewsletterForm";
 
 const icons: Record<string, ReactNode> = {
@@ -254,6 +255,9 @@ export default function Home() {
           ))}
         </section>
       </section>
+
+      {/* FAQ Section */}
+      <HomeFAQ />
 
       <footer className="border-t border-zinc-900 bg-black/70 px-5 py-5 lg:px-8">
         <div className="mx-auto grid max-w-[1540px] gap-8 lg:grid-cols-[1.6fr_2fr_1.2fr]">
