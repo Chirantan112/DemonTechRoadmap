@@ -2,32 +2,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import HomeHeader, { Logo } from "@/src/components/HomeHeader";
 import RoadmapQuiz from "@/src/components/RoadmapQuiz";
-<<<<<<< HEAD
 import HomeFAQ from "@/src/components/HomeFAQ";
-
-const audiences = [
-  {
-    title: "Choose a path",
-    text: "Start with the track that matches your goal, then follow the next topic without guessing.",
-  },
-  {
-    title: "Build projects",
-    text: "Turn each major concept into portfolio proof with project prompts and practical checkpoints.",
-  },
-  {
-    title: "Grow with feedback",
-    text: "Use notes, bookmarks, progress tracking, and community support to keep momentum visible.",
-  },
-];
-
-const roadmaps = [
-  { title: "Frontend", href: "/roadmaps/frontend-developer", steps: ["HTML", "CSS", "JavaScript", "React", "Next.js"] },
-  { title: "Backend", href: "/roadmaps/backend-developer", steps: ["Internet", "APIs", "Databases", "Auth", "Deploy"] },
-  { title: "DevOps", href: "/roadmaps/devops-engineer", steps: ["Linux", "CI/CD", "Docker", "Kubernetes", "Cloud"] },
-];
-=======
 import NewsletterForm from "@/src/components/NewsletterForm";
->>>>>>> origin/main
 
 const icons: Record<string, ReactNode> = {
   arrow: <path d="M5 12h14m-6-6 6 6-6 6" />,
@@ -282,9 +258,6 @@ export default function Home() {
 
       {/* FAQ Section */}
       <HomeFAQ />
-
-      {/* Community Leaderboard */}
-      <ContributorLeaderboard />
 
       <footer className="border-t border-zinc-900 bg-black/70 px-5 py-5 lg:px-8">
         <div className="mx-auto grid max-w-[1540px] gap-8 lg:grid-cols-[1.6fr_2fr_1.2fr]">
