@@ -19,7 +19,7 @@ This reusable framework allows maintainers to systematically evaluate documentat
 ### 3. 💡 Code Examples & Snippets
 - [ ] **Copy-Paste Ready:** Examples compile cleanly without hidden dependencies or implicit global states.
 - [ ] **Clarity:** Code blocks feature short comments explaining non-trivial logic segments.
-- [ ] **Standardization:** Uses appropriate markdown code fencing with language tags (e.g., \`\`\`typescript).
+- [ ] **Standardization:** Uses appropriate markdown code fencing with language tags like triple backticks followed by the language name.
 
 ### 4. ♿ Accessibility (a11y) & Readability
 - [ ] **Semantic Structure:** Follows a strict, linear heading hierarchy (`#` ➔ `##` ➔ `###`). Never skips a layer.
