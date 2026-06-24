@@ -20,6 +20,20 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Contributor Data & Fallback Architecture
+
+To keep the platform performance dashboards accurate, contributor statistics are dynamically integrated via remote version-control logs. Use these internal parameters when debugging frontend state elements.
+
+### 🔌 Data Pipeline Logic
+* **Primary Source Engine:** Contributor metrics are parsed from the GitHub API using utility configurations established inside `project/src/lib/github.ts`.
+* **API Rate Limiting Operations:** The GitHub REST API enforces strict high-level request-rate quotas per hour. If a visitor encounters rate throttling, or if the network API responses return null/empty arrays, the local state management architecture must intercept the exception smoothly.
+
+### 🎨 Expected UI Fallback Behavior
+When data is missing or rate limits are triggered, frontend elements (such as `ContributorLeaderboard.tsx`) must adhere to these rules:
+1. **Skeleton States:** Display a clean, shimmering Tailwind loading placeholder while data is in transit.
+2. **Graceful Degradation:** Avoid hard layout crashes. If the data returns null or an API error occurs, render an elegant message badge: *"Unable to load contributor standings at this time. Please check back shortly."*
+3. **Mock Data Redirection:** If specified by local environment debugging parameters, the leaderboard UI components should switch gracefully to static local JSON arrays instead of breaking the layout grid.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
