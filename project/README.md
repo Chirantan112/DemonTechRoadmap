@@ -20,13 +20,11 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
----
-
-## 🗺️ Application Route Inventory Mapping
+## Application Route Inventory Mapping
 
 To assist open-source contributors with locating the precise file configurations corresponding to public website URLs, use this reference matrix. It maps user-facing paths directly to their structural file paths inside the Next.js App Router workspace (`project/src/app/`).
 
-### 📋 Public Navigation Inventory
+### Public Navigation Inventory
 
 | Public URL Pattern | Target Page Source Folder / File Path | Architectural Context / Scope |
 | :--- | :--- | :--- |
@@ -42,7 +40,7 @@ To assist open-source contributors with locating the precise file configurations
 | `/roadmaps` | `project/src/app/roadmaps/` | Main Interactive Career Roadmap Portal |
 | `/roadmaps/[roadmapSlug]` | `project/src/app/roadmaps/[roadmapSlug]/` | Dynamic Fallback Router for New Curriculum Nodes |
 
-> 💡 **Development Guideline Note:** Specific core developer tracks (such as `/roadmaps/frontend-developer`, `/roadmaps/backend-developer`, etc.) contain dedicated layout folder blocks under `project/src/app/roadmaps/` to handle optimization profiles. Check those sub-directories directly when working on custom component trees rather than creating new root pages.
+> **Development Guideline Note:** Specific core developer tracks (such as `/roadmaps/frontend-developer`, `/roadmaps/backend-developer`, etc.) contain dedicated layout folder blocks under `project/src/app/roadmaps/` to handle optimization profiles. Check those sub-directories directly when working on custom component trees rather than creating new root pages.
 
 ## Learn More
 
